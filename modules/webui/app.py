@@ -46,11 +46,8 @@ def create_app_footer():
 
     config.versions.gradio_version = gradio_version
 
-    footer_items = ["🍦 [Speech-AI-Forge](https://github.com/lenML/Speech-AI-Forge)"]
-    footer_items.append(
-        f"version: [{git_tag}](https://github.com/lenML/Speech-AI-Forge/commit/{git_commit})"
-    )
-    footer_items.append(f"branch: `{git_branch}`")
+    footer_items = ["🍦 [D.Va](https://github.com/echonoshy/D.Va)"]
+
     footer_items.append(f"python: `{python_version}`")
     footer_items.append(f"torch: `{torch_version}`")
     footer_items.append(f"ffmpeg: `{ffmpeg_version}`")
@@ -83,7 +80,7 @@ def create_interface():
     </script>
     """
 
-    with gr.Blocks(js=js_func, head=head_js, title="Speech-AI Forge WebUI") as demo:
+    with gr.Blocks(js=js_func, head=head_js, title="D.Va WebUI") as demo:
         css = """
         <style>
         .big-button {
@@ -125,25 +122,25 @@ def create_interface():
                             tabs2=ssml_tabs,
                             script_table_out=script_table,
                         )
-                    with gr.TabItem("From subtitle"):
-                        create_subtitle_tab(
-                            ssml_input=ssml_input,
-                            tabs1=tabs,
-                            tabs2=ssml_tabs,
-                            script_table_out=script_table,
-                        )
+                    # with gr.TabItem("From subtitle"):
+                    #     create_subtitle_tab(
+                    #         ssml_input=ssml_input,
+                    #         tabs1=tabs,
+                    #         tabs2=ssml_tabs,
+                    #         script_table_out=script_table,
+                    #     )
 
             with gr.TabItem("Speaker"):
                 create_speaker_panel()
             with gr.TabItem("Inpainting", visible=webui_config.experimental):
                 gr.Markdown("🚧 Under construction")
-            with gr.TabItem("ASR"):
-                create_asr_tab()
-            with gr.TabItem("Finetune", visible=webui_config.experimental):
-                create_ft_tabs(demo)
+            # with gr.TabItem("ASR"):
+            #     create_asr_tab()
+            # with gr.TabItem("Finetune", visible=webui_config.experimental):
+            #     create_ft_tabs(demo)
 
-            with gr.TabItem("Tools"):
-                create_tools_tab()
+            # with gr.TabItem("Tools"):
+            #     create_tools_tab()
 
             with gr.TabItem("System"):
                 create_system_tab(demo)
@@ -152,8 +149,7 @@ def create_interface():
                 with gr.Tabs():
                     with gr.TabItem("readme"):
                         create_readme_tab()
-                    with gr.TabItem("changelog"):
-                        create_changelog_tab()
+
 
         create_app_footer()
 

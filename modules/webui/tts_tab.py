@@ -161,15 +161,15 @@ def create_tts_interface():
         with gr.TabItem("ChatTTS"):
             tts_interface = TTSInterface()
             tts_interface.create_tts_interface()
-        with gr.TabItem("CosyVoice"):
-            cosy_voice_interface = CosyVoiceInterface()
-            cosy_voice_interface.create_tts_interface()
-        with gr.TabItem("FireRedTTS"):
-            fire_red_tts_interface = FireRedTTSInterface()
-            fire_red_tts_interface.create_tts_interface()
-        with gr.TabItem("F5TTS"):
-            f5_tts_interface = F5TtsInterface()
-            f5_tts_interface.create_tts_interface()
+        # with gr.TabItem("CosyVoice"):
+        #     cosy_voice_interface = CosyVoiceInterface()
+        #     cosy_voice_interface.create_tts_interface()
+        # with gr.TabItem("FireRedTTS"):
+        #     fire_red_tts_interface = FireRedTTSInterface()
+        #     fire_red_tts_interface.create_tts_interface()
+        # with gr.TabItem("F5TTS"):
+        #     f5_tts_interface = F5TtsInterface()
+        #     f5_tts_interface.create_tts_interface()
 
         # NOTE: 现在没有SFT版本，效果很差
         with gr.TabItem("FishSpeech"):

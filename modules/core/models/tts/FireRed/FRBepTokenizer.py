@@ -14,7 +14,6 @@ from modules.repos_static.FireRedTTS.fireredtts.modules.tokenizer.whisper_tokeni
 from modules.utils.detect_lang import guess_lang
 
 
-# NOTE: 为什么需要这个: https://github.com/lenML/Speech-AI-Forge/issues/178
 class FRBepTokenizer:
     def __init__(self):
         self.tokenizer = get_tokenizer(multilingual=True)

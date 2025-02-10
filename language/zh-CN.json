@@ -138,9 +138,7 @@
     "3. 随机生成说话人：点击 \"Random Speaker\" 按钮，随机生成一个种子和名字，可以进一步编辑其他信息并测试。"
   ],
 
-  "SSML_TEXT_GUIDE": [
-    "- 关于SSML可以看这个 [文档](https://github.com/lenML/ChatTTS-Forge/blob/main/docs/SSML.md)"
-  ],
+
 
   "TTS_TEXT_GUIDE": ["- 如果尾字吞字不读，可以试试结尾加上 `[lbreak]`"],
 

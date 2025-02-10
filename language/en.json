@@ -95,9 +95,7 @@
     "3. Randomly Generate Speaker: Click the \"Random Speaker\" button to randomly generate a seed and name, which can then be further edited and tested."
   ],
 
-  "SSML_TEXT_GUIDE": [
-    "- For more information about SSML, refer to this [documentation](https://github.com/lenML/ChatTTS-Forge/blob/main/docs/SSML.md)"
-  ],
+
 
   "TTS_TEXT_GUIDE": [
     "- If the last character is swallowed and not read, try adding `[lbreak]` at the end."

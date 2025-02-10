@@ -1,8 +1,21 @@
-
+请生成一段 podcast 文稿，格式必须完全符合以下 XML 规范：
 <speak version="0.1">
-    <voice spk="Bob" style="narration-relaxed">
-        ChatTTS 用于合成多角色多情感的有声书示例
+    <voice spk="角色1" style="语气1">
+        对应的文本内容1
     </voice>
+    <voice spk="角色2" style="语气2">
+        对应的文本内容2
+    </voice>
+    …...(根据需要继续添加对话)
+</speak>
+
+请注意：
+1. 每段对话必须使用 <voice> 标签，并设置 spk 和 style 属性。
+2. 保留行内的特殊标记，比如 [uv_break] ，不要做任何调整。
+3. 输出的内容中不要包含其他格式，只保留上述 XML 格式的内容。
+  
+例如，生成以下示例对话：
+<speak version="0.1">
     <voice spk="Bob" style="narration-relaxed">
         黛玉冷笑道：
     </voice>
@@ -22,3 +35,5 @@
         说着，便赌气回房去了。
     </voice>
 </speak>
+
+请根据以上格式生成相应的 podcast 文稿。

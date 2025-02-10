@@ -109,7 +109,6 @@ def render_speakers_html(files: list[dict]):
         "原神"
       ],
       "filename": "yuanshen/mona.spkv1.json",
-      "url": "https://github.com/lenML/Speech-AI-Forge-spks/raw/refs/heads/main/spks/yuanshen/mona.spkv1.json"
     }
     """
     html_content = "<table>"
@@ -242,7 +241,6 @@ def create_spk_hub_ui():
     # 远程 JSON 文件的 URL，您可以使用环境变量设置 SPKS_INDEX
     DEFAULT_SPKS_INDEX_URL = os.getenv(
         "SPKS_INDEX",
-        "https://github.com/lenML/Speech-AI-Forge-spks/raw/refs/heads/main/index.json",
     )
 
     with gr.TabItem("Available", id="available"):
