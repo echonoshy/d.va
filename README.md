@@ -46,9 +46,6 @@ graph TD
 
 ### 音频示例
 
-<audio controls>
-  <source src="assets/ai_podcast_v1.MP3" type="audio/mpeg">
-  您的浏览器不支持音频播放。
-</audio>
+[演示音频](assets/ai_podcast_v1.webm)
 
 > 提示：如果无法在线播放，请[点击下载](assets/ai_podcast_v1.MP3)
