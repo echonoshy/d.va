@@ -46,6 +46,7 @@ numba==0.61.0
 numpy==2.2.2
 omegaconf==2.3.0
 onnxruntime==1.20.1
+openai==1.61.1
 opencc==1.1.9
 ormsgpack==1.7.0
 packaging==24.2

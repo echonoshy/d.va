@@ -1,0 +1,32 @@
+请生成一段关于{topic}的 podcast 对话文稿，格式必须完全符合以下 XML 规范：
+<speak version="0.1">
+    <voice spk="Alice" style="podcast">
+        对话内容
+    </voice>
+    <voice spk="Bob" style="podcast">
+        对话内容
+    </voice>
+</speak>
+
+请注意：
+1. 只使用 Alice 和 Bob 两个角色进行对话
+2. 所有对话的 style 属性统一使用 "podcast"
+3. [uv_break] 表示说话时的停顿，请在合适的语句断点处添加，使对话更自然
+4. 多使用口语化的语气词，如："嗯..." "哦？" "哎呀" "是吗？" "诶" "啊！" 等
+5. 只生成纯文本内容，支持中英文
+6. 输出内容必须严格按照上述 XML 格式
+
+示例格式：
+<speak version="0.1">
+    <voice spk="Alice" style="podcast">
+        嘿，Bob [uv_break] 你知道吗？最近我发现了一个特别有意思的事情。
+    </voice>
+    <voice spk="Bob" style="podcast">
+        哦？[uv_break] 快告诉我！
+    </voice>
+    <voice spk="Alice" style="podcast">
+        嗯... [uv_break] 怎么说呢 [uv_break] 这事还真的挺令人惊讶的。
+    </voice>
+</speak>
+
+请基于上述格式，生成一段关于{topic}的对话式 podcast 文稿，注意对话要自然生动。

@@ -126,13 +126,13 @@ class APIManager:
                     await _set_cors_headers(response)
             return response
 
-    def setup_playground(self):
-        app = self.app
-        app.mount(
-            "/playground",
-            CustomStaticFiles(directory="playground", html=True),
-            name="playground",
-        )
+    # def setup_playground(self):
+    #     app = self.app
+    #     app.mount(
+    #         "/playground",
+    #         CustomStaticFiles(directory="playground", html=True),
+    #         name="playground",
+    #     )
 
     def get(self, path: str, **kwargs):
         def decorator(func):
