@@ -1,8 +1,3 @@
-import requests
-
-# ssml_content = "<speak version='0.1'><voice>Hello, world!</voice></speak>"
-
-ssml_content = """
 <speak version="0.1">
 
     <voice spk="有磁性的男播音" style="narration-relaxed">
@@ -38,41 +33,3 @@ ssml_content = """
     </voice>
 
 </speak>
-
-"""
-
-
-
-
-
-url = "http://localhost:7870/v1/ssml"  # 请将此 URL 替换为实际的 API 端点
-
-headers = {
-    "Content-Type": "application/json"
-}
-
-payload = {
-    "ssml": ssml_content,
-    "format": "mp3",
-    "batch_size": 16,
-    "enhancer": {
-        "enable": True,
-        "model": "resemble-enhance",
-    },
-    "adjuster": {
-        "speed_rate": 1.3
-    }
-}
-
-response = requests.post(url, json=payload, headers=headers)
-
-if response.status_code == 200:
-    print("请求成功!")
-    print("音频内容类型：", response.headers.get("content-type"))
-    # 将返回的音频内容保存为 MP3 文件
-    with open("output2.mp3", "wb") as audio_file:
-        audio_file.write(response.content)
-        print("音频已保存为 output2.mp3")
-else:
-    print(f"请求失败，状态码: {response.status_code}")
-    print("响应内容：", response.text)
