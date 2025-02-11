@@ -19,6 +19,7 @@ from modules.webui.ssml.ssml_tab import create_ssml_interface
 from modules.webui.ssml.subtitle_tab import create_subtitle_tab
 from modules.webui.system_tab import create_system_tab
 from modules.webui.tts_tab import create_tts_interface
+from modules.webui.llm_podcast_tab import create_llm_podcast_tab
 
 logger = logging.getLogger(__name__)
 
@@ -97,6 +98,8 @@ def create_interface():
 
         gr.HTML(css)
         with gr.Tabs() as tabs:
+            with gr.TabItem("LLM_Podcast"):
+                create_llm_podcast_tab()
             with gr.TabItem("TTS"):
                 create_tts_interface()
 

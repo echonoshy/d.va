@@ -92,7 +92,7 @@ def process_webui_args(args):
     share = get_and_update_env(args, "share", False, bool)
     debug = get_and_update_env(args, "debug", False, bool)
     auth = get_and_update_env(args, "auth", None, str)
-    language = get_and_update_env(args, "language", "zh-CN", str)
+    # language = get_and_update_env(args, "language", "zh-CN", str)
     api = get_and_update_env(args, "api", False, bool)
 
     webui_config.off_track_tqdm = get_and_update_env(

@@ -134,3 +134,4 @@ dmypy.json
 .pytype/
 
 .Ds_Store
+*.mp3

@@ -1,4 +1,5 @@
 import os
+import requests 
 from pydub import AudioSegment
 from modules.llm_ssml_service.ssml_service import SiliconFlowClient
 
@@ -15,17 +16,24 @@ class PodcastPipeline:
         self.generate_audio()
         self.audio_postprocess()
         
-        
+    def clean_ssml_content(self, content: str) -> str:
+        if content.startswith("```xml"):
+            content = content.replace("```xml", "", 1)
+        if content.endswith("```"):
+            content = content.rsplit("```", 1)[0]
+        return content.strip()
+    
     def generate_ssml(self, topic):
         client = SiliconFlowClient()
         template_path = "modules/llm_ssml_service/template.txt"
         
         try:
             print(f"Start to generate ssml for this topic: {topic}")
-            self.ssml_content = client.generate_response(
+            content = client.generate_response(
                 topic=topic,
                 template_path=template_path
             )
+            self.ssml_content = self.clean_ssml_content(content)
             print("Generate done.")
             print(self.ssml_content)
         except Exception as e:
@@ -80,10 +88,10 @@ class PodcastPipeline:
             bgm = AudioSegment.from_mp3(bgm_path)
             
             # 提取BGM前3秒
-            bgm_intro = bgm[:3000]  # pydub中的时间单位是毫秒
+            bgm_intro = bgm[:5000]  # pydub中的时间单位是毫秒
             
             # 准备BGM主体部分（3秒后的部分）
-            bgm_main = bgm[3000:]
+            bgm_main = bgm[5000:]
             
             # 计算需要的BGM长度
             podcast_length = len(podcast)
@@ -98,7 +106,7 @@ class PodcastPipeline:
             bgm_main = bgm_main[:podcast_length]
             
             # 降低BGM音量到30%
-            bgm_main = bgm_main - 10.5  # -10.5dB ≈ 30% 音量
+            bgm_main = bgm_main - 20  # -10.5dB ≈ 30% 音量
             
             # 对BGM主体的最后3秒进行淡出处理
             fade_duration = 3000  # 3秒，单位毫秒
