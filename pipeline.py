@@ -1,3 +1,5 @@
+import os
+from pydub import AudioSegment
 from modules.llm_ssml_service.ssml_service import SiliconFlowClient
 
 
@@ -11,6 +13,7 @@ class PodcastPipeline:
     def pipeline(self, topic):
         self.generate_ssml(topic)
         self.generate_audio()
+        self.audio_postprocess()
         
         
     def generate_ssml(self, topic):
@@ -59,10 +62,60 @@ class PodcastPipeline:
                 
                 
                 
-    def audio_postprocess(self):
-        # 增加背景音乐等
-        pass 
-    
+    def audio_postprocess(self, 
+                         podcast_path: str = "output.mp3", 
+                         bgm_path: str = "assets/bgm.mp3", 
+                         output_path: str = "final_output.mp3") -> bool:
+        """
+        给播客音频添加背景音乐
+        
+        Args:
+            podcast_path: 播客音频文件路径
+            bgm_path: 背景音乐文件路径
+            output_path: 输出文件路径
+        """
+        try:
+            # 加载音频文件
+            podcast = AudioSegment.from_mp3(podcast_path)
+            bgm = AudioSegment.from_mp3(bgm_path)
+            
+            # 提取BGM前3秒
+            bgm_intro = bgm[:3000]  # pydub中的时间单位是毫秒
+            
+            # 准备BGM主体部分（3秒后的部分）
+            bgm_main = bgm[3000:]
+            
+            # 计算需要的BGM长度
+            podcast_length = len(podcast)
+            bgm_main_length = len(bgm_main)
+            
+            # 如果BGM较短，循环播放直到满足需要的长度
+            if bgm_main_length < podcast_length:
+                repeats = (podcast_length // bgm_main_length) + 1
+                bgm_main = bgm_main * repeats
+            
+            # 截取需要的BGM长度
+            bgm_main = bgm_main[:podcast_length]
+            
+            # 降低BGM音量到30%
+            bgm_main = bgm_main - 10.5  # -10.5dB ≈ 30% 音量
+            
+            # 对BGM主体的最后3秒进行淡出处理
+            fade_duration = 3000  # 3秒，单位毫秒
+            bgm_main = bgm_main.fade_out(duration=fade_duration)
+            
+            # 合成最终音频：BGM前奏（3秒） + （播客+低音量BGM叠加）
+            mixed = bgm_intro
+            mixed = mixed.append(podcast.overlay(bgm_main), crossfade=500)
+            
+            # 导出文件
+            mixed.export(output_path, format="mp3")
+            print(f"后期处理完成，文件已保存至: {output_path}")
+            return True
+            
+        except Exception as e:
+            print(f"音频后期处理失败: {str(e)}")
+            return False
     
     
     
@@ -70,4 +123,3 @@ class PodcastPipeline:
 if __name__ == "__main__":
     podcast = PodcastPipeline()
     podcast.pipeline("聊一聊躺平？")
-    
