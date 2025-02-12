@@ -122,7 +122,7 @@ class PodcastPipeline:
             bgm_main = bgm_main[:podcast_length]
             
             # 降低BGM音量到30%
-            bgm_main = bgm_main - 20  # -10.5dB ≈ 30% 音量
+            bgm_main = bgm_main - 25  # -10.5dB ≈ 30% 音量
             
             # 对BGM主体的最后3秒进行淡出处理
             fade_duration = 3000  # 3秒，单位毫秒

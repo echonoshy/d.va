@@ -32,10 +32,8 @@ def create_llm_podcast_tab():
                     info="选择用于生成内容的模型"
                 )
                 
-                bgm_input = gr.File(
-                    label="背景音乐",
-                    file_types=["audio"],
-                    info="可选：上传自定义背景音乐（MP3格式）"
+                bgm_input = gr.Audio(
+                    label="背景音乐(mp3)",
                 )
                 
                 generate_btn = gr.Button("生成播客", variant="primary")

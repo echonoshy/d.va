@@ -43,7 +43,7 @@ class SiliconFlowClient:
         model: str | None = None,
         stream: bool = False,
         max_tokens: int = 4096,
-        **kwargs: dict[str, Any]
+        **kwargs: dict[str, str]
     ) -> str:
         try:
             prompt_template = self.read_prompt_template(template_path)
