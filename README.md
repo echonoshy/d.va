@@ -9,6 +9,9 @@
 
 D.VA 是一个基于大模型优化的端到端多人TTS引擎，专注于播客节目创作。项目的目标是让AI辅助创作变得简单而有趣。
 
+https://github.com/user-attachments/assets/703eddfa-f641-4a23-b54f-c666a9263709
+
+
 
 ### 🎧 音频示例
 [ai_podcast.webm](https://github.com/user-attachments/assets/a64f099a-7455-4142-af2f-0b68cb7e0679)
