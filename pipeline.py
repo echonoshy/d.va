@@ -4,17 +4,33 @@ from pydub import AudioSegment
 from modules.llm_ssml_service.ssml_service import SiliconFlowClient
 
 
-
-
 class PodcastPipeline:
     
-    def __init__(self):
-        pass
+    def __init__(
+        self,
+        default_model: str = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+        default_bgm_path: str = "assets/bgm.mp3"
+    ):
+        self.default_model = default_model
+        self.default_bgm_path = default_bgm_path
     
-    def pipeline(self, topic):
-        self.generate_ssml(topic)
+    def pipeline(
+        self, 
+        topic: str,
+        model: str | None = None,
+        bgm_path: str | None = None
+    ):
+        """
+        运行完整的播客生成流程
+        
+        Args:
+            topic: 播客主题
+            model: 可选，LLM模型名称
+            bgm_path: 可选，背景音乐路径
+        """
+        self.generate_ssml(topic, model=model)
         self.generate_audio()
-        self.audio_postprocess()
+        self.audio_postprocess(bgm_path=bgm_path or self.default_bgm_path)
         
     def clean_ssml_content(self, content: str) -> str:
         if content.startswith("```xml"):
@@ -23,7 +39,7 @@ class PodcastPipeline:
             content = content.rsplit("```", 1)[0]
         return content.strip()
     
-    def generate_ssml(self, topic):
+    def generate_ssml(self, topic: str, model: str | None = None):
         client = SiliconFlowClient()
         template_path = "modules/llm_ssml_service/template.txt"
         
@@ -31,7 +47,8 @@ class PodcastPipeline:
             print(f"Start to generate ssml for this topic: {topic}")
             content = client.generate_response(
                 topic=topic,
-                template_path=template_path
+                template_path=template_path,
+                model=model or self.default_model
             )
             self.ssml_content = self.clean_ssml_content(content)
             print("Generate done.")
@@ -67,8 +84,7 @@ class PodcastPipeline:
             with open("output.mp3", "wb") as audio_file:
                 audio_file.write(response.content)
                 print("Audio saved to output.mp3")
-                
-                
+                                
                 
     def audio_postprocess(self, 
                          podcast_path: str = "output.mp3", 
@@ -129,5 +145,13 @@ class PodcastPipeline:
     
     
 if __name__ == "__main__":
+    # 使用默认参数
     podcast = PodcastPipeline()
     podcast.pipeline("聊一聊躺平？")
+    
+    # 或者指定参数
+    podcast.pipeline(
+        "聊一聊躺平？",
+        model="deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+        bgm_path="assets/custom_bgm.mp3"
+    )

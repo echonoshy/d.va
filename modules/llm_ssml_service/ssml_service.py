@@ -1,16 +1,14 @@
-from typing import Optional, Dict, Any
-from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
 class SiliconFlowClient:    
     def __init__(
         self, 
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
         base_url: str = 'https://api.siliconflow.cn/v1/',
-        # model: str = 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-        model: str = 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
-        timeout: float = 600.0
+        timeout: float = 600.0,
+        default_model: str = 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B'
     ):
         if api_key is None:
             load_dotenv()
@@ -20,7 +18,7 @@ class SiliconFlowClient:
         
         self.api_key = api_key
         self.base_url = base_url
-        self.model = model
+        self.default_model = default_model
         self.timeout = timeout
         
         self.client = OpenAI(
@@ -42,9 +40,10 @@ class SiliconFlowClient:
         self, 
         topic: str,
         template_path: str,
+        model: str | None = None,
         stream: bool = False,
         max_tokens: int = 4096,
-        **kwargs: Dict[str, Any]
+        **kwargs: dict[str, Any]
     ) -> str:
         try:
             prompt_template = self.read_prompt_template(template_path)
@@ -53,7 +52,7 @@ class SiliconFlowClient:
             messages = [{"role": "user", "content": prompt}]
             
             response = self.client.chat.completions.create(
-                model=self.model,
+                model=model or self.default_model,
                 messages=messages,
                 stream=stream,
                 max_tokens=max_tokens,
