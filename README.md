@@ -41,7 +41,6 @@ pip install -r requirements.txt
 在.env 文件中增加硅基流动deepseek api-key, 字段名为：SILICONFLOW_API_KEY
 
 ```bash
-python launch.py # 启动本地tts服务
 python webui.py  # 启动web界面
 ```
 
@@ -58,7 +57,7 @@ python webui.py  # 启动web界面
 4. 自动推送到小红书和播客
 
 ## 新特性TODO:
-1. 增加声音克隆功能
-2. 增加自定义音色
-3. 解决api访问较慢问题
-4. 增加其他场景功能（待定）
+[ ] 1. 增加声音克隆功能  
+[ ] 2. 增加自定义音色  
+[x] 3. 解决tts api访问较慢问题  
+[ ] 4. 增加其他场景功能（待定）  

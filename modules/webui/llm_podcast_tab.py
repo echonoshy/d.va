@@ -1,16 +1,20 @@
 import gradio as gr
 from pipeline import PodcastPipeline
+from modules.webui.webui_utils import synthesize_ssml
+
+# Initialize pipeline once
+podcast_pipeline = PodcastPipeline()
 
 def create_llm_podcast_tab():
     MODEL_OPTIONS = [
         "deepseek-ai/DeepSeek-R1",
-        "Pro/deepseek-ai/DeepSeek-R1",
         "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
         "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
         "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
         "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
         "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "Pro/deepseek-ai/DeepSeek-R1",
         "Pro/deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
         "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
@@ -54,29 +58,46 @@ def create_llm_podcast_tab():
         def generate_podcast(topic, model, bgm):
             if not topic:
                 return "请输入话题", None
-                
-            pipeline = PodcastPipeline()
-            
+
             try:
-                # 处理BGM路径
+                # Process BGM path
                 bgm_path = bgm.name if bgm else None
                 
-                # 运行pipeline
-                pipeline.pipeline(
-                    topic=topic,
-                    model=model,
-                    bgm_path=bgm_path
+                # Generate SSML content
+                ssml_content = podcast_pipeline.generate_ssml(topic, model=model)
+                if not ssml_content:
+                    return "SSML 生成失败，请重试", None
+
+                # Generate and process audio
+                audio_data = synthesize_ssml(
+                    ssml=ssml_content,
+                    batch_size=16,
+                    enable_enhance=True,
+                    enable_denoise=True,
+                    speed_rate=1.1
                 )
-                
-                return pipeline.ssml_content, "final_output.mp3"
-                
+                if not audio_data:
+                    return "音频生成失败，请重试", None
+
+                # Post-process audio with BGM
+                success = podcast_pipeline.audio_postprocess(
+                    audio_data,
+                    bgm_path=bgm_path or podcast_pipeline.default_bgm_path
+                )
+                if not success:
+                    return "音频后期处理失败，请重试", None
+
+                return ssml_content, "final_output.mp3"
+
             except Exception as e:
-                return f"生成失败: {str(e)}", None
-                
+                error_msg = f"生成过程发生错误: {str(e)}"
+                print(error_msg)
+                return error_msg, None
+
         generate_btn.click(
             fn=generate_podcast,
             inputs=[topic_input, model_select, bgm_input],
             outputs=[ssml_output, audio_output]
         )
-        
+
         return generate_btn
