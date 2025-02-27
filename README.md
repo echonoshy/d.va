@@ -1,63 +1,72 @@
-# d.va
+# 🎮 D.VA - AI Podcast Creation Engine
+
 > D.Va拥有一部强大的机甲，它具有两台全自动的近距离聚变机炮、可以使机甲飞跃敌人或障碍物的推进器、 还有可以抵御来自正面的远程攻击的防御矩阵
 
 —— From [OverWatch](http://ow.blizzard.cn/heroes/dva)
 
 <img src="https://zos.alipayobjects.com/rmsportal/psagSCVHOKQVqqNjjMdf.jpg" width="200" height="200" />
 
-## 项目简介
+## 🚀 项目简介
 
-D.VA 是一个基于大模型优化的端到端多人TTS引擎，专注于播客节目创作。项目的目标是让AI辅助创作变得简单而有趣。
-
+**D.VA** 是一个基于大模型优化的端到端多人TTS引擎，让AI播客创作变得简单又有趣！
 https://github.com/user-attachments/assets/703eddfa-f641-4a23-b54f-c666a9263709
 
-### 音频示例
-[ai_podcast.webm](https://github.com/user-attachments/assets/a64f099a-7455-4142-af2f-0b68cb7e0679)
-> 提示：如果无法在线播放，请[点击下载](assets/ai_podcast_v1.MP3)
 
+🎧 **音频示例：** 
+https://github.com/user-attachments/assets/a64f099a-7455-4142-af2f-0b68cb7e0679
+> 无法在线播放？[点击下载](assets/ai_podcast_v1.MP3)
 
-### 项目配置
+## 🛠️ 快速上手
 
-#### 1. 模型下载
-从Hugging Face下载预训练模型:
+### 1️⃣ 模型安装
 ```bash
 cd models/
 git lfs install
 git clone https://huggingface.co/echonoshy/d.va
 ```
 
-#### 2. 第三方库
+### 2️⃣ 依赖安装
 ```bash
+# 系统依赖
 apt install ffmpeg rubberband-cli
-```
 
-#### 3. pip库
-```bash
+# Python依赖
 pip install -r requirements.txt
 ```
 
-
-### 项目启动
-在.env 文件中增加硅基流动deepseek api-key, 字段名为：SILICONFLOW_API_KEY
-
-```bash
-python webui.py  # 启动web界面
+### 3️⃣ 配置与启动
+在项目根目录创建`.env`文件，并添加：
+```
+SILICONFLOW_API_KEY=your_api_key_here
 ```
 
+启动Web界面：
+```bash
+python webui.py
+```
 
-## 应用场景
+## 🎯 应用场景
 
-构建一个可以每日更新语音版新闻的助手，然后自动推送到播客和小红书涨粉。
+想象一下：每天自动更新的AI语音新闻，为您的播客频道和小红书账号源源不断地产出优质内容，轻松涨粉！
 
+### 🗺️ 实现路径
+1. 🗞️ 每日智能采集多领域专业新闻
+2. ✂️ 自动分解整理成高质量新闻稿
+3. 🎤 转化为精美语音内容（含片头片尾，时长控制在4分钟以内）
+4. 📱 一键推送至小红书和各大播客平台
 
-### 实现路径
-1. 每日获取不同领域的专业新闻
-2. 讲新闻分解成新闻稿
-3. 新闻稿变成语音稿件 （带片头片尾曲，时长不超过4分钟）
-4. 自动推送到小红书和播客
+## 🌟 即将到来的新特性
 
-## 新特性TODO:
-[ ] 1. 增加声音克隆功能  
-[ ] 2. 增加自定义音色  
-[x] 3. 解决tts api访问较慢问题  
-[ ] 4. 增加其他场景功能（待定）  
+- [ ] 🎭 声音克隆功能 - 用您喜欢的声音讲述故事
+- [ ] 🎨 自定义音色系统 - 打造专属于您的声音标识
+- [x] ⚡ 优化TTS API访问速度 - 让创作更加流畅
+- [ ] 🔮 更多场景支持 - 敬请期待...
+
+## 💖 致谢
+
+本项目借鉴了众多开源项目的思路和解决方案，在此感谢他们的贡献：
+
+- [ChatTTS](https://github.com/2noise/ChatTTS)
+- [Awesome-ChatTTS](https://github.com/panyanyany/Awesome-ChatTTS)
+- [ChatTTS-Forge](https://github.com/lenML/ChatTTS-Forge)
+- [ChatTTS_WebUI](https://github.com/craii/ChatTTS_WebUI)
