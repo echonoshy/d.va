@@ -4,7 +4,7 @@
 
 —— From [OverWatch](http://ow.blizzard.cn/heroes/dva)
 
-<img src="https://zos.alipayobjects.com/rmsportal/psagSCVHOKQVqqNjjMdf.jpg" width="200" height="200" />
+<img src="https://upload.wikimedia.org/wikipedia/zh/5/55/D.Va_Overwatch.png" width="200" height="200" />
 
 ## 🚀 项目简介
 
