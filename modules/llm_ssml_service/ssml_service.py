@@ -2,19 +2,21 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-class SiliconFlowClient:    
+
+class DeepSeekClient:    
     def __init__(
         self, 
         api_key: str | None = None,
-        base_url: str = 'https://api.siliconflow.cn/v1/',
+        base_url: str = 'https://api.deepseek.com/',
         timeout: float = 600.0,
-        default_model: str = 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B'
+        default_model: str = 'deepseek-chat'
     ):
         if api_key is None:
             load_dotenv()
-            api_key = os.getenv('SILICONFLOW_API_KEY')
+            # api_key = os.getenv('DEEPSEEK_API_KEY')
+            api_key = "sk-2feaf545da6f4a48a1a2a884c25e4d07"
             if not api_key:
-                raise ValueError("API key not found in environment variables")
+                raise ValueError("DeepSeek API key not found in environment variables")
         
         self.api_key = api_key
         self.base_url = base_url
@@ -42,14 +44,18 @@ class SiliconFlowClient:
         template_path: str,
         model: str | None = None,
         stream: bool = False,
-        max_tokens: int = 4096,
+        max_tokens: int = 8192,
+        system_message: str = "You are a helpful assistant.",
         **kwargs: dict[str, str]
     ) -> str:
         try:
             prompt_template = self.read_prompt_template(template_path)
             prompt = self.format_prompt(prompt_template, topic)
             
-            messages = [{"role": "user", "content": prompt}]
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": prompt}
+            ]
             
             response = self.client.chat.completions.create(
                 model=model or self.default_model,
@@ -63,4 +69,4 @@ class SiliconFlowClient:
             return response.choices[0].message.content
             
         except Exception as e:
-            raise Exception(f"Error generating response: {str(e)}")
+            raise Exception(f"Error generating response with DeepSeek API: {str(e)}")

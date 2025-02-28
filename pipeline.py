@@ -1,6 +1,6 @@
 import numpy as np
 from pydub import AudioSegment
-from modules.llm_ssml_service.ssml_service import SiliconFlowClient
+from modules.llm_ssml_service.ssml_service import DeepSeekClient
 from modules.webui.webui_utils import synthesize_ssml
 
 class PodcastPipeline:
@@ -53,7 +53,7 @@ class PodcastPipeline:
     
     def generate_ssml(self, topic: str, model: str | None = None) -> str | None:
         """Generate SSML content for the podcast"""
-        client = SiliconFlowClient()
+        client = DeepSeekClient()
         template_path = "modules/llm_ssml_service/template.txt"
         
         try:

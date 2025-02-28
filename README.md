@@ -37,7 +37,7 @@ pip install -r requirements.txt
 ### 3️⃣ 配置与启动
 在项目根目录创建`.env`文件，并添加：
 ```
-SILICONFLOW_API_KEY=your_api_key_here
+DEEPSEEK_API_KEY=your_api_key_here
 ```
 
 启动Web界面：
@@ -57,6 +57,7 @@ python webui.py
 
 ## 🌟 即将到来的新特性
 
+- [x] 🐳 满血版deepseek-r1接入，移除硅基流动api
 - [ ] 🎭 声音克隆功能 - 用您喜欢的声音讲述故事
 - [ ] 🎨 自定义音色系统 - 打造专属于您的声音标识
 - [x] ⚡ 优化TTS API访问速度 - 让创作更加流畅

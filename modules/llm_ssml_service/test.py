@@ -1,8 +1,8 @@
-from ssml_service import SiliconFlowClient
+from ssml_service import DeepSeekClient
 
 def main():
-    client = SiliconFlowClient()
-    template_path = "llm_ssml_service/template.txt"
+    client = DeepSeekClient()
+    template_path = "template.txt"
     topic = "程序员如何低成本创业？"
     
     try:

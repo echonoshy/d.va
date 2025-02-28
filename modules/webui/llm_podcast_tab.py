@@ -7,17 +7,8 @@ podcast_pipeline = PodcastPipeline()
 
 def create_llm_podcast_tab():
     MODEL_OPTIONS = [
-        "deepseek-ai/DeepSeek-R1",
-        "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
-        "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-        "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-        "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
-        "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-        "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
-        "Pro/deepseek-ai/DeepSeek-R1",
-        "Pro/deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
-        "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-        "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+        "deepseek-chat",
+        "deepseek-reasoner"
     ]
 
     with gr.Tab("LLM Podcast"):
