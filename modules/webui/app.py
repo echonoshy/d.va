@@ -5,10 +5,7 @@ import gradio as gr
 
 from modules import config
 from modules.webui import gradio_extensions, webui_config
-from modules.webui.asr_tab import create_asr_tab
-from modules.webui.audio_tools.tools_tab import create_tools_tab
 from modules.webui.changelog_tab import create_changelog_tab
-from modules.webui.finetune.ft_tab import create_ft_tabs
 from modules.webui.localization_runtime import ENLocalizationVars, ZHLocalizationVars
 from modules.webui.readme_tab import create_readme_tab
 from modules.webui.speaker_tab import create_speaker_panel
@@ -16,7 +13,6 @@ from modules.webui.ssml.podcast_tab import create_ssml_podcast_tab
 from modules.webui.ssml.script_tab import create_script_tab
 from modules.webui.ssml.spliter_tab import create_spliter_tab
 from modules.webui.ssml.ssml_tab import create_ssml_interface
-from modules.webui.ssml.subtitle_tab import create_subtitle_tab
 from modules.webui.system_tab import create_system_tab
 from modules.webui.tts_tab import create_tts_interface
 from modules.webui.llm_podcast_tab import create_llm_podcast_tab
@@ -125,25 +121,11 @@ def create_interface():
                             tabs2=ssml_tabs,
                             script_table_out=script_table,
                         )
-                    # with gr.TabItem("From subtitle"):
-                    #     create_subtitle_tab(
-                    #         ssml_input=ssml_input,
-                    #         tabs1=tabs,
-                    #         tabs2=ssml_tabs,
-                    #         script_table_out=script_table,
-                    #     )
 
             with gr.TabItem("Speaker"):
                 create_speaker_panel()
             with gr.TabItem("Inpainting", visible=webui_config.experimental):
                 gr.Markdown("🚧 Under construction")
-            # with gr.TabItem("ASR"):
-            #     create_asr_tab()
-            # with gr.TabItem("Finetune", visible=webui_config.experimental):
-            #     create_ft_tabs(demo)
-
-            # with gr.TabItem("Tools"):
-            #     create_tools_tab()
 
             with gr.TabItem("System"):
                 create_system_tab(demo)
