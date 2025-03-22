@@ -8,7 +8,7 @@ emojiswitch==0.0.3
 eng_to_ipa==0.0.2
 faster_whisper==1.1.1
 funasr==1.2.3
-gradio==4.44.0
+gradio>=5.12
 huggingface_hub==0.23.2
 HyperPyYAML==1.2.2
 inflect==7.5.0
