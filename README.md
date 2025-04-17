@@ -6,7 +6,7 @@
 >
 > —— From [OverWatch](http://ow.blizzard.cn/heroes/dva)
 
-<p align="center">
+<p align="left">
   <img src="https://upload.wikimedia.org/wikipedia/zh/5/55/D.Va_Overwatch.png" width="200" height="200" alt="D.Va Overwatch" />
 </p>
 
