@@ -42,7 +42,7 @@ def create_system_tab(demo: gr.Blocks):
                 status_box = gr.Markdown(value="")
 
                 # 每秒更新一次状态
-                demo.load(fn=get_system_status, inputs=[], outputs=status_box, every=5)
+                demo.load(fn=get_system_status, inputs=[], outputs=status_box)
 
         with gr.Column(scale=5):
             with gr.Group():

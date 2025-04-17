@@ -8,7 +8,7 @@ class PodcastPipeline:
     
     def __init__(
         self,
-        default_model: str = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+        default_model: str = "deepseek-chat",
         default_bgm_path: str = "assets/bgm.mp3"
     ):
         self.default_model = default_model

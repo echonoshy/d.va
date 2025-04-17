@@ -7,13 +7,13 @@ from fastapi import FastAPI
 from modules import config
 from modules.api.Api import APIManager
 from modules.api.impl import (
-    google_api,
+    # google_api,
     models_api,
-    openai_api,
+    # openai_api,
     refiner_api,
     speaker_api,
     ssml_api,
-    stt_api,
+    # stt_api,
     style_api,
     sys_api,
     tts_api,
@@ -38,11 +38,11 @@ def create_api(app: FastAPI, exclude=[]):
     speaker_api.setup(app_mgr)
     tts_api.setup(app_mgr)
     ssml_api.setup(app_mgr)
-    google_api.setup(app_mgr)
-    openai_api.setup(app_mgr)
+    # google_api.setup(app_mgr)
+    # openai_api.setup(app_mgr)
     refiner_api.setup(app_mgr)
     xtts_v2_api.setup(app_mgr)
-    stt_api.setup(app_mgr)
+    # stt_api.setup(app_mgr)
     vc_api.setup(app_mgr)
 
     # v2 apis

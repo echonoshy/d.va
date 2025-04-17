@@ -22,7 +22,7 @@ def create_llm_podcast_tab():
                 
                 model_select = gr.Dropdown(
                     choices=MODEL_OPTIONS,
-                    value=MODEL_OPTIONS[2],  # 默认选择70B模型
+                    value=MODEL_OPTIONS[0],  # 默认选择70B模型
                     label="选择模型",
                     info="选择用于生成内容的模型"
                 )

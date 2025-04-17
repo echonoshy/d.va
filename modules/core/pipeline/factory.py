@@ -19,8 +19,8 @@ from modules.core.pipeline.processors.VoiceClone import VoiceCloneProcessor
 from modules.core.spk.SpkMgr import spk_mgr
 from modules.core.spk.TTSSpeaker import TTSSpeaker
 from modules.core.tn.ChatTtsTN import ChatTtsTN
-from modules.core.tn.CosyVoiceTN import CosyVoiceTN
-from modules.core.tn.FireRedTtsTN import FireRedTtsTN
+# from modules.core.tn.CosyVoiceTN import CosyVoiceTN
+# from modules.core.tn.FireRedTtsTN import FireRedTtsTN
 from modules.core.tn.FishSpeechTN import FishSpeechTN
 from modules.core.tn.F5TtsTN import F5TtsTN
 from modules.core.tn.TNPipeline import TNPipeline

@@ -10,14 +10,14 @@ from typing import Dict, Union
 from modules.core.models.BaseZooModel import BaseZooModel
 from modules.core.models.TTSModel import TTSModel
 from modules.core.models.enhancer.ResembleEnhanceModel import ResembleEnhanceModel
-from modules.core.models.stt.Whisper import WhisperModel
+# from modules.core.models.stt.Whisper import WhisperModel
 from modules.core.models.tts.ChatTtsModel import ChatTTSModel
-from modules.core.models.tts.CosyVoiceModel import CosyVoiceTTSModel
-from modules.core.models.tts.F5TtsModel import F5TtsModel
-from modules.core.models.tts.FireRed.FireRedTTSModel import FireRedTTSModel
-from modules.core.models.tts.FishSpeechModel import FishSpeechModel
+# from modules.core.models.tts.CosyVoiceModel import CosyVoiceTTSModel
+# from modules.core.models.tts.F5TtsModel import F5TtsModel
+# from modules.core.models.tts.FireRed.FireRedTTSModel import FireRedTTSModel
+# from modules.core.models.tts.FishSpeechModel import FishSpeechModel
 from modules.core.models.tts.fishspeech.FishSpeech14Model import FishSpeech14Model
-from modules.core.models.vc.OpenVoice import OpenVoiceModel
+# from modules.core.models.vc.OpenVoice import OpenVoiceModel
 from modules.devices import devices
 
 
@@ -30,19 +30,19 @@ class ModelZoo:
         # === tts ===
         "chat-tts": ChatTTSModel(),
         "fish-speech": FishSpeech14Model(),
-        "cosy-voice": CosyVoiceTTSModel(),
-        "fire-red-tts": FireRedTTSModel(),
-        "f5-tts": F5TtsModel(),
+        # "cosy-voice": CosyVoiceTTSModel(),
+        # "fire-red-tts": FireRedTTSModel(),
+        # "f5-tts": F5TtsModel(),
         # === enhancer ===
         "resemble-enhance": ResembleEnhanceModel(),
         # === whisper ===
-        "whisper": WhisperModel("whisper.large"),
+        # "whisper": WhisperModel("whisper.large"),
         # "whisper.large": WhisperModel("whisper.large"),
         # "whisper.medium": WhisperModel("whisper.medium"),
         # "whisper.small": WhisperModel("whisper.small"),
         # "whisper.tiny": WhisperModel("whisper.tiny"),
         # === voice clone ===
-        "open-voice": OpenVoiceModel(),
+        # "open-voice": OpenVoiceModel(),
     }
 
     # 当mem不足时，是否自动卸载其他模型
@@ -119,8 +119,8 @@ class ModelZoo:
     def get_chat_tts(self) -> ChatTTSModel:
         return self.get_model("chat-tts")
 
-    def get_cosy_voice(self) -> CosyVoiceTTSModel:
-        return self.get_model("cosy-voice")
+    # def get_cosy_voice(self) -> CosyVoiceTTSModel:
+    #     return self.get_model("cosy-voice")
 
     def get_fish_speech(self) -> FishSpeech14Model:
         return self.get_model("fish-speech")
@@ -128,17 +128,17 @@ class ModelZoo:
     def get_resemble_enhance(self) -> ResembleEnhanceModel:
         return self.get_model("resemble-enhance")
 
-    def get_whisper(self) -> WhisperModel:
-        return self.get_model("whisper")
+    # def get_whisper(self) -> WhisperModel:
+    #     return self.get_model("whisper")
 
-    def get_open_voice(self) -> OpenVoiceModel:
-        return self.get_model("open-voice")
+    # def get_open_voice(self) -> OpenVoiceModel:
+    #     return self.get_model("open-voice")
 
-    def get_fire_red_tts(self) -> FireRedTTSModel:
-        return self.get_model("fire-red-tts")
+    # def get_fire_red_tts(self) -> FireRedTTSModel:
+    #     return self.get_model("fire-red-tts")
 
-    def get_f5_tts(self) -> F5TtsModel:
-        return self.get_model("f5-tts")
+    # def get_f5_tts(self) -> F5TtsModel:
+    #     return self.get_model("f5-tts")
 
 
 model_zoo = ModelZoo()

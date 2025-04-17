@@ -13,8 +13,7 @@ class DeepSeekClient:
     ):
         if api_key is None:
             load_dotenv()
-            # api_key = os.getenv('DEEPSEEK_API_KEY')
-            api_key = "sk-2feaf545da6f4a48a1a2a884c25e4d07"
+            api_key = os.getenv('DEEPSEEK_API_KEY')
             if not api_key:
                 raise ValueError("DeepSeek API key not found in environment variables")
         
