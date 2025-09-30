@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Annotated, Literal, Optional
 
 import torch
-from pydantic import AfterValidator, BaseModel, Field, confloat, conint, conlist
+from pydantic import BaseModel, Field, conint, conlist
 from pydantic.functional_validators import SkipValidation
 
 from fish_speech.conversation import Message, TextPart, VQPart

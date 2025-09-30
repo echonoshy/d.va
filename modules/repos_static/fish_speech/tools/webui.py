@@ -9,12 +9,10 @@ from functools import partial
 from pathlib import Path
 
 import gradio as gr
-import librosa
 import numpy as np
 import pyrootutils
 import torch
 from loguru import logger
-from transformers import AutoTokenizer
 
 pyrootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 

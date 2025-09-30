@@ -1,9 +1,8 @@
-import io
 import logging
-from typing import Literal, Optional, Union
+from typing import Literal, Union
 
 from fastapi import Depends, HTTPException, Query, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from modules.api import utils as api_utils
@@ -18,7 +17,6 @@ from modules.core.handler.datacls.tts_model import InferConfig, TTSConfig
 from modules.core.handler.datacls.vc_model import VCConfig
 from modules.core.handler.TTSHandler import TTSHandler
 from modules.core.models.zoo.ModelZoo import model_zoo
-from modules.core.spk.SpkMgr import spk_mgr
 from modules.core.spk.TTSSpeaker import TTSSpeaker
 
 from modules.api.constants import support_bitrates

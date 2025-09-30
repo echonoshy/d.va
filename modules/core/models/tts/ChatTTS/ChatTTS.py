@@ -1,4 +1,3 @@
-import gc
 import logging
 import threading
 

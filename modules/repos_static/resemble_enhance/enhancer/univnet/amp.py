@@ -4,7 +4,6 @@ import math
 
 import torch
 import torch.nn as nn
-from torch import nn
 from torch.nn.utils.parametrizations import weight_norm
 
 from .alias_free_torch import DownSample1d, UpSample1d

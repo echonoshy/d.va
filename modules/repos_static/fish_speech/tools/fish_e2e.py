@@ -1,12 +1,10 @@
-import base64
 import ctypes
 import io
-import json
 import os
 import struct
 from dataclasses import dataclass
 from enum import Enum
-from typing import AsyncGenerator, Union
+from typing import AsyncGenerator
 
 import httpx
 import numpy as np

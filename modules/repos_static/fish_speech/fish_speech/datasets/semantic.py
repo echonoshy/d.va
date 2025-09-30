@@ -1,16 +1,12 @@
 import random
 from dataclasses import dataclass
-from itertools import chain
 from pathlib import Path
 from random import Random
 from typing import Optional, Union
 
 import numpy as np
-import pyarrow.parquet as pq
 import torch
 import torch.nn.functional as F
-from datasets.download.streaming_download_manager import xopen
-from huggingface_hub import HfApi
 from lightning import LightningDataModule
 from torch.distributed import get_rank, get_world_size, is_initialized
 from torch.utils.data import DataLoader, IterableDataset, get_worker_info
@@ -479,7 +475,6 @@ class SemanticDataModule(LightningDataModule):
 
 
 if __name__ == "__main__":
-    from tqdm import tqdm
 
     ds = AutoTextSemanticInstructionDataset(
         ["data/protos"],

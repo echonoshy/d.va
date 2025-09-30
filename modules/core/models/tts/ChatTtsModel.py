@@ -4,7 +4,6 @@ from typing import Any, Generator, Union
 
 import numpy as np
 
-from modules.core.models.AudioReshaper import AudioReshaper
 from modules.core.models.TTSModel import TTSModel
 from modules.core.models.tts.ChatTTS.ChatTTS import (
     ChatTTS,
@@ -17,7 +16,6 @@ from modules.core.pipeline.pipeline import TTSSegment
 from modules.core.pipeline.processor import NP_AUDIO
 from modules.core.spk.TTSSpeaker import TTSSpeaker
 from modules.devices import devices
-from modules.utils import audio_utils
 from modules.utils.SeedContext import SeedContext
 
 logger = logging.getLogger(__name__)
@@ -223,4 +221,4 @@ if __name__ == "__main__":
         context=TTSPipelineContext(),
     )
 
-    sf.write(f"test_chat_tts.wav", audio_data, sr)
+    sf.write("test_chat_tts.wav", audio_data, sr)

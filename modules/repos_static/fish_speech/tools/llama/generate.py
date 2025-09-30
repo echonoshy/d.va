@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Literal, Optional, Tuple, Union
 
 import click
-import hydra
 import numpy as np
 import torch
 import torch._dynamo.config
@@ -626,7 +625,7 @@ def encode_tokens(
     if prompt_tokens.ndim == 3:
         assert (
             prompt_tokens.shape[0] == 1
-        ), f"3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
+        ), "3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
         prompt_tokens = prompt_tokens[0]
 
     assert prompt_tokens.ndim == 2
@@ -664,7 +663,7 @@ def load_model(checkpoint_path, device, precision, compile=False, is_agent=False
     )
 
     model = model.to(device=device, dtype=precision)
-    logger.info(f"Restored model from checkpoint")
+    logger.info("Restored model from checkpoint")
 
     if isinstance(model, DualARTransformer):
         decode_one_token = (
@@ -845,7 +844,7 @@ def generate_long(
             # since there is <im_end> and <eos> tokens, we remove last 2 tokens
             codes = y[1:, prompt_length:-1].clone()
             codes = codes - 1
-            assert (codes >= 0).all(), f"Negative code found"
+            assert (codes >= 0).all(), "Negative code found"
 
             decoded = y[:, prompt_length:-1].clone()
             # But for global encoding, we should keep the <im_end> token
@@ -958,7 +957,7 @@ def launch_thread_safe_queue_agent(
                     response_queue.put(token)
 
                 response_queue.put("stop")
-            except Exception as e:
+            except Exception:
                 import traceback
 
                 logger.exception(f"Error in worker: {traceback.format_exc()}")
@@ -1076,7 +1075,7 @@ def main(
             if codes:
                 np.save(f"codes_{idx}.npy", torch.cat(codes, dim=1).cpu().numpy())
                 logger.info(f"Saved codes to codes_{idx}.npy")
-            logger.info(f"Next sample")
+            logger.info("Next sample")
             codes = []
             idx += 1
         else:

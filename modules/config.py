@@ -2,7 +2,7 @@ import sys
 
 import torch
 
-from modules.utils import ffmpeg, git
+from modules.utils import ffmpeg
 from modules.utils.JsonObject import JsonObject
 
 # TODO impl RuntimeEnvVars() class

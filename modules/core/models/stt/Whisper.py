@@ -199,7 +199,6 @@ if __name__ == "__main__":
     import json
 
     from pydub import AudioSegment
-    from scipy.io import wavfile
 
     from modules.core.handler.datacls.stt_model import STTOutputFormat
 

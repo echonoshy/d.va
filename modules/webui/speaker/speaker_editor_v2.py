@@ -1,12 +1,8 @@
-import io
-import json
 import tempfile
 
 import gradio as gr
 import numpy as np
 import torch
-import torchaudio
-from scipy.io import wavfile
 
 from modules.core.models.tts.ChatTtsModel import ChatTTSModel
 from modules.core.spk.dcls import DcSpkInferConfig, DcSpkReference, DcSpkSample
@@ -14,7 +10,7 @@ from modules.core.spk.TTSSpeaker import TTSSpeaker
 from modules.utils.hf import spaces
 from modules.webui import webui_config
 from modules.webui.speaker.wav_misc import encode_to_wav
-from modules.webui.webui_utils import SPK_FILE_EXTS, tts_generate
+from modules.webui.webui_utils import tts_generate
 
 # TODO: 增加 png 编辑
 

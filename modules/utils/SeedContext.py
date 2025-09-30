@@ -45,7 +45,7 @@ class SeedContext:
 
         try:
             self.seed = int(np.clip(int(seed), -1, 2**32 - 1, out=None, dtype=np.int64))
-        except Exception as e:
+        except Exception:
             raise ValueError(f"Seed must be an integer, but: {type(seed)}")
 
         self.seed = seed
@@ -72,7 +72,7 @@ class SeedContext:
 
         try:
             deterministic(self.seed, cudnn_deterministic=self.cudnn_deterministic)
-        except Exception as e:
+        except Exception:
             # raise ValueError(
             #     f"Seed must be an integer, but: <{type(self.seed)}> {self.seed}"
             # )

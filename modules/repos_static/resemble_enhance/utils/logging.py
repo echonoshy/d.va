@@ -14,7 +14,7 @@ def setup_logging(run_dir):
     handlers.append(stdout_handler)
 
     if run_dir is not None:
-        filename = Path(run_dir) / f"log.txt"
+        filename = Path(run_dir) / "log.txt"
         filename.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(filename, mode="a")
         file_handler.setLevel(logging.DEBUG)

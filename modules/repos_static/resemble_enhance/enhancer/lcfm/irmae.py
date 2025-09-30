@@ -4,7 +4,7 @@ from typing import Union
 
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor, nn
+from torch import Tensor
 from torch.nn.utils.parametrizations import weight_norm
 
 from ...common import Normalizer

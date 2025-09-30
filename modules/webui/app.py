@@ -5,7 +5,6 @@ import gradio as gr
 
 from modules import config
 from modules.webui import gradio_extensions, webui_config
-from modules.webui.changelog_tab import create_changelog_tab
 from modules.webui.localization_runtime import ENLocalizationVars, ZHLocalizationVars
 from modules.webui.readme_tab import create_readme_tab
 from modules.webui.speaker_tab import create_speaker_panel
@@ -50,7 +49,7 @@ def create_app_footer():
     footer_items.append(f"ffmpeg: `{ffmpeg_version}`")
 
     if config.runtime_env_vars.api and not config.runtime_env_vars.no_docs:
-        footer_items.append(f"[api](/docs)")
+        footer_items.append("[api](/docs)")
 
     gr.Markdown(
         " | ".join(footer_items),

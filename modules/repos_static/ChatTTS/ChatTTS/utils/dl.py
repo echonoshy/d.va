@@ -86,7 +86,7 @@ def download_and_extract_tar_gz(url: str, folder: str):
     with BytesIO() as out_file:
         out_file.write(response.content)
         out_file.seek(0)
-        logger.get_logger().info(f"downloaded.")
+        logger.get_logger().info("downloaded.")
         with tarfile.open(fileobj=out_file, mode="r:gz") as tar:
             tar.extractall(folder)
         logger.get_logger().info(f"extracted into {folder}")
@@ -100,7 +100,7 @@ def download_and_extract_zip(url: str, folder: str):
     with BytesIO() as out_file:
         out_file.write(response.content)
         out_file.seek(0)
-        logger.get_logger().info(f"downloaded.")
+        logger.get_logger().info("downloaded.")
         with zipfile.ZipFile(out_file) as zip_ref:
             zip_ref.extractall(folder)
         logger.get_logger().info(f"extracted into {folder}")

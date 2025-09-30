@@ -2,11 +2,11 @@ import math
 
 import torch
 from openvoice import attentions, commons, modules
-from openvoice.commons import get_padding, init_weights
+from openvoice.commons import init_weights
 from torch import nn
-from torch.nn import Conv1d, Conv2d, ConvTranspose1d
+from torch.nn import Conv1d, ConvTranspose1d
 from torch.nn import functional as F
-from torch.nn.utils import remove_weight_norm, spectral_norm, weight_norm
+from torch.nn.utils import remove_weight_norm, weight_norm
 
 
 class TextEncoder(nn.Module):

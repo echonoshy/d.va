@@ -5,7 +5,6 @@ import time
 from datetime import timedelta
 from functools import lru_cache
 from pathlib import Path
-from random import Random
 
 import click
 import numpy as np
@@ -13,7 +12,6 @@ import torch
 import torchaudio
 from hydra import compose, initialize
 from hydra.utils import instantiate
-from lightning import LightningModule
 from loguru import logger
 from omegaconf import OmegaConf
 
@@ -73,7 +71,7 @@ def get_model(
     model.eval()
     model.to(device)
 
-    logger.info(f"Loaded model")
+    logger.info("Loaded model")
     return model
 
 
@@ -183,11 +181,11 @@ def main(
         for p in processes:
             p.wait()
 
-        logger.info(f"All workers finished")
+        logger.info("All workers finished")
         return
 
     # This is a worker
-    logger.info(f"Starting worker")
+    logger.info("Starting worker")
     if filelist:
         files = [i[0] for i in load_filelist(filelist)]
     else:

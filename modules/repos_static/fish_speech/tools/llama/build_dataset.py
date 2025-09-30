@@ -2,7 +2,6 @@ import itertools
 import os
 import re
 from collections import defaultdict
-from functools import partial
 from multiprocessing import Pool
 from pathlib import Path
 

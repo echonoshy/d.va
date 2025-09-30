@@ -3,31 +3,21 @@ import re
 import threading
 from typing import Generator, Optional
 import torch
-import torchaudio
 import numpy as np
-import tempfile
 from einops import rearrange
 from vocos import Vocos
-from pydub import AudioSegment, silence
 from modules.core.models.tts.F5.F5Annotation import F5Annotation
 from modules.core.pipeline.dcls import TTSPipelineContext, TTSSegment
 from modules.core.pipeline.processor import NP_AUDIO
 from modules.devices import devices
-from modules.repos_static.F5TTS.f5_tts.model import CFM, UNetT, DiT, MMDiT
+from modules.repos_static.F5TTS.f5_tts.model import CFM, DiT
 from modules.repos_static.F5TTS.f5_tts.model.utils import (
     load_checkpoint,
     get_tokenizer,
-    convert_char_to_pinyin,
-    save_spectrogram,
 )
-from transformers import pipeline
-import soundfile as sf
-import tomli
-import argparse
 import tqdm
 from pathlib import Path
-import codecs
-from vocos.feature_extractors import FeatureExtractor, EncodecFeatures
+from vocos.feature_extractors import EncodecFeatures
 
 from modules.core.models.TTSModel import TTSModel
 from modules.utils.SeedContext import SeedContext

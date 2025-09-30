@@ -2,9 +2,8 @@ import gradio as gr
 import pandas as pd
 import torch
 
-from modules.utils.hf import spaces
 from modules.webui import webui_utils
-from modules.webui.webui_utils import get_styles, split_long_text, text_normalize
+from modules.webui.webui_utils import get_styles, split_long_text
 
 
 def merge_dataframe_to_ssml(dataframe, spk, style):

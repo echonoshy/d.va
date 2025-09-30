@@ -1,5 +1,4 @@
 import abc
-import functools
 import io
 import json
 import logging
@@ -10,7 +9,6 @@ import typing
 import torch.utils.data
 import torchaudio
 import transformers
-import vocos
 from tqdm import tqdm
 
 from modules.repos_static.ChatTTS.ChatTTS.norm import Normalizer

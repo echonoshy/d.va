@@ -6,7 +6,6 @@ from modules.core.models.tts.fishspeech.FF14_llama import FF14_llama
 from modules.core.models.tts.fishspeech.FF14_vqgan import FF14_vqgan
 import torch
 
-from modules.devices import devices
 
 
 logger = logging.getLogger(__name__)

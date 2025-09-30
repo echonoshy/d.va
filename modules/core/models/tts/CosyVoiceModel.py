@@ -336,7 +336,6 @@ class CosyVoiceTTSModel(TTSModel):
 if __name__ == "__main__":
     import soundfile as sf
     import tqdm
-    from whisper.tokenizer import Tokenizer
 
     from modules.core.pipeline.dcls import TTSSegment
     from modules.core.spk import spk_mgr

@@ -1,6 +1,5 @@
 import gradio as gr
 
-from modules import config
 from modules.webui.speaker.speaker_creator import speaker_creator_ui
 from modules.webui.speaker.speaker_editor import speaker_editor_ui
 from modules.webui.speaker.speaker_editor_v2 import speaker_editor_ui_v2

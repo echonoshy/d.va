@@ -6,7 +6,6 @@ from glob import glob
 
 import librosa
 import numpy as np
-import torch
 from faster_whisper import WhisperModel
 from pydub import AudioSegment
 from whisper_timestamped.transcribe import get_audio_tensor, get_vad_segments

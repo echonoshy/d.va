@@ -4,7 +4,7 @@ import os
 import gradio as gr
 import requests
 
-from modules.core.spk import TTSSpeaker, spk_mgr
+from modules.core.spk import spk_mgr
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def github_fallback_download(url: str):
             mirror_url = f"https://ghp.ci/{url}"
             logger.error(f"Error fetching data: {e}, try mirror url: {mirror_url}")
             logger.warning(
-                f"Warning: Using mirror site can be slow. Consider setting up a proxy (set HTTPS_PROXY env) for GitHub requests."
+                "Warning: Using mirror site can be slow. Consider setting up a proxy (set HTTPS_PROXY env) for GitHub requests."
             )
             response = requests.get(mirror_url)
             response.raise_for_status()
@@ -63,7 +63,7 @@ def filter_speakers(files: list[dict], hide_tags=None, search_query=""):
             if not any(tag in file.get("tags", []) for tag in hide_tags)
         ]
         # 过滤 gender
-        files = [file for file in files if not file.get("gender") in hide_tags]
+        files = [file for file in files if file.get("gender") not in hide_tags]
 
     if search_query:
         files = [
@@ -142,7 +142,7 @@ def render_speakers_html(files: list[dict]):
         avatar = file.get("avatar", "")
         url = file.get("url", "")
 
-        html_content += f"<tr>"
+        html_content += "<tr>"
         datas = [
             id[0:5],
             name,
@@ -169,7 +169,7 @@ def render_speakers_html(files: list[dict]):
                 html_content += dl_btn_html("🔁ReDownload")
         else:
             html_content += f"<td><button onclick='download_speaker(this, \"{html.escape(url)}\")'>🟡Download it</button></td>"
-        html_content += f"</tr>"
+        html_content += "</tr>"
     html_content += "</table>"
 
     return html_content

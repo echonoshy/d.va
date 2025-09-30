@@ -99,7 +99,7 @@ class FishSpeechInfer:
         # since there is <im_end> and <eos> tokens, we remove last 2 tokens
         codes = y[1:, prompt_length:-1].clone()
         codes = codes - 1
-        assert (codes >= 0).all(), f"Negative code found"
+        assert (codes >= 0).all(), "Negative code found"
 
         decoded = y[:, prompt_length:-1].clone()
 
@@ -257,7 +257,7 @@ class FishSpeechInfer:
         if prompt_tokens.ndim == 3:
             assert (
                 prompt_tokens.shape[0] == 1
-            ), f"3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
+            ), "3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
             prompt_tokens = prompt_tokens[0]
 
         assert prompt_tokens.ndim == 2

@@ -184,7 +184,7 @@ class Discriminator(nn.Module):
             length_difference = (fake.shape[-1] - real.shape[-1]) / real.shape[-1]
             assert (
                 length_difference < 0.05
-            ), f"length_difference should be smaller than 5%"
+            ), "length_difference should be smaller than 5%"
 
             self.loss_type_("hinge")
             real = real.to(self.dummy_float)

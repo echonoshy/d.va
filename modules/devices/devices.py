@@ -119,8 +119,8 @@ def torch_gc():
 
         if has_mps():
             mac_devices.torch_mps_gc()
-    except Exception as e:
-        logger.error(f"Error in torch_gc", exc_info=True)
+    except Exception:
+        logger.error("Error in torch_gc", exc_info=True)
 
 
 cpu: torch.device = torch.device("cpu")

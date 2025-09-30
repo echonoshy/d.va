@@ -5,13 +5,11 @@ tts post api
 """
 
 import base64
-import io
 import logging
 from typing import Optional
 
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
-import numpy as np
 from pydantic import BaseModel, Field
 
 from modules.api.Api import APIManager
@@ -26,7 +24,6 @@ from modules.core.handler.datacls.vc_model import VCConfig
 from modules.core.handler.TTSHandler import TTSHandler
 from modules.core.spk.SpkMgr import spk_mgr
 from modules.core.spk.TTSSpeaker import TTSSpeaker
-from pydub import AudioSegment
 
 
 logger = logging.getLogger(__name__)

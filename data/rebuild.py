@@ -9,11 +9,8 @@
 """
 
 import os
-import sys
-import json
-import argparse
 
-from modules.core.spk import TTSSpeaker, spk_mgr
+from modules.core.spk import spk_mgr
 
 
 for spk in spk_mgr.list_speakers():

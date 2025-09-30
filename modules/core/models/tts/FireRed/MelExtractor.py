@@ -1,6 +1,5 @@
 from functools import partial
 
-import librosa
 import numpy as np
 import torch
 from librosa.filters import mel as librosa_mel_fn

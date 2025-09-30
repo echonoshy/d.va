@@ -1,7 +1,6 @@
 import os
 
 os.environ["USE_LIBUV"] = "0"
-import sys
 from typing import Optional
 
 import hydra
@@ -10,7 +9,6 @@ import pyrootutils
 import torch
 from lightning import Callback, LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
-from lightning.pytorch.strategies import DDPStrategy
 from omegaconf import DictConfig, OmegaConf
 
 os.environ.pop("SLURM_NTASKS", None)

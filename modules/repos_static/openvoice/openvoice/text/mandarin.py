@@ -1,7 +1,4 @@
-import logging
-import os
 import re
-import sys
 
 import cn2an
 import jieba

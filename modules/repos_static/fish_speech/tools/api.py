@@ -41,7 +41,7 @@ from threading import Lock
 import httpx
 from cachetools import LRUCache, cached
 from funasr import AutoModel
-from silero_vad import get_speech_timestamps, load_silero_vad
+from silero_vad import load_silero_vad
 
 from fish_speech.conversation import IM_END_TOKEN, SEMANTIC_TOKEN
 from fish_speech.models.text2semantic.llama import BaseModelArgs
@@ -60,19 +60,14 @@ from tools.llama.generate import (
 )
 from tools.schema import (
     GLOBAL_NUM_SAMPLES,
-    ASRPackRequest,
     ServeASRRequest,
     ServeASRResponse,
-    ServeASRSegment,
-    ServeAudioPart,
-    ServeForwardMessage,
     ServeMessage,
     ServeRequest,
     ServeResponse,
     ServeStreamDelta,
     ServeStreamResponse,
     ServeTextPart,
-    ServeTimedASRResponse,
     ServeTTSRequest,
     ServeVQGANDecodeRequest,
     ServeVQGANDecodeResponse,
@@ -872,7 +867,7 @@ def initialize_app(app: Kui):
     args.precision = torch.half if args.half else torch.bfloat16
 
     if args.load_asr_model:
-        logger.info(f"Loading ASR model...")
+        logger.info("Loading ASR model...")
         asr_model = load_asr_model(device=args.device)
 
     logger.info("Loading Llama model...")

@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 import gc
 from tqdm import tqdm
-import wandb
 
 import torch
 from torch.optim import AdamW

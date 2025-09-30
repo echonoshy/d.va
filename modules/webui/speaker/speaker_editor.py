@@ -1,5 +1,3 @@
-import json
-import tempfile
 
 import gradio as gr
 import torch
@@ -86,7 +84,7 @@ def speaker_editor_ui():
         author = spk.author
 
         rows = [
-            f"💌 Speaker info",
+            "💌 Speaker info",
             f"- Name: {name}",
             f"- Gender: {gender}",
             f"- Author: {author}",

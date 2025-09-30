@@ -1,16 +1,13 @@
-import shutil
 from copy import deepcopy
 from pathlib import Path
 
 import click
-import hydra
 import torch
 from hydra import compose, initialize
 from hydra.utils import instantiate
 from loguru import logger
 
 from fish_speech.models.text2semantic.llama import BaseTransformer
-from fish_speech.models.text2semantic.lora import get_merged_state_dict
 
 
 @click.command()
@@ -35,7 +32,7 @@ def merge(lora_config, base_weight, lora_weight, output):
         load_weights=True,
         lora_config=lora_config,
     )
-    logger.info(f"Loaded llama model")
+    logger.info("Loaded llama model")
 
     llama_state_dict = llama_model.state_dict()
     llama_state_dict = {k: v for k, v in llama_state_dict.items() if "lora" not in k}
@@ -67,7 +64,7 @@ def merge(lora_config, base_weight, lora_weight, output):
 
     merged_state_dict = llama_state_dict | lora_state_dict
     llama_model.load_state_dict(merged_state_dict, strict=True)
-    logger.info(f"Merged model loaded")
+    logger.info("Merged model loaded")
 
     # Trigger eval mode to merge lora
     llama_model.eval()

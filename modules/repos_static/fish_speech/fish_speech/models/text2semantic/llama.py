@@ -411,7 +411,7 @@ class BaseTransformer(nn.Module):
 
             if next(iter(weights.keys())).startswith("model."):
                 logger.info(
-                    f"Remove prefix 'model.' created by TextToSemantic LightningModule from keys"
+                    "Remove prefix 'model.' created by TextToSemantic LightningModule from keys"
                 )
                 new_weights = OrderedDict()
                 for k, v in weights.items():

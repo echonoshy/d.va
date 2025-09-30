@@ -4,12 +4,11 @@ import time
 from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Union
 
-import numpy as np
 from vllm.config import CacheConfig, ModelConfig, ParallelConfig, SchedulerConfig
 from vllm.engine.metrics import record_metrics
 from vllm.engine.ray_utils import RayWorkerVllm, initialize_cluster, ray
 from vllm.logger import init_logger
-from vllm.transformers_utils.tokenizer import detokenize_incrementally, get_tokenizer
+from vllm.transformers_utils.tokenizer import detokenize_incrementally
 from vllm.utils import Counter, get_ip, get_open_port, set_cuda_visible_devices
 
 from .configs import EngineArgs

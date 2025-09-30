@@ -3,7 +3,6 @@
 # Copyright FunASR (https://github.com/alibaba-damo-academy/FunASR). All Rights Reserved.
 #  MIT License  (https://opensource.org/licenses/MIT)
 
-import copy
 import json
 import logging
 import os.path
@@ -22,14 +21,13 @@ from funasr.train_utils.set_all_random_seed import set_all_random_seed
 from funasr.utils import export_utils, misc
 from funasr.utils.load_utils import load_audio_text_image_video, load_bytes
 from funasr.utils.misc import deep_update
-from funasr.utils.timestamp_tools import timestamp_sentence, timestamp_sentence_en
 from tqdm import tqdm
 
 from .vad_utils import merge_vad, slice_padding_audio_samples
 
 try:
     from funasr.models.campplus.cluster_backend import ClusterBackend
-    from funasr.models.campplus.utils import distribute_spk, postprocess, sv_chunk
+    from funasr.models.campplus.utils import sv_chunk
 except:
     pass
 

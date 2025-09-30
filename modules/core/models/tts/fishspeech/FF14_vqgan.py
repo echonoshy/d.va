@@ -6,7 +6,6 @@ import torch
 from modules.devices import devices
 from hydra import compose, initialize
 from hydra.utils import instantiate
-import torch
 import hydra
 
 from modules.repos_static.fish_speech.fish_speech.models.vqgan.modules.firefly import (

@@ -1,7 +1,6 @@
 import argparse
 import logging
 
-from modules.core.models import zoo
 from modules.devices import devices
 from modules.core.models.zoo import model_zoo
 from modules.utils import env

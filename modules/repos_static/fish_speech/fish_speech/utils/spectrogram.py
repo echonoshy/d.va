@@ -1,7 +1,6 @@
 import torch
 import torchaudio.functional as F
 from torch import Tensor, nn
-from torchaudio.transforms import MelScale
 
 
 class LinearSpectrogram(nn.Module):

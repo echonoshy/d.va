@@ -20,7 +20,7 @@ def check_for_mps() -> bool:
     else:
         try:
             return torch.backends.mps.is_available() and torch.backends.mps.is_built()
-        except Exception as e:
+        except Exception:
             logger.warning("MPS check failed: %s", exc_info=True)
             return False
 

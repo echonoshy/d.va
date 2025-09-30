@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
 
-from modules.core.handler.datacls.stt_model import STTConfig, STTOutputFormat
+from modules.core.handler.datacls.stt_model import STTConfig
 from modules.core.models.BaseZooModel import BaseZooModel
 from modules.core.pipeline.processor import NP_AUDIO
 

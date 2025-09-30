@@ -5,7 +5,6 @@ import numpy as np
 import pybase16384 as b14
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchaudio
 from vector_quantize_pytorch import GroupedResidualFSQ
 

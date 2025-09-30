@@ -164,7 +164,7 @@ class DynamicBatchSampler(Sampler[list[int]]):
 
         for idx in tqdm(
             self.sampler,
-            desc=f"Sorting with sampler... if slow, check whether dataset is provided with duration",
+            desc="Sorting with sampler... if slow, check whether dataset is provided with duration",
         ):
             indices.append((idx, data_source.get_frame_len(idx)))
         indices.sort(key=lambda elem: elem[1])

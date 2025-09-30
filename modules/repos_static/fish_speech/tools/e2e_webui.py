@@ -3,7 +3,6 @@ import re
 import wave
 
 import gradio as gr
-import numpy as np
 
 from .fish_e2e import FishE2EAgent, FishE2EEventType
 from .schema import ServeMessage, ServeTextPart, ServeVQPart

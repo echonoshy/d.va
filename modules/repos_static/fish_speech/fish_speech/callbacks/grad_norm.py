@@ -1,6 +1,5 @@
 from typing import Optional, Union
 
-import lightning.pytorch as pl
 import torch
 from lightning import LightningModule, Trainer
 from lightning.pytorch.callbacks import Callback

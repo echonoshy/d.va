@@ -3,7 +3,7 @@ import regex
 from builtins import str as unicode
 import unicodedata
 
-from modules.core.tn.TNPipeline import GuessLang, TNPipeline
+from modules.core.tn.TNPipeline import GuessLang
 from modules.repos_static.FireRedTTS.fireredtts.modules.text_normalizer.utils import (
     f2b,
     is_chinese,

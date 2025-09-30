@@ -3,7 +3,6 @@ import typing as tp
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from fireredtts.modules.flow.utils import make_pad_mask
 
 

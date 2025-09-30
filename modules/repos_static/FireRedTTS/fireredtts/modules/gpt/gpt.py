@@ -2,8 +2,6 @@
 # ported from: https://github.com/coqui-ai/TTS/blob/dev/TTS/tts/layers/xtts/gpt.py
 
 import functools
-import math
-import random
 
 import torch
 import torch.nn as nn

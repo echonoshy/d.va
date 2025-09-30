@@ -22,11 +22,9 @@ to transcribe the second speaker.
 Note: Be aware of your audio sample rate, which defaults to 44.1kHz.
 """
 
-import re
 from pathlib import Path
 
 import click
-import soundfile as sf
 from faster_whisper import WhisperModel
 from loguru import logger
 from pydub import AudioSegment

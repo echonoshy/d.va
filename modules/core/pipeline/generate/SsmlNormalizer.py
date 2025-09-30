@@ -3,7 +3,6 @@ import re
 from typing import List, Union
 
 from modules.api.utils import calc_spk_style, to_number
-from modules.core.models import zoo
 from modules.core.pipeline.dcls import TTSPipelineContext, TTSSegment
 from modules.core.pipeline.generate.SimpleTokenizer import RegexpTokenizer
 from modules.core.ssml.SSMLParser import SSMLBreak, SSMLSegment

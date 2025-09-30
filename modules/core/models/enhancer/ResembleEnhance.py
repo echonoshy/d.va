@@ -117,8 +117,6 @@ def reload_enhancer():
 
 
 if __name__ == "__main__":
-    import gradio as gr
-    import torchaudio
 
     device = torch.device("cuda")
 

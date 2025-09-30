@@ -1,9 +1,7 @@
-import gc
 import json
 import os
 import time
 from dataclasses import dataclass
-from typing import Tuple
 
 import numpy as np
 import torch
@@ -16,7 +14,6 @@ from modules.repos_static.FireRedTTS.fireredtts.modules.codec.speaker import (
     SpeakerEmbedddingExtractor,
 )
 from modules.repos_static.FireRedTTS.fireredtts.modules.gpt.gpt import GPT
-from modules.repos_static.FireRedTTS.fireredtts.utils.utils import load_audio
 
 
 @dataclass(frozen=True, repr=False, eq=False)

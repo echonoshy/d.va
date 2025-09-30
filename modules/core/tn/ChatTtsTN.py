@@ -1,4 +1,3 @@
-from modules.core.models import zoo
 from modules.core.tn.TNPipeline import GuessLang
 
 from .base_tn import BaseTN

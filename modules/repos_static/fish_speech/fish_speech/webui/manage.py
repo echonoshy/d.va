@@ -534,7 +534,7 @@ def train_process(
             f"trainer.val_check_interval={llama_check_interval}",
             f"trainer.accumulate_grad_batches={llama_grad_batches}",
             f"train_dataset.interactive_prob={llama_use_speaker}",
-        ] + ([f"+lora@model.model.lora_config=r_8_alpha_16"] if llama_use_lora else [])
+        ] + (["+lora@model.model.lora_config=r_8_alpha_16"] if llama_use_lora else [])
         logger.info(train_cmd)
         subprocess.run(train_cmd)
 

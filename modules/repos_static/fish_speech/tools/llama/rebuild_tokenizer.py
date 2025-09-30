@@ -1,5 +1,5 @@
 from tokenizers import Tokenizer, decoders, models, pre_tokenizers, processors, trainers
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+from transformers import PreTrainedTokenizerFast
 
 # Initialize a tokenizer
 tokenizer = Tokenizer(models.BPE())

@@ -198,7 +198,7 @@ class DITInterface:
         return eos_input, spliter_thr_input
 
     def create_tts_text_guide(self):
-        gr.Markdown(f"TTS_TEXT_GUIDE")
+        gr.Markdown("TTS_TEXT_GUIDE")
 
     def create_text_input_interface(self):
         with gr.Group():

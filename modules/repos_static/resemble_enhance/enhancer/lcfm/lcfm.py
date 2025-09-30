@@ -5,7 +5,7 @@ from typing import Union
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from torch import Tensor, nn
+from torch import Tensor
 
 from .cfm import CFM
 from .irmae import IRMAE, IRMAEOutput

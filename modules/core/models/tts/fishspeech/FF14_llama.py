@@ -7,18 +7,11 @@ import torch
 
 from modules import config
 from modules.devices import devices
-from hydra import compose, initialize
-from hydra.utils import instantiate
-import torch
-import hydra
 
 from modules.repos_static.fish_speech.fish_speech.models.text2semantic.llama import (
     BaseTransformer,
     DualARTransformer,
     NaiveTransformer,
-)
-from modules.repos_static.fish_speech.fish_speech.models.vqgan.modules.firefly import (
-    FireflyArchitecture,
 )
 from modules.repos_static.fish_speech.tools.llama.generate import (
     decode_one_token_ar,
@@ -67,7 +60,7 @@ class FF14_llama:
         )
 
         model = model.to(device=device, dtype=precision)
-        logger.info(f"Restored model from checkpoint")
+        logger.info("Restored model from checkpoint")
 
         if isinstance(model, DualARTransformer):
             decode_one_token = decode_one_token_ar

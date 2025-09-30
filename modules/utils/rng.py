@@ -27,7 +27,6 @@ def np_rng():
 
 
 if __name__ == "__main__":
-    import random
 
     print(TORCH_RNG_MIN, TORCH_RNG_MAX)
     s1 = np_rng()

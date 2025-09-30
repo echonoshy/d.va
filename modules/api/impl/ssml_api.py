@@ -1,5 +1,5 @@
 from fastapi import Body, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from modules.api.Api import APIManager
