@@ -86,9 +86,7 @@ async def text_normalize_post(request: TextNormalizeRequest):
         if text is None:
             raise HTTPException(status_code=400, detail="text is required")
         if pipe_id not in pipelines:
-            raise HTTPException(
-                status_code=400, detail=f"pipe_id {pipe_id} is not supported"
-            )
+            raise HTTPException(status_code=400, detail=f"pipe_id {pipe_id} is not supported")
 
         pipe = pipelines[pipe_id]
 

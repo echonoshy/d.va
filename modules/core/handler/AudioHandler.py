@@ -24,6 +24,7 @@ import logging
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.DEBUG)
 
+
 def remove_wav_bytes_header(wav_bytes: bytes):
     wav_file = WAVFileBytes(wav_bytes=wav_bytes)
     wav_file.read()
@@ -37,16 +38,9 @@ def read_np_to_wav(audio_data: np.ndarray) -> bytes:
 
 
 class AudioHandler:
-
-    def __init__(
-        self, encoder_config: EncoderConfig, infer_config: InferConfig
-    ) -> None:
-        assert isinstance(
-            infer_config, InferConfig
-        ), "infer_config should be InferConfig"
-        assert isinstance(
-            encoder_config, EncoderConfig
-        ), "encoder_config should be EncoderConfig"
+    def __init__(self, encoder_config: EncoderConfig, infer_config: InferConfig) -> None:
+        assert isinstance(infer_config, InferConfig), "infer_config should be InferConfig"
+        assert isinstance(encoder_config, EncoderConfig), "encoder_config should be EncoderConfig"
 
         self.encoder_config = encoder_config
         self.infer_config = infer_config
@@ -55,9 +49,7 @@ class AudioHandler:
         raise NotImplementedError("Method 'enqueue' must be implemented by subclass")
 
     def enqueue_stream(self) -> Generator[NP_AUDIO, None, None]:
-        raise NotImplementedError(
-            "Method 'enqueue_stream' must be implemented by subclass"
-        )
+        raise NotImplementedError("Method 'enqueue_stream' must be implemented by subclass")
 
     def get_encoder(self) -> StreamEncoder:
         encoder_config = self.encoder_config
@@ -123,9 +115,7 @@ class AudioHandler:
         # called to interrupt inference
         pass
 
-    async def enqueue_to_stream_with_request(
-        self, request: Request
-    ) -> AsyncGenerator[bytes, None]:
+    async def enqueue_to_stream_with_request(self, request: Request) -> AsyncGenerator[bytes, None]:
         gen1 = self.enqueue_to_stream()
         for chunk in gen1:
             disconnected = await request.is_disconnected()

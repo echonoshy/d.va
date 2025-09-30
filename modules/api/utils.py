@@ -37,7 +37,6 @@ def to_number(value, t, default=0):
 
 
 def merge_prompt(attrs: dict, elem: Dict[str, Any]):
-
     def attr_num(attrs: Dict[str, Any], k: str, min_value: int, max_value: int):
         val = elem.get(k, attrs.get(k, ""))
         if val == "":
@@ -47,7 +46,7 @@ def merge_prompt(attrs: dict, elem: Dict[str, Any]):
         if val == "min":
             val = min_value
         val = np.clip(int(val), min_value, max_value)
-        if "prompt" not in attrs or attrs["prompt"] == None:
+        if attrs.get("prompt") is None:
             attrs["prompt"] = ""
         attrs["prompt"] += " " + f"[{k}_{val}]"
 
@@ -57,9 +56,7 @@ def merge_prompt(attrs: dict, elem: Dict[str, Any]):
     attr_num(attrs, "break", 0, 7)
 
 
-def calc_spk_style(
-    spk: Union[str, int, None] = None, style: Union[str, int, None] = None
-):
+def calc_spk_style(spk: Union[str, int, None] = None, style: Union[str, int, None] = None):
     voice_attrs = {
         "spk": None,
         "prompt1": None,
@@ -70,9 +67,9 @@ def calc_spk_style(
     }
     params = {}
 
-    if type(spk) == int:
+    if isinstance(spk, int):
         voice_attrs["spk"] = spk
-    elif type(spk) == str:
+    elif isinstance(spk, str):
         if spk.isdigit():
             voice_attrs["spk"] = int(spk)
         else:
@@ -80,9 +77,9 @@ def calc_spk_style(
             if spker:
                 voice_attrs["spk"] = spker
 
-    if type(style) == int or type(style) == float:
+    if isinstance(style, (int, float)):
         raise ParamsTypeError("The style parameter cannot be a number.")
-    elif type(style) == str and style != "":
+    elif isinstance(style, str) and style != "":
         if style.isdigit():
             raise ParamsTypeError("The style parameter cannot be a number.")
         else:
@@ -95,9 +92,7 @@ def calc_spk_style(
     merge_prompt(voice_attrs, params)
 
     voice_attrs["spk"] = params.get("spk", voice_attrs.get("spk", None))
-    voice_attrs["temperature"] = params.get(
-        "temp", voice_attrs.get("temperature", None)
-    )
+    voice_attrs["temperature"] = params.get("temp", voice_attrs.get("temperature", None))
     voice_attrs["prefix"] = params.get("prefix", voice_attrs.get("prefix", None))
     voice_attrs["prompt1"] = params.get("prompt1", voice_attrs.get("prompt1", None))
     voice_attrs["prompt2"] = params.get("prompt2", voice_attrs.get("prompt2", None))

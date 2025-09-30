@@ -23,11 +23,7 @@ from modules.utils.monkey_tqdm import disable_tqdm
 DEFAULT_TEMPERATURE = (0.0, 0.2, 0.4, 0.6, 0.8, 1.0)
 
 whisper_tokenizer = get_tokenizer(multilingual=True)
-number_tokens = [
-    i
-    for i in range(whisper_tokenizer.eot)
-    if all(c in "0123456789" for c in whisper_tokenizer.decode([i]).removeprefix(" "))
-]
+number_tokens = [i for i in range(whisper_tokenizer.eot) if all(c in "0123456789" for c in whisper_tokenizer.decode([i]).removeprefix(" "))]
 
 
 class WhisperModel(STTModel):
@@ -72,9 +68,7 @@ class WhisperModel(STTModel):
                     model_size_or_path=str(self.model_dir),
                     local_files_only=True,
                     device=self.device.type,
-                    compute_type=(
-                        "float16" if self.dtype == torch.float16 else "float32"
-                    ),
+                    compute_type=("float16" if self.dtype == torch.float16 else "float32"),
                 )
                 self.logger.info("Whisper model loaded.")
         return WhisperModel.model
@@ -127,15 +121,12 @@ class WhisperModel(STTModel):
         audio = self.ensure_stereo_to_mono(audio=audio)
         return audio
 
-    def transcribe_to_result(
-        self, audio: NP_AUDIO, config: STTConfig
-    ) -> WhisperTranscribeResult:
+    def transcribe_to_result(self, audio: NP_AUDIO, config: STTConfig) -> WhisperTranscribeResult:
         prompt = config.prompt
         prefix = config.prefix
 
         language = config.language
-        tempperature = config.temperature
-        sample_len = config.sample_len
+        temperature = config.temperature
         best_of = config.best_of
         beam_size = config.beam_size
         patience = config.patience
@@ -144,8 +135,8 @@ class WhisperModel(STTModel):
         _, audio_data = self.normalize_audio(audio=audio)
         # _, audio_data = audio
 
-        if tempperature is None or tempperature <= 0:
-            tempperature = DEFAULT_TEMPERATURE
+        if temperature is None or temperature <= 0:
+            temperature = DEFAULT_TEMPERATURE
 
         model = self.load()
 
@@ -155,7 +146,7 @@ class WhisperModel(STTModel):
             initial_prompt=prompt,
             prefix=prefix,
             # sample_len=sample_len,
-            temperature=tempperature or DEFAULT_TEMPERATURE,
+            temperature=temperature or DEFAULT_TEMPERATURE,
             best_of=best_of or 1,
             beam_size=beam_size or 5,
             patience=patience or 1,
@@ -167,9 +158,7 @@ class WhisperModel(STTModel):
 
         return WhisperTranscribeResult(segments=segments, info=info)
 
-    def convert_result_with_format(
-        self, config: STTConfig, result: WhisperTranscribeResult
-    ) -> str:
+    def convert_result_with_format(self, config: STTConfig, result: WhisperTranscribeResult) -> str:
         writer_options = {
             "highlight_words": config.highlight_words,
             "max_line_count": config.max_line_count,
@@ -207,7 +196,6 @@ if __name__ == "__main__":
 
     def pydub_to_numpy(audio_segment: AudioSegment):
         raw_data = audio_segment.raw_data
-        sample_width = audio_segment.sample_width
         channels = audio_segment.channels
         audio_data = np.frombuffer(raw_data, dtype=np.int16)
         if channels > 1:
@@ -236,9 +224,7 @@ if __name__ == "__main__":
 
     result = model.transcribe(
         audio=(sr, input_data),
-        config=STTConfig(
-            mid="whisper.large-v3", language="zh", format=STTOutputFormat.srt
-        ),
+        config=STTConfig(mid="whisper.large-v3", language="zh", format=STTOutputFormat.srt),
     )
 
     # print(result.text)

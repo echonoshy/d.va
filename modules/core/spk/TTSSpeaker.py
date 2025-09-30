@@ -48,7 +48,6 @@ def dcls_asdict(obj: Any) -> dict:
 
 
 class DcSpkEncoder(json.JSONEncoder):
-
     def default(self, obj):
         if isinstance(obj, torch.Tensor):
             # token 会触发这里
@@ -72,18 +71,13 @@ class DcSpkEncoder(json.JSONEncoder):
 
 
 class DcSpkDecoder(json.JSONDecoder):
-
     def __init__(self, *args, **kwargs):
         super().__init__(object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj):
         if "_type" in obj:
             if obj["_type"] == "torch.Tensor":
-                return torch.from_numpy(
-                    np.frombuffer(
-                        base64.b64decode(obj["data"]), dtype=np.float32
-                    ).copy()
-                )
+                return torch.from_numpy(np.frombuffer(base64.b64decode(obj["data"]), dtype=np.float32).copy())
             if obj["_type"] == "bytes":
                 return base64.b64decode(obj["data"])
             for dlcs in dclses:
@@ -97,7 +91,6 @@ class DcSpkDecoder(json.JSONDecoder):
 
 
 class TTSSpeaker:
-
     @staticmethod
     def empty() -> "TTSSpeaker":
         """
@@ -188,9 +181,7 @@ class TTSSpeaker:
         # raise ValueError(f"speaker {self._data.meta.name} not support model {model_id}")
         return None
 
-    def get_ref(
-        self, get_func: Optional[Callable[[DcSpkReference], bool]] = None
-    ) -> Optional[DcSpkReference]:
+    def get_ref(self, get_func: Optional[Callable[[DcSpkReference], bool]] = None) -> Optional[DcSpkReference]:
         if self._data.refs is None:
             return None
         if len(self._data.refs) == 0:
@@ -208,9 +199,7 @@ class TTSSpeaker:
             return found_ref
         return ref0
 
-    def get_ref_wav(
-        self, get_func: Optional[Callable[[DcSpkReference], bool]] = None
-    ) -> Union[tuple[int, np.ndarray, str], tuple[None, None, None]]:
+    def get_ref_wav(self, get_func: Optional[Callable[[DcSpkReference], bool]] = None) -> Union[tuple[int, np.ndarray, str], tuple[None, None, None]]:
         ref0 = self.get_ref(get_func)
         if ref0 is None:
             return None, None, None

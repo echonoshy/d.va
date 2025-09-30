@@ -9,7 +9,5 @@ class AudioNormalizer(AudioProcessor):
         if not adjust_config.normalize:
             return audio
         sample_rate, audio_data = audio
-        sample_rate, audio_data = audio_utils.apply_normalize(
-            audio_data=audio_data, headroom=adjust_config.headroom, sr=sample_rate
-        )
+        sample_rate, audio_data = audio_utils.apply_normalize(audio_data=audio_data, headroom=adjust_config.headroom, sr=sample_rate)
         return sample_rate, audio_data

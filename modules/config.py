@@ -21,5 +21,8 @@ versions = JsonObject(
         # "git_branch": git.branch_name(),
         # "git_commit": git.commit_hash(),
         "ffmpeg_version": ffmpeg.ffmpeg_version(),
+        "git_tag": None,
+        "git_commit": None,
+        "git_branch": None,
     }
 )

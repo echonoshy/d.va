@@ -6,9 +6,7 @@ from scipy.io import wavfile
 
 def encode_to_wav(audio_tuple: tuple[int, np.ndarray]):
     if not isinstance(audio_tuple, tuple) or len(audio_tuple) != 2:
-        raise ValueError(
-            "Invalid audio data format. Expected a tuple (sample_rate, audio_data)."
-        )
+        raise ValueError("Invalid audio data format. Expected a tuple (sample_rate, audio_data).")
 
     sample_rate, audio_data = audio_tuple
 

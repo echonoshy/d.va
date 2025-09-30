@@ -41,9 +41,7 @@ class SegmentNormalizer:
         max_line_width = max_line_width or 1000
         max_words_per_line = max_words_per_line or 1000
 
-        for subtitle in self._iterate_subtitles(
-            max_line_width, max_line_count, preserve_segments, max_words_per_line
-        ):
+        for subtitle in self._iterate_subtitles(max_line_width, max_line_count, preserve_segments, max_words_per_line):
             subtitle_start = self._format_timestamp(subtitle[0].start)
             subtitle_end = self._format_timestamp(subtitle[-1].end)
             subtitle_text = "".join([word.word for word in subtitle])
@@ -74,9 +72,7 @@ class SegmentNormalizer:
             words = segment.words
             while chunk_index < len(words):
                 words_count = min(max_words_per_line, len(words) - chunk_index)
-                for i, original_timing in enumerate(
-                    words[chunk_index : chunk_index + words_count]
-                ):
+                for i, original_timing in enumerate(words[chunk_index : chunk_index + words_count]):
                     timing = copy.deepcopy(original_timing)
                     long_pause = not preserve_segments and timing.start - last > 3.0
                     has_room = line_len + len(timing.word) <= max_line_width
@@ -86,12 +82,7 @@ class SegmentNormalizer:
                         line_len += len(timing.word)
                     else:
                         timing = timing._replace(word=timing.word.strip())
-                        if (
-                            len(subtitle) > 0
-                            and max_line_count is not None
-                            and (long_pause or line_count >= max_line_count)
-                            or seg_break
-                        ):
+                        if len(subtitle) > 0 and max_line_count is not None and (long_pause or line_count >= max_line_count) or seg_break:
                             yield subtitle
                             subtitle = []
                             line_count = 1

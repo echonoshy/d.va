@@ -24,9 +24,7 @@ def github_fallback_download(url: str):
         if is_github_asset:
             mirror_url = f"https://ghp.ci/{url}"
             logger.error(f"Error fetching data: {e}, try mirror url: {mirror_url}")
-            logger.warning(
-                "Warning: Using mirror site can be slow. Consider setting up a proxy (set HTTPS_PROXY env) for GitHub requests."
-            )
+            logger.warning("Warning: Using mirror site can be slow. Consider setting up a proxy (set HTTPS_PROXY env) for GitHub requests.")
             response = requests.get(mirror_url)
             response.raise_for_status()
             logger.info(f"Success mirror url: {mirror_url}")
@@ -57,20 +55,12 @@ def filter_speakers(files: list[dict], hide_tags=None, search_query=""):
 
     if hide_tags:
         # 过滤 tags
-        files = [
-            file
-            for file in files
-            if not any(tag in file.get("tags", []) for tag in hide_tags)
-        ]
+        files = [file for file in files if not any(tag in file.get("tags", []) for tag in hide_tags)]
         # 过滤 gender
         files = [file for file in files if file.get("gender") not in hide_tags]
 
     if search_query:
-        files = [
-            file
-            for file in files
-            if search_query.lower() in file.get("name", "").lower()
-        ]
+        files = [file for file in files if search_query.lower() in file.get("name", "").lower()]
 
     return files
 
@@ -139,7 +129,6 @@ def render_speakers_html(files: list[dict]):
         tags = file.get("tags", [])
         # 时间是毫秒
         created_date = file.get("created_date", 0)
-        avatar = file.get("avatar", "")
         url = file.get("url", "")
 
         html_content += "<tr>"
@@ -157,6 +146,7 @@ def render_speakers_html(files: list[dict]):
             html_content += f"<td>{data}</td>"
 
         html_content += f'<td><a href="{url}" target="_blank">{filename}</a></td>'
+
         def dl_btn_html(label: str):
             return f"<td><button onclick='download_speaker(this, \"{html.escape(url)}\")'>{label}</button></td>"
 
@@ -220,6 +210,7 @@ def refresh_speakers(
 
     return html_content, data, gr.CheckboxGroup(choices=["female", "male", *all_tags])
 
+
 def install_speaker(spk_url, hide_tags, sort_option, search_query, cached_data):
     """
     下载 speaker 文件到 ./data/speakers 目录下面
@@ -274,9 +265,7 @@ def create_spk_hub_ui():
 
         # 这两个组件用来和js脚本配合 传递html中的参数
         speaker_to_install = gr.Text(elem_id="speaker_to_install", visible=False)
-        install_speaker_button = gr.Button(
-            elem_id="install_speaker_button", visible=False
-        )
+        install_speaker_button = gr.Button(elem_id="install_speaker_button", visible=False)
 
         # 按钮点击事件：加载数据并渲染，使用缓存
         refresh_button.click(

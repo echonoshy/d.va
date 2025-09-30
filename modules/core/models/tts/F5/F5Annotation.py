@@ -26,10 +26,7 @@ class CharToken:
     anno_pinyin: Optional[str] = None
 
     def __repr__(self) -> str:
-        return (
-            f"CharToken(text={self.text}, is_zh={self.is_zh}, pos={self.pos}, "
-            f"auto_pinyin={self.auto_pinyin}, anno_pinyin={self.anno_pinyin})"
-        )
+        return f"CharToken(text={self.text}, is_zh={self.is_zh}, pos={self.pos}, auto_pinyin={self.auto_pinyin}, anno_pinyin={self.anno_pinyin})"
 
 
 class F5Annotation:
@@ -48,20 +45,6 @@ class F5Annotation:
         """
         return re.sub(self.annotation_pattern, lambda m: m[1], text)
 
-    def list_annotation(self, text: str) -> List[CharToken]:
-        """
-        找出所有手动标注的位置
-        """
-        char_tokens = []
-        for m in re.finditer(self.annotation_pattern, text):
-            char_tokens.append(
-                CharToken(
-                    text=m.group(),
-                    pos=m.start(),
-                )
-            )
-        return char_tokens
-
     def auto_pinyin(self, text: str) -> List[CharToken]:
         """
         将使用jieba分词之后自动标注
@@ -74,28 +57,20 @@ class F5Annotation:
 
             if seg_byte_len == len(seg):  # 纯英文和符号
                 for c in seg:
-                    tokens.append(
-                        CharToken(text=c, is_zh=False, pos=pos, auto_pinyin=None)
-                    )
+                    tokens.append(CharToken(text=c, is_zh=False, pos=pos, auto_pinyin=None))
                     pos += 1
             elif seg_byte_len == 3 * len(seg):  # 纯中文字符
                 pinyins = lazy_pinyin(seg, style=Style.TONE3, tone_sandhi=True)
                 for char, py in zip(seg, pinyins):
-                    tokens.append(
-                        CharToken(text=char, is_zh=True, pos=pos, auto_pinyin=py)
-                    )
+                    tokens.append(CharToken(text=char, is_zh=True, pos=pos, auto_pinyin=py))
                     pos += 1
             else:  # 混合中英文
                 for c in seg:
                     if ord(c) < 256:  # ASCII字符
-                        tokens.append(
-                            CharToken(text=c, is_zh=False, pos=pos, auto_pinyin=None)
-                        )
+                        tokens.append(CharToken(text=c, is_zh=False, pos=pos, auto_pinyin=None))
                     else:  # 中文字符
                         py = lazy_pinyin(c, style=Style.TONE3, tone_sandhi=True)[0]
-                        tokens.append(
-                            CharToken(text=c, is_zh=True, pos=pos, auto_pinyin=py)
-                        )
+                        tokens.append(CharToken(text=c, is_zh=True, pos=pos, auto_pinyin=py))
                     pos += 1
 
         return tokens
@@ -109,9 +84,7 @@ class F5Annotation:
             # 提取字符和拼音
             char = m.group()[0]  # 第一个字符是汉字
             pinyin = m.group()[2:-1]  # 括号中的拼音
-            char_tokens.append(
-                CharToken(text=char, is_zh=True, pos=m.start(), anno_pinyin=pinyin)
-            )
+            char_tokens.append(CharToken(text=char, is_zh=True, pos=m.start(), anno_pinyin=pinyin))
         return char_tokens
 
     def pase_text(self, text: str) -> List[CharToken]:
@@ -210,7 +183,7 @@ def test_f5_annotation():
     result7 = f5_annotation.convert_to_pinyin(text7)
     expect7 = [" ","ta1"," ","zheng4"," ","zai4"," ","shu3"," ","qian2","。"]
     assert result7 == expect7, f"Case 7 failed: {result7}"
-    
+
     # 测试案例8: 英语
     text8 = "He is a student."
     result8 = f5_annotation.convert_to_pinyin(text8)

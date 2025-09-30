@@ -16,9 +16,7 @@ class SentenceSplitter:
     SEP_TOKEN = " "
 
     def __init__(self, threshold=100, tokenizer=char_tokenizer):
-        assert (
-            isinstance(threshold, int) and threshold > 0
-        ), "Threshold must be greater than 0."
+        assert isinstance(threshold, int) and threshold > 0, "Threshold must be greater than 0."
 
         self.sentence_threshold = threshold
         self.tokenizer = tokenizer

@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class BatchGenerate:
-
     def __init__(
         self,
         buckets: list[TTSBucket],
@@ -91,9 +90,7 @@ class BatchGenerate:
                 logger.warning("Not support speed_rate in stream mode")
                 break
 
-        for results in model.generate_batch_stream(
-            segments=segments, context=self.context
-        ):
+        for results in model.generate_batch_stream(segments=segments, context=self.context):
             for audio, result in zip(batch.segments, results):
                 sr, data = result
                 if data.size == 0:

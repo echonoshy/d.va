@@ -76,9 +76,7 @@ class SeedContext:
             # raise ValueError(
             #     f"Seed must be an integer, but: <{type(self.seed)}> {self.seed}"
             # )
-            logger.warning(
-                f"Deterministic field, with: <{type(self.seed)}> {self.seed}"
-            )
+            logger.warning(f"Deterministic field, with: <{type(self.seed)}> {self.seed}")
 
     def __exit__(self, exc_type, exc_value, traceback):
         torch.set_rng_state(self.state[0])

@@ -28,12 +28,8 @@ class DITInterface:
         self.speaker_names = self.get_speaker_names()
         self.styles = ["*auto"] + [s.get("name") for s in get_styles()]
 
-        self.default_selected_speaker = (
-            self.speaker_names[1] if len(self.speaker_names) > 1 else "*random"
-        )
-        self.default_speaker_name = self.get_speaker_name_from_show_name(
-            self.default_selected_speaker
-        )
+        self.default_selected_speaker = self.speaker_names[1] if len(self.speaker_names) > 1 else "*random"
+        self.default_speaker_name = self.get_speaker_name_from_show_name(self.default_selected_speaker)
 
         self.model_id = model_id
         self.refine_visible = True
@@ -59,9 +55,7 @@ class DITInterface:
         self.show_sampling = True
 
     def get_speaker_names(self):
-        names = ["*random"] + [
-            self.get_speaker_show_name(speaker) for speaker in self.speakers
-        ]
+        names = ["*random"] + [self.get_speaker_show_name(speaker) for speaker in self.speakers]
         names.sort(key=lambda x: x.startswith("*") and "-1" or x)
         return names
 
@@ -123,25 +117,19 @@ class DITInterface:
             gr.Markdown("🗣️Speaker")
             with gr.Tabs():
                 with gr.Tab(label="Pick"):
-                    spk_input_text, spk_input_dropdown, spk_rand_button = (
-                        self.create_speaker_picker()
-                    )
+                    spk_input_text, spk_input_dropdown, spk_rand_button = self.create_speaker_picker()
 
                 with gr.Tab(label="Upload"):
-                    spk_file_upload = gr.File(
-                        label="Speaker (Upload)", file_types=SPK_FILE_EXTS
-                    )
+                    spk_file_upload = gr.File(label="Speaker (Upload)", file_types=SPK_FILE_EXTS)
                     gr.Markdown("📝Speaker info")
                     infos = gr.Markdown("empty", elem_classes=["no-translate"])
-                    spk_file_upload.change(
-                        fn=load_spk_info, inputs=[spk_file_upload], outputs=[infos]
-                    )
+                    spk_file_upload.change(fn=load_spk_info, inputs=[spk_file_upload], outputs=[infos])
 
                 with gr.Tab(label="Refrence"):
                     # 使用参考音频
                     ref_audio_upload = gr.Audio(label="Refrence Audio")
 
-                    text_visible = self.need_ref_text == True
+                    text_visible = self.need_ref_text
                     ref_text_input = gr.Textbox(
                         label="Refrence Text",
                         placeholder="Text from refrence audio",
@@ -166,35 +154,23 @@ class DITInterface:
         with gr.Group(visible=self.show_style_dropdown):
             gr.Markdown("🎭Style")
             self.create_tts_style_guide()
-            style_input_dropdown = gr.Dropdown(
-                choices=self.styles, interactive=True, show_label=False, value="*auto"
-            )
+            style_input_dropdown = gr.Dropdown(choices=self.styles, interactive=True, show_label=False, value="*auto")
         return style_input_dropdown
 
     def create_sampling_interface(self):
         with gr.Group(visible=self.show_sampling):
             gr.Markdown("🎛️Sampling")
-            temperature_input = gr.Slider(
-                0.01, 2.0, value=self.default_temprature, step=0.01, label="Temperature"
-            )
-            top_p_input = gr.Slider(
-                0.1, 1.0, value=self.default_top_p, step=0.1, label="Top P"
-            )
-            top_k_input = gr.Slider(
-                1, 50, value=self.default_top_k, step=1, label="Top K"
-            )
-            batch_size_input = gr.Slider(
-                1, webui_config.max_batch_size, value=4, step=1, label="Batch Size"
-            )
+            temperature_input = gr.Slider(0.01, 2.0, value=self.default_temprature, step=0.01, label="Temperature")
+            top_p_input = gr.Slider(0.1, 1.0, value=self.default_top_p, step=0.1, label="Top P")
+            top_k_input = gr.Slider(1, 50, value=self.default_top_k, step=1, label="Top K")
+            batch_size_input = gr.Slider(1, webui_config.max_batch_size, value=4, step=1, label="Batch Size")
         return temperature_input, top_p_input, top_k_input, batch_size_input
 
     def create_splitter_interface(self):
         with gr.Group():
             gr.Markdown("🎛️Spliter")
             eos_input = gr.Textbox(label="eos", value=self.spliter_eos)
-            spliter_thr_input = gr.Slider(
-                label="Spliter Threshold", value=100, minimum=50, maximum=1000, step=1
-            )
+            spliter_thr_input = gr.Slider(label="Spliter Threshold", value=100, minimum=50, maximum=1000, step=1)
         return eos_input, spliter_thr_input
 
     def create_tts_text_guide(self):
@@ -202,7 +178,7 @@ class DITInterface:
 
     def create_text_input_interface(self):
         with gr.Group():
-            input_title = gr.Markdown("📝Text Input", elem_id="input-title")
+            gr.Markdown("📝Text Input", elem_id="input-title")
             self.create_tts_text_guide()
             text_input = gr.Textbox(
                 show_label=False,
@@ -228,16 +204,12 @@ class DITInterface:
         with gr.Group():
             gr.Markdown("🎄Examples")
             sample_dropdown = gr.Dropdown(
-                choices=[
-                    sample["text"] for sample in webui_config.localization.tts_examples
-                ],
+                choices=[sample["text"] for sample in webui_config.localization.tts_examples],
                 show_label=False,
                 value=None,
                 interactive=True,
             )
-            sample_dropdown.change(
-                fn=lambda x: x, inputs=[sample_dropdown], outputs=[text_input]
-            )
+            sample_dropdown.change(fn=lambda x: x, inputs=[sample_dropdown], outputs=[text_input])
         return sample_dropdown
 
     def create_output_interface(self):
@@ -252,18 +224,10 @@ class DITInterface:
     def create_refiner_interface(self):
         with gr.Group(visible=self.refine_visible):
             gr.Markdown("🎶Refiner")
-            rf_oral_input = gr.Slider(
-                label="Oral", value=2, minimum=-1, maximum=9, step=1
-            )
-            rf_speed_input = gr.Slider(
-                label="Speed", value=2, minimum=-1, maximum=9, step=1
-            )
-            rf_break_input = gr.Slider(
-                label="Break", value=2, minimum=-1, maximum=7, step=1
-            )
-            rf_laugh_input = gr.Slider(
-                label="Laugh", value=0, minimum=-1, maximum=2, step=1
-            )
+            rf_oral_input = gr.Slider(label="Oral", value=2, minimum=-1, maximum=9, step=1)
+            rf_speed_input = gr.Slider(label="Speed", value=2, minimum=-1, maximum=9, step=1)
+            rf_break_input = gr.Slider(label="Break", value=2, minimum=-1, maximum=7, step=1)
+            rf_laugh_input = gr.Slider(label="Laugh", value=0, minimum=-1, maximum=2, step=1)
             refine_button = gr.Button("✍️Refine Text")
         return (
             rf_oral_input,
@@ -279,29 +243,17 @@ class DITInterface:
             prompt1_input = gr.Textbox(label="Prompt 1")
             prompt2_input = gr.Textbox(label="Prompt 2")
             prefix_input = gr.Textbox(label="Prefix")
-            prompt_audio = gr.File(
-                label="prompt_audio", visible=webui_config.experimental
-            )
+            prompt_audio = gr.File(label="prompt_audio", visible=webui_config.experimental)
         return prompt1_input, prompt2_input, prefix_input, prompt_audio
 
     def create_adjuster_interface(self):
         with gr.Group():
             gr.Markdown("🎛️Adjuster")
-            speed_input = gr.Slider(
-                label="Speed", value=1.0, minimum=0.5, maximum=2.0, step=0.1
-            )
-            pitch_input = gr.Slider(
-                label="Pitch", value=0, minimum=-12, maximum=12, step=0.1
-            )
-            volume_up_input = gr.Slider(
-                label="Volume Gain", value=0, minimum=-20, maximum=6, step=0.1
-            )
-            enable_loudness_normalization = gr.Checkbox(
-                value=True, label="Enable Loudness EQ"
-            )
-            headroom_input = gr.Slider(
-                label="Headroom", value=1, minimum=0, maximum=12, step=0.1
-            )
+            speed_input = gr.Slider(label="Speed", value=1.0, minimum=0.5, maximum=2.0, step=0.1)
+            pitch_input = gr.Slider(label="Pitch", value=0, minimum=-12, maximum=12, step=0.1)
+            volume_up_input = gr.Slider(label="Volume Gain", value=0, minimum=-20, maximum=6, step=0.1)
+            enable_loudness_normalization = gr.Checkbox(value=True, label="Enable Loudness EQ")
+            headroom_input = gr.Slider(label="Headroom", value=1, minimum=0, maximum=12, step=0.1)
         return (
             speed_input,
             pitch_input,
@@ -331,15 +283,11 @@ class DITInterface:
     def create_generate_interface(self):
         with gr.Group():
             gr.Markdown("🔊Generate")
-            disable_normalize_input = gr.Checkbox(
-                value=False, label="Disable Normalize", visible=False
-            )
+            disable_normalize_input = gr.Checkbox(value=False, label="Disable Normalize", visible=False)
             with gr.Group():
                 enable_enhance = gr.Checkbox(value=True, label="Enable Enhance")
                 enable_de_noise = gr.Checkbox(value=False, label="Enable De-noise")
-            tts_button = gr.Button(
-                "🔊Generate Audio", variant="primary", elem_classes="big-button"
-            )
+            tts_button = gr.Button("🔊Generate Audio", variant="primary", elem_classes="big-button")
         return disable_normalize_input, enable_enhance, enable_de_noise, tts_button
 
     def create_tts_interface(self):
@@ -353,20 +301,14 @@ class DITInterface:
                     ref_text_input,
                 ) = self.create_speaker_interface()
                 style_input_dropdown = self.create_style_interface()
-                temperature_input, top_p_input, top_k_input, batch_size_input = (
-                    self.create_sampling_interface()
-                )
+                temperature_input, top_p_input, top_k_input, batch_size_input = self.create_sampling_interface()
                 eos_input, spliter_thr_input = self.create_splitter_interface()
-                use_decoder_input = gr.Checkbox(
-                    value=True, label="Use Decoder", visible=False
-                )
+                use_decoder_input = gr.Checkbox(value=True, label="Use Decoder", visible=False)
 
             with gr.Column(scale=4):
                 text_input = self.create_text_input_interface()
-                sample_dropdown = self.create_examples_interface(text_input=text_input)
-                audio_history, tts_output1, tts_output2, tts_output3 = (
-                    self.create_output_interface()
-                )
+                self.create_examples_interface(text_input=text_input)
+                audio_history, tts_output1, tts_output2, tts_output3 = self.create_output_interface()
 
             with gr.Column(scale=1):
                 (
@@ -376,9 +318,7 @@ class DITInterface:
                     rf_laugh_input,
                     refine_button,
                 ) = self.create_refiner_interface()
-                prompt1_input, prompt2_input, prefix_input, prompt_audio = (
-                    self.create_prompt_engineering_interface()
-                )
+                prompt1_input, prompt2_input, prefix_input, prompt_audio = self.create_prompt_engineering_interface()
                 (
                     speed_input,
                     pitch_input,
@@ -387,9 +327,7 @@ class DITInterface:
                     headroom_input,
                 ) = self.create_adjuster_interface()
                 infer_seed_input = self.create_inference_seed_interface()
-                disable_normalize_input, enable_enhance, enable_de_noise, tts_button = (
-                    self.create_generate_interface()
-                )
+                disable_normalize_input, enable_enhance, enable_de_noise, tts_button = self.create_generate_interface()
 
         refine_button.click(
             refine_text,

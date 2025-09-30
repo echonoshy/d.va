@@ -33,22 +33,12 @@ def get_dvae_mel_specs(
     mel_specs: torch.Tensor,  # (batch_size, 100, mel_len)
     mel_attention_mask: torch.Tensor,  # (batch_size, mel_len)
 ):
-    audio_attention_mask = get_audio_attention_mask(
-        mel_attention_mask
-    )  # (batch_size, mel_len / 2)
-    audio_latents = dvae_encode(
-        chat.dvae, mel_specs
-    )  # (batch_size, audio_dim, mel_len / 2)
+    audio_attention_mask = get_audio_attention_mask(mel_attention_mask)  # (batch_size, mel_len / 2)
+    audio_latents = dvae_encode(chat.dvae, mel_specs)  # (batch_size, audio_dim, mel_len / 2)
     audio_latents = audio_latents * audio_attention_mask.unsqueeze(1)  # clip
-    audio_quantized_latents, _ = dvae_quantize(
-        chat.dvae.vq_layer.quantizer, audio_latents
-    )  # (batch_size, audio_dim, mel_len / 2)
-    audio_quantized_latents = audio_quantized_latents * audio_attention_mask.unsqueeze(
-        1
-    )
-    dvae_mel_specs = dvae_decode(
-        chat.dvae, audio_quantized_latents
-    )  # (batch_size, 100, mel_len)
+    audio_quantized_latents, _ = dvae_quantize(chat.dvae.vq_layer.quantizer, audio_latents)  # (batch_size, audio_dim, mel_len / 2)
+    audio_quantized_latents = audio_quantized_latents * audio_attention_mask.unsqueeze(1)
+    dvae_mel_specs = dvae_decode(chat.dvae, audio_quantized_latents)  # (batch_size, 100, mel_len)
     return dvae_mel_specs  # (batch_size, 100, mel_len)
 
 
@@ -92,12 +82,8 @@ def dvae_quantize(
     # ind shape (GFSQ.G, batch_size, mel_len / 2, GFSQ.R)
     # num_vq=GFSQ.G*GFSQ.R
     feat, ind = quantizer(audio_latents.transpose(1, 2))
-    audio_quantized_latents = feat.transpose(
-        1, 2
-    )  # (batch_size, audio_dim, mel_len / 2)
-    audio_input_ids = rearrange(
-        ind, "g b t r ->b t (g r)"
-    )  # (batch_size, mel_len / 2, num_vq)
+    audio_quantized_latents = feat.transpose(1, 2)  # (batch_size, audio_dim, mel_len / 2)
+    audio_input_ids = rearrange(ind, "g b t r ->b t (g r)")  # (batch_size, mel_len / 2, num_vq)
     return audio_quantized_latents, audio_input_ids
 
 
@@ -133,16 +119,10 @@ def get_hidden_states_and_labels(
     speakers: list[str],
     speaker_embeds: dict[str, torch.Tensor],
 ) -> dict[Literal["labels"] | Literal["hidden_states"], torch.Tensor]:
-    audio_attention_mask = get_audio_attention_mask(
-        mel_attention_mask
-    )  # (batch_size, mel_len / 2)
-    audio_latents = dvae_encode(
-        chat.dvae, mel_specs
-    )  # (batch_size, audio_dim, mel_len // 2)
+    audio_attention_mask = get_audio_attention_mask(mel_attention_mask)  # (batch_size, mel_len / 2)
+    audio_latents = dvae_encode(chat.dvae, mel_specs)  # (batch_size, audio_dim, mel_len // 2)
     audio_latents = audio_latents * audio_attention_mask.unsqueeze(1)  # clip
-    _, dvae_audio_input_ids = dvae_quantize(
-        chat.dvae.vq_layer.quantizer, audio_latents
-    )  # (batch_size, mel_len // 2)
+    _, dvae_audio_input_ids = dvae_quantize(chat.dvae.vq_layer.quantizer, audio_latents)  # (batch_size, mel_len // 2)
     dvae_audio_input_ids[~audio_attention_mask.bool()] = AUDIO_PAD_TOKEN_ID
 
     batch_size = text_attention_mask.size(0)
@@ -178,9 +158,7 @@ def get_hidden_states_and_labels(
     # combine text and audio
     input_ids = torch.cat(  # (batch_size, text_len + mel_len + 1, num_vq)
         [
-            text_input_ids.unsqueeze(-1).repeat(
-                1, 1, chat.gpt.num_vq
-            ),  # (batch_size, text_len, num_vq)
+            text_input_ids.unsqueeze(-1).repeat(1, 1, chat.gpt.num_vq),  # (batch_size, text_len, num_vq)
             extended_audio_input_ids,  # (batch_size, mel_len, num_vq)
         ],
         dim=1,
@@ -221,11 +199,7 @@ def get_hidden_states_and_labels(
     #     ).unsqueeze(0)
 
     # (batch_size, text_len + mel_len)
-    outputs = chat.gpt.gpt.forward(
-        inputs_embeds=inputs_embeds, attention_mask=attention_mask
-    )
-    hidden_states = (
-        outputs.last_hidden_state
-    )  # (batch_size, text_len + mel_len + 1, 768)
+    outputs = chat.gpt.gpt.forward(inputs_embeds=inputs_embeds, attention_mask=attention_mask)
+    hidden_states = outputs.last_hidden_state  # (batch_size, text_len + mel_len + 1, 768)
 
     return {"labels": labels, "hidden_states": hidden_states}

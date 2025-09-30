@@ -76,9 +76,7 @@ class AudioDenoiser:
             w_t_std = self._trimmed_dev(waveform)
             waveform = waveform * _expected_t_std / w_t_std
         if sample_rate != self.model_sample_rate:
-            transform = torchaudio.transforms.Resample(
-                orig_freq=sample_rate, new_freq=self.model_sample_rate
-            )
+            transform = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=self.model_sample_rate)
             waveform = transform(waveform)
         hop_len = self.n_fft // 2
         spectrogram = create_spectrogram(waveform, n_fft=self.n_fft, hop_length=hop_len)
@@ -93,20 +91,14 @@ class AudioDenoiser:
                 num_segments = math.ceil(num_frames / self.segment_num_frames)
                 adj_num_frames = num_segments * self.segment_num_frames
                 if adj_num_frames > num_frames:
-                    c_spectrogram = nn.functional.pad(
-                        c_spectrogram, (0, adj_num_frames - num_frames)
-                    )
-                c_spectrogram = c_spectrogram.view(
-                    fft_size, num_segments, self.segment_num_frames
-                )
+                    c_spectrogram = nn.functional.pad(c_spectrogram, (0, adj_num_frames - num_frames))
+                c_spectrogram = c_spectrogram.view(fft_size, num_segments, self.segment_num_frames)
                 # c_spectrogram: (257, num_segments, 32)
                 c_spectrogram = torch.permute(c_spectrogram, (1, 0, 2))
                 # c_spectrogram: (num_segments, 257, 32)
                 log_c_spectrogram = self._sp_log(c_spectrogram)
                 scaled_log_c_sp = self.scaler(log_c_spectrogram)
-                pred_noise_log_sp = batched_apply(
-                    self.model, scaled_log_c_sp, detached=True
-                )
+                pred_noise_log_sp = batched_apply(self.model, scaled_log_c_sp, detached=True)
                 log_denoised_sp = log_c_spectrogram - pred_noise_log_sp
                 denoised_sp = self._sp_exp(log_denoised_sp)
                 # denoised_sp: (num_segments, 257, 32)
@@ -116,17 +108,13 @@ class AudioDenoiser:
                 # denoised_sp: (1, 257, adj_num_frames)
                 denoised_sp = denoised_sp[:, :, :num_frames]
                 denoised_sp = denoised_sp.cpu()
-                denoised_waveform = reconstruct_from_spectrogram(
-                    denoised_sp, num_iterations=self.num_iterations
-                )
+                denoised_waveform = reconstruct_from_spectrogram(denoised_sp, num_iterations=self.num_iterations)
                 # denoised_waveform: (1, num_samples)
                 results.append(denoised_waveform)
             cpu_results = torch.cat(results)
             return cpu_results if return_cpu_tensor else cpu_results.to(self.device)
 
-    def process_audio_file(
-        self, in_audio_file: str, out_audio_file: str, auto_scale: bool = False
-    ):
+    def process_audio_file(self, in_audio_file: str, out_audio_file: str, auto_scale: bool = False):
         """
         Denoises an audio file.
         @param in_audio_file: An input audio file with a format supported by torchaudio.
@@ -134,9 +122,5 @@ class AudioDenoiser:
         @param auto_scale: Whether the input waveform scale should be normalized before processing. Recommended for low-volume audio.
         """
         waveform, sample_rate = torchaudio.load(in_audio_file)
-        denoised_waveform = self.process_waveform(
-            waveform, sample_rate, return_cpu_tensor=True, auto_scale=auto_scale
-        )
-        torchaudio.save(
-            out_audio_file, denoised_waveform, sample_rate=self.model_sample_rate
-        )
+        denoised_waveform = self.process_waveform(waveform, sample_rate, return_cpu_tensor=True, auto_scale=auto_scale)
+        torchaudio.save(out_audio_file, denoised_waveform, sample_rate=self.model_sample_rate)

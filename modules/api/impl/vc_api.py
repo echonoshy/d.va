@@ -53,7 +53,6 @@ class VoiceCloneForm(BaseModel):
 
 def pydub_to_numpy(audio_segment: AudioSegment) -> np.ndarray:
     raw_data = audio_segment.raw_data
-    sample_width = audio_segment.sample_width
     channels = audio_segment.channels
     audio_data: np.ndarray = np.frombuffer(raw_data, dtype=np.int16)
     if channels > 1:
@@ -74,16 +73,13 @@ async def read_upload_file(file: UploadFile):
 
 
 def setup(app: APIManager):
-
     @app.post(
         "/v1/vc",
         description="Voice cloning API",
         response_class=StreamingResponse,
         tags=["Voice Clone"],
     )
-    async def voice_clone(
-        request: Request, form: VoiceCloneForm = Depends(VoiceCloneForm.as_form)
-    ):
+    async def voice_clone(request: Request, form: VoiceCloneForm = Depends(VoiceCloneForm.as_form)):
         model = form.model
         src_audio = form.src_audio
         ref_audio = form.ref_audio
@@ -93,9 +89,7 @@ def setup(app: APIManager):
         format = form.format
 
         if ref_audio is None and ref_spk is None:
-            raise HTTPException(
-                status_code=422, detail="Either ref_audio or ref_spk should be provided"
-            )
+            raise HTTPException(status_code=422, detail="Either ref_audio or ref_spk should be provided")
         if src_audio is None:
             raise HTTPException(status_code=422, detail="src_audio should be provided")
         if format not in AudioFormat.__members__:
@@ -114,9 +108,7 @@ def setup(app: APIManager):
                 raise HTTPException(status_code=422, detail="Invalid speaker")
 
         if ref_audio is not None:
-            ref_audio_wav = (
-                await read_upload_file(ref_audio) if ref_audio is not None else None
-            )
+            ref_audio_wav = await read_upload_file(ref_audio) if ref_audio is not None else None
             ref_spk = TTSSpeaker.from_ref_wav(ref_wav=ref_audio_wav)
 
         vc_config = VCConfig(enabled=True, mid=model, emotion=spk_emotion, tau=tau)
@@ -134,12 +126,11 @@ def setup(app: APIManager):
             )
 
             return handler.enqueue_to_response(request=request)
-        except Exception as e:
+        except Exception as exc:
             import logging
 
-            logging.exception(e)
+            logging.exception(exc)
 
-            if isinstance(e, HTTPException):
-                raise e
-            else:
-                raise HTTPException(status_code=500, detail=str(e))
+            if isinstance(exc, HTTPException):
+                raise exc
+            raise HTTPException(status_code=500, detail=str(exc))

@@ -5,7 +5,6 @@ from modules.core.pipeline.processor import NP_AUDIO
 
 
 class AudioReshaper:
-
     @staticmethod
     def resample_audio(audio: NP_AUDIO, target_sr: int) -> NP_AUDIO:
         sr, data = audio

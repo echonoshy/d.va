@@ -15,7 +15,6 @@ class GuessLang:
 
 
 class TNBlock:
-
     def __init__(self, name: str):
         self.name = name
         self.enabled = True
@@ -76,9 +75,7 @@ class TNPipeline:
     def clone(self):
         return copy.deepcopy(self)
 
-    def split_string_with_freeze(
-        self, text: str, freeze_strs: list[str]
-    ) -> list[TNText]:
+    def split_string_with_freeze(self, text: str, freeze_strs: list[str]) -> list[TNText]:
         if not freeze_strs:
             return [TNText(text=text, type="normal")]
 
@@ -90,9 +87,7 @@ class TNPipeline:
 
             for freeze_str in freeze_strs:
                 if buffer.endswith(freeze_str):
-                    result.append(
-                        TNText(text=buffer[: -len(freeze_str)], type="normal")
-                    )
+                    result.append(TNText(text=buffer[: -len(freeze_str)], type="normal"))
                     result.append(TNText(text=freeze_str, type="freeze"))
                     buffer = ""
                     break

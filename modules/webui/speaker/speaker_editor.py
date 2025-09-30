@@ -1,4 +1,3 @@
-
 import gradio as gr
 import torch
 
@@ -111,16 +110,12 @@ def speaker_editor_ui():
 
             with gr.Group():
                 # 模型选择
-                model_id_select = gr.Dropdown(
-                    label="Model", choices=["chat-tts", "cosy-voice"], value="chat-tts"
-                )
+                model_id_select = gr.Dropdown(label="Model", choices=["chat-tts", "cosy-voice"], value="chat-tts")
 
             with gr.Group():
                 # 采样率
                 gr.Markdown("🎛️Sampling")
-                temperature_input = gr.Slider(
-                    0.01, 2.0, value=0.3, step=0.01, label="Temperature"
-                )
+                temperature_input = gr.Slider(0.01, 2.0, value=0.3, step=0.01, label="Temperature")
                 top_p_input = gr.Slider(0.1, 1.0, value=0.7, step=0.1, label="Top P")
                 top_k_input = gr.Slider(1, 50, value=20, step=1, label="Top K")
 
@@ -133,7 +128,7 @@ def speaker_editor_ui():
                 top_k_input=top_k_input,
             )
 
-            btn1 = create_test_voice_card(**kwargs)
-            btn2 = create_test_voice_card(**kwargs)
-            btn3 = create_test_voice_card(**kwargs)
-            btn4 = create_test_voice_card(**kwargs)
+            create_test_voice_card(**kwargs)
+            create_test_voice_card(**kwargs)
+            create_test_voice_card(**kwargs)
+            create_test_voice_card(**kwargs)

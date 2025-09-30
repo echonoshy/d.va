@@ -58,9 +58,7 @@ class CustomStaticFiles(StaticFiles):
         content = content_bytes.decode("utf-8")
         content = content.replace(CURRENT_CDN, cdn_host)
         del response.headers["Content-Length"]
-        new_response = Response(
-            content, headers=response.headers, media_type=response.media_type
-        )
+        new_response = Response(content, headers=response.headers, media_type=response.media_type)
         return new_response
 
 

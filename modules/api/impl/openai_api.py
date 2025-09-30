@@ -27,6 +27,7 @@ from modules.data import styles_mgr
 
 from modules.api.constants import support_bitrates
 
+
 class AudioSpeechRequest(BaseModel):
     input: str  # 需要合成的文本
     model: str = "chat-tts"
@@ -41,9 +42,7 @@ class AudioSpeechRequest(BaseModel):
 
     style: str = ""
     batch_size: int = Field(1, ge=1, le=20, description="Batch size")
-    spliter_threshold: float = Field(
-        100, ge=10, le=1024, description="Threshold for sentence spliter"
-    )
+    spliter_threshold: float = Field(100, ge=10, le=1024, description="Threshold for sentence spliter")
     # end of sentence
     eos: str = "[uv_break]"
 
@@ -55,11 +54,7 @@ class AudioSpeechRequest(BaseModel):
     bitrate: str = "64k"
 
 
-async def openai_speech_api(
-    request: AudioSpeechRequest = Body(
-        ..., description="JSON body with model, input text, and voice"
-    )
-):
+async def openai_speech_api(request: AudioSpeechRequest = Body(..., description="JSON body with model, input text, and voice")):
     model = request.model
     input_text = request.input
     voice = request.voice
@@ -70,9 +65,7 @@ async def openai_speech_api(
     audio_bitrate = request.bitrate
 
     response_format = request.response_format
-    if not isinstance(response_format, AudioFormat) and isinstance(
-        response_format, str
-    ):
+    if not isinstance(response_format, AudioFormat) and isinstance(response_format, str):
         response_format = AudioFormat(response_format)
 
     batch_size = request.batch_size
@@ -87,7 +80,7 @@ async def openai_speech_api(
     try:
         if style:
             styles_mgr.find_item_by_name(style)
-    except:
+    except Exception:
         raise HTTPException(status_code=400, detail="Invalid style.")
 
     if audio_bitrate not in support_bitrates:
@@ -194,7 +187,6 @@ openai api document:
 
     def pydub_to_numpy(audio_segment: AudioSegment) -> np.ndarray:
         raw_data = audio_segment.raw_data
-        sample_width = audio_segment.sample_width
         channels = audio_segment.channels
         audio_data = np.frombuffer(raw_data, dtype=np.int16)
         if channels > 1:
@@ -246,12 +238,11 @@ openai api document:
 
             result = handler.enqueue()
             return {"text": result.text}
-        except Exception as e:
+        except Exception as exc:
             import logging
 
-            logging.exception(e)
+            logging.exception(exc)
 
-            if isinstance(e, HTTPException):
-                raise e
-            else:
-                raise HTTPException(status_code=500, detail=str(e))
+            if isinstance(exc, HTTPException):
+                raise exc
+            raise HTTPException(status_code=500, detail=str(exc))

@@ -50,16 +50,12 @@ class FishSpeech14Model(TTSModel):
         # 来自 modules/repos_static/fish_speech/fish_speech/configs/firefly_gan_vq.yaml
         return 44100
 
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         generator = self.generate_batch_stream(segments, context)
         return next(generator)
 
     # NOTE: 不支持batch生成 所以基本上是同步的
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], None, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], None, None]:
         cached = self.get_cache(segments=segments, context=context)
         if cached is not None:
             yield cached

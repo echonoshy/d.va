@@ -14,7 +14,6 @@ class TranscribeResult:
 
 
 class STTModel(BaseZooModel):
-
     def __init__(self, model_id: str) -> None:
         super().__init__(model_id=model_id)
 

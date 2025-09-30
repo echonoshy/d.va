@@ -1,6 +1,5 @@
 import json
 import os
-import time
 from dataclasses import dataclass
 
 import numpy as np
@@ -35,12 +34,8 @@ class FireRedTTSInfer:
         self.device = device
         self.config: dict = json.load(open(config_path))
         self.gpt_path: str = os.path.join(pretrained_path, "fireredtts_gpt.pt")
-        self.token2wav_path: str = os.path.join(
-            pretrained_path, "fireredtts_token2wav.pt"
-        )
-        self.speaker_extractor_path: str = os.path.join(
-            pretrained_path, "fireredtts_speaker.bin"
-        )
+        self.token2wav_path: str = os.path.join(pretrained_path, "fireredtts_token2wav.pt")
+        self.speaker_extractor_path: str = os.path.join(pretrained_path, "fireredtts_speaker.bin")
 
         assert os.path.exists(self.token2wav_path)
         assert os.path.exists(self.gpt_path)
@@ -50,9 +45,7 @@ class FireRedTTSInfer:
         self.text_tokenizer: FRBepTokenizer = FRBepTokenizer()
 
         # Speaker extractor
-        self.speaker_extractor: SpeakerEmbedddingExtractor = SpeakerEmbedddingExtractor(
-            ckpt_path=self.speaker_extractor_path, device=device
-        )
+        self.speaker_extractor: SpeakerEmbedddingExtractor = SpeakerEmbedddingExtractor(ckpt_path=self.speaker_extractor_path, device=device)
 
         # Load GPT model
         self.gpt: GPT = GPT(
@@ -111,17 +104,9 @@ class FireRedTTSInfer:
         """
         # Convert numpy array to torch tensor and resample if needed
         audio_tensor = torch.from_numpy(audio).unsqueeze(0).float().to(self.device)
-        audio_resampled = torchaudio.functional.resample(
-            audio_tensor, orig_freq=audio_sr, new_freq=16000
-        )
-        audio_len = torch.tensor(
-            [audio_resampled.shape[1]], dtype=torch.long, requires_grad=False
-        )
-
+        audio_resampled = torchaudio.functional.resample(audio_tensor, orig_freq=audio_sr, new_freq=16000)
         # Extract speaker embeddings
-        spk_embeddings: torch.Tensor = self.speaker_extractor(
-            audio_resampled
-        ).unsqueeze(0)
+        spk_embeddings: torch.Tensor = self.speaker_extractor(audio_resampled).unsqueeze(0)
         return spk_embeddings
 
     def do_gpt_inference(
@@ -148,19 +133,15 @@ class FireRedTTSInfer:
                 top_p=params.top_p or def_ps.top_p,
                 top_k=params.top_k or def_ps.top_k,
                 temperature=params.temperature or def_ps.temperature,
-                num_return_sequences=params.num_return_sequences
-                or def_ps.num_return_sequences,
+                num_return_sequences=params.num_return_sequences or def_ps.num_return_sequences,
                 num_beams=params.num_beams or def_ps.num_beams,
                 length_penalty=params.length_penalty or def_ps.length_penalty,
-                repetition_penalty=params.repetition_penalty
-                or def_ps.repetition_penalty,
+                repetition_penalty=params.repetition_penalty or def_ps.repetition_penalty,
                 output_attentions=False,
             )
 
         EOS_TOKEN = self.config["gpt"]["gpt_stop_audio_token"]
-        seqs = [
-            seq[: (seq == EOS_TOKEN).nonzero(as_tuple=True)[0][0]] for seq in gpt_codes
-        ]
+        seqs = [seq[: (seq == EOS_TOKEN).nonzero(as_tuple=True)[0][0]] for seq in gpt_codes]
         sorted_seqs = sorted(seqs, key=lambda i: len(i))
         gpt_codes = sorted_seqs[2].unsqueeze(0)
 
@@ -191,37 +172,21 @@ class FireRedTTSInfer:
         assert audio.dtype == np.float32
 
         # Convert text to tokens
-        text_tokens: torch.Tensor = (
-            torch.IntTensor(self.text_tokenizer.encode(text=text, lang=lang))
-            .unsqueeze(0)
-            .to(self.device)
-        )
+        text_tokens: torch.Tensor = torch.IntTensor(self.text_tokenizer.encode(text=text, lang=lang)).unsqueeze(0).to(self.device)
         assert text_tokens.shape[-1] < 400
 
         # Extract speaker embedding
-        spk_embeddings = self.extract_spk_embeddings(
-            audio=audio, audio_sr=audio_sr
-        ).unsqueeze(0)
+        spk_embeddings = self.extract_spk_embeddings(audio=audio, audio_sr=audio_sr).unsqueeze(0)
         with torch.no_grad():
             spk_gpt = self.gpt.reference_embedding(spk_embeddings)
 
         # Perform GPT inference
-        gpt_start_time = time.time()
-        gpt_codes = self.do_gpt_inference(
-            spk_gpt=spk_gpt, text_tokens=text_tokens, params=params
-        )
-        gpt_end_time = time.time()
+        gpt_codes = self.do_gpt_inference(spk_gpt=spk_gpt, text_tokens=text_tokens, params=params)
 
         # Extract mel-spectrogram from input audio
-        prompt_mel = (
-            self.mel_extractor.from_array(wav_data=audio, wav_sr=audio_sr)
-            .unsqueeze(0)
-            .to(self.device)
-        )
+        prompt_mel = self.mel_extractor.from_array(wav_data=audio, wav_sr=audio_sr).unsqueeze(0).to(self.device)
 
         # Convert tokens to waveform
-        voc_start_time = time.time()
         rec_wavs = self.token2wav.inference(gpt_codes, prompt_mel, n_timesteps=10)
-        voc_end_time = time.time()
 
         return rec_wavs

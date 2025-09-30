@@ -20,8 +20,9 @@ from modules.utils import audio_utils
 """
 TODO: 简化 pipeline，不要在这里做类型转换，并且增加 segment class 实现
 """
-class AudioPipeline:
 
+
+class AudioPipeline:
     def __init__(self, context: TTSPipelineContext) -> None:
         self.context = context
 
@@ -40,9 +41,7 @@ class AudioPipeline:
         audio = AudioReshaper.normalize_audio(audio=audio, target_sr=self.audio_sr)
         return audio
 
-    def ensure_audio_type(
-        self, audio: AUDIO, output_type: Literal["ndarray", "segment"]
-    ):
+    def ensure_audio_type(self, audio: AUDIO, output_type: Literal["ndarray", "segment"]):
         if output_type == "segment":
             audio = self._to_audio_segment(audio)
         elif output_type == "ndarray":
@@ -78,7 +77,6 @@ class AudioPipeline:
 
 
 class TTSPipeline(AudioPipeline):
-
     def __init__(self, context: TTSPipelineContext):
         super().__init__(context=context)
         self.model: TTSModel = None
@@ -92,9 +90,7 @@ class TTSPipeline(AudioPipeline):
         # 其实这个在 chunker 之前调用好点...但是有副作用所以放在后面
         segments = [self.process_pre(seg) for seg in segments]
 
-        synth = BatchSynth(
-            input_segments=segments, context=self.context, model=self.model
-        )
+        synth = BatchSynth(input_segments=segments, context=self.context, model=self.model)
         return synth
 
     def generate(self) -> NP_AUDIO:

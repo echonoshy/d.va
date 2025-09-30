@@ -52,11 +52,7 @@ def preprocess_text(sentence: str):
     sentence = regex.sub("\p{Zp}", "\n", sentence)
 
     sentence = unicode(sentence)
-    sentence = "".join(
-        char
-        for char in unicodedata.normalize("NFD", sentence)
-        if unicodedata.category(char) != "Mn"
-    )  # Strip accents
+    sentence = "".join(char for char in unicodedata.normalize("NFD", sentence) if unicodedata.category(char) != "Mn")  # Strip accents
 
     sentence = strip_kaomoji(sentence)
     # full to half with exemption (to be converted after number TN): 。，：
@@ -80,9 +76,7 @@ def preprocess_text(sentence: str):
         if char == " ":
             if idx == 0:
                 continue
-            if is_chinese(sentence[idx + 1]) and (
-                is_chinese(sentence[idx - 1]) or sentence[idx - 1] in '") '
-            ):
+            if is_chinese(sentence[idx + 1]) and (is_chinese(sentence[idx - 1]) or sentence[idx - 1] in '") '):
                 result += "，"
             else:
                 result += " "
@@ -144,6 +138,7 @@ def something_tn(text: str, guess_lang: GuessLang) -> str:
     text = rettt(text)
     return text
 
+
 inflect_parser = inflect.engine()
 
 
@@ -156,13 +151,7 @@ def clean_text(text: str, guess_lang: GuessLang) -> str:
         text = re.sub(r"[^ 0-9A-Za-z\[\]'.,:?!_\-]", "", text)
         # fallback number normalization
         pieces = re.split(r"(\d+)", text)
-        text = "".join(
-            [
-                inflect_parser.number_to_words(p) if p.isnumeric() else p
-                for p in pieces
-                if len(p) > 0
-            ]
-        )
+        text = "".join([inflect_parser.number_to_words(p) if p.isnumeric() else p for p in pieces if len(p) > 0])
 
     # cleanup
     text = text.replace("_", " ")

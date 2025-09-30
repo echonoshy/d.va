@@ -8,7 +8,6 @@ from modules.webui.webui_utils import (
 
 # 没有 seed/style/examples 配置的ui
 class NotSeedTTSInterface(TTSInterface):
-
     def create_tts_style_guide(self):
         pass
 
@@ -54,7 +53,6 @@ class NotSeedTTSInterface(TTSInterface):
 
 
 class CosyVoiceInterface(NotSeedTTSInterface):
-
     def __init__(self):
         super().__init__("cosy-voice")
         self.refine_visible = False
@@ -72,7 +70,6 @@ class CosyVoiceInterface(NotSeedTTSInterface):
 
 
 class FireRedTTSInterface(NotSeedTTSInterface):
-
     def __init__(self):
         super().__init__("fire-red-tts")
         self.refine_visible = False
@@ -108,7 +105,6 @@ class FireRedTTSInterface(NotSeedTTSInterface):
 
 
 class F5TtsInterface(NotSeedTTSInterface):
-
     def __init__(self):
         super().__init__("f5-tts")
         self.refine_visible = False
@@ -131,7 +127,6 @@ class F5TtsInterface(NotSeedTTSInterface):
 
 
 class FishSpeechInterface(NotSeedTTSInterface):
-
     def __init__(self):
         super().__init__("fish-speech")
         self.refine_visible = False
@@ -155,7 +150,6 @@ class FishSpeechInterface(NotSeedTTSInterface):
 
 
 def create_tts_interface():
-
     with gr.Tabs():
         with gr.TabItem("ChatTTS"):
             tts_interface = TTSInterface()

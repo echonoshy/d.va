@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class TTSHandler(AudioHandler):
-
     def __init__(
         self,
         *,
@@ -32,18 +31,10 @@ class TTSHandler(AudioHandler):
         tn_config: TNConfig = TNConfig(),
     ):
         assert isinstance(tts_config, TTSConfig), "tts_config should be ChatTTSConfig"
-        assert isinstance(
-            infer_config, InferConfig
-        ), "infer_config should be InferConfig"
-        assert isinstance(
-            adjust_config, AdjustConfig
-        ), "adjest_config should be AdjustConfig"
-        assert isinstance(
-            enhancer_config, EnhancerConfig
-        ), "enhancer_config should be EnhancerConfig"
-        assert isinstance(
-            encoder_config, EncoderConfig
-        ), "encoder_config should be EncoderConfig"
+        assert isinstance(infer_config, InferConfig), "infer_config should be InferConfig"
+        assert isinstance(adjust_config, AdjustConfig), "adjest_config should be AdjustConfig"
+        assert isinstance(enhancer_config, EnhancerConfig), "enhancer_config should be EnhancerConfig"
+        assert isinstance(encoder_config, EncoderConfig), "encoder_config should be EncoderConfig"
         assert isinstance(vc_config, VCConfig), "vc_config should be VCConfig"
         assert isinstance(tn_config, TNConfig), "tn_config should be TNConfig"
 

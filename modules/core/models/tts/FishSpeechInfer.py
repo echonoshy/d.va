@@ -72,18 +72,14 @@ class FishSpeechInfer:
         encoded_prompt = self.encode_spk(spk=spk, emotion=emotion) if spk else None
 
         global_encoded = encoded_prefix + [encoded_text]
-        partial_encoded = (
-            [encoded_prompt] + global_encoded if encoded_prompt else global_encoded
-        )
+        partial_encoded = [encoded_prompt] + global_encoded if encoded_prompt else global_encoded
 
         # Move temperature, top_p, repetition_penalty to device
         # This is important so that changing params doesn't trigger recompile
         # ref: https://github.com/fishaudio/fish-speech/blob/cee143d213906ccaf0b81a86833bc5f0289d4c5d/tools/llama/generate.py#L434-L440
         temperature = torch.tensor(temperature, device=self.device, dtype=torch.float)
         top_p = torch.tensor(top_p, device=self.device, dtype=torch.float)
-        repetition_penalty = torch.tensor(
-            repetition_penalty, device=self.device, dtype=torch.float
-        )
+        repetition_penalty = torch.tensor(repetition_penalty, device=self.device, dtype=torch.float)
 
         cat_encoded = torch.cat(partial_encoded, dim=1)
         prompt_length = cat_encoded.size(1)
@@ -162,15 +158,9 @@ class FishSpeechInfer:
         input_pos = torch.arange(0, T, device=device)
 
         # Use non-accelerated version for now, to avoid compilation overhead
-        prefill_decode = (
-            decode_one_token_naive
-            if isinstance(model, NaiveTransformer)
-            else decode_one_token_ar
-        )
+        prefill_decode = decode_one_token_naive if isinstance(model, NaiveTransformer) else decode_one_token_ar
 
-        next_token = prefill_decode(
-            model, prompt.view(1, codebook_dim, -1), input_pos, **sampling_kwargs
-        )
+        next_token = prefill_decode(model, prompt.view(1, codebook_dim, -1), input_pos, **sampling_kwargs)
         seq[:, T : T + 1] = next_token
 
         input_pos = torch.tensor([T], device=device, dtype=torch.int)
@@ -203,24 +193,16 @@ class FishSpeechInfer:
         wav_sr = ref_config.wav_sr
         prompt_text = ref_config.text
 
-        prompt_tokens = (
-            self.encode_ref_wav(wav_bytes=wav_bytes, wav_sr=wav_sr)
-            if wav_bytes is not None
-            else None
-        )
+        prompt_tokens = self.encode_ref_wav(wav_bytes=wav_bytes, wav_sr=wav_sr) if wav_bytes is not None else None
 
-        encoded_prompt = self.encode_tokens(
-            text=prompt_text, prompt_tokens=prompt_tokens
-        )
+        encoded_prompt = self.encode_tokens(text=prompt_text, prompt_tokens=prompt_tokens)
 
         return encoded_prompt
 
     def encode_ref_wav(self, *, wav_bytes: bytes, sr: int):
         audio, _ = librosa.load(io.BytesIO(wav_bytes), sr=sr, mono=True)
         audios = torch.from_numpy(audio).to(device=self.device)[None, None, :]
-        audio_lengths = torch.tensor(
-            [audios.shape[2]], device=self.device, dtype=torch.long
-        )
+        audio_lengths = torch.tensor([audios.shape[2]], device=self.device, dtype=torch.long)
         prompt_tokens = self.vqgan.encode(audios, audio_lengths)[0][0]
 
         return prompt_tokens
@@ -242,12 +224,7 @@ class FishSpeechInfer:
         tokens = torch.tensor([new_tokens], dtype=torch.int, device=self.device)
 
         # Codebooks
-        zeros = (
-            torch.ones(
-                (num_codebooks, tokens.size(1)), dtype=torch.int, device=self.device
-            )
-            * CODEBOOK_PAD_TOKEN_ID
-        )
+        zeros = torch.ones((num_codebooks, tokens.size(1)), dtype=torch.int, device=self.device) * CODEBOOK_PAD_TOKEN_ID
         prompt = torch.cat((tokens, zeros), dim=0)
 
         if prompt_tokens is None:
@@ -255,18 +232,14 @@ class FishSpeechInfer:
 
         # Get prompt tokens
         if prompt_tokens.ndim == 3:
-            assert (
-                prompt_tokens.shape[0] == 1
-            ), "3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
+            assert prompt_tokens.shape[0] == 1, "3 dim prompt tokens should have shape (1, num_codebooks, seq_len)"
             prompt_tokens = prompt_tokens[0]
 
         assert prompt_tokens.ndim == 2
         data = prompt_tokens + 1
 
         if prompt_tokens.shape[0] > num_codebooks:
-            self.logger.warning(
-                f"Prompt tokens shape {prompt_tokens.shape} is larger than num_codebooks {num_codebooks}, getting first {num_codebooks} codebooks"
-            )
+            self.logger.warning(f"Prompt tokens shape {prompt_tokens.shape} is larger than num_codebooks {num_codebooks}, getting first {num_codebooks} codebooks")
             data = data[:num_codebooks]
 
         # Add pad token for each codebook
@@ -278,10 +251,7 @@ class FishSpeechInfer:
         # Since 1.0, we use <|semantic|>
         s0_token_id = tokenizer.convert_tokens_to_ids("<|semantic|>")
         end_token_id = tokenizer.convert_tokens_to_ids("<|im_end|>")
-        main_token_ids = (
-            torch.ones((1, data.size(1)), dtype=torch.int, device=self.device)
-            * s0_token_id
-        )
+        main_token_ids = torch.ones((1, data.size(1)), dtype=torch.int, device=self.device) * s0_token_id
         main_token_ids[0, -1] = end_token_id
 
         data = torch.cat((main_token_ids, data), dim=0)
@@ -292,9 +262,7 @@ class FishSpeechInfer:
     def decode_vq_tokens(self, *, codes: torch.Tensor) -> np.ndarray:
         with torch.autocast(device_type=self.device.type, dtype=self.dtype):
             feature_lengths = torch.tensor([codes.shape[1]], device=self.device)
-            fake_audios = self.vqgan.decode(
-                indices=codes[None], feature_lengths=feature_lengths
-            ).squeeze()
+            fake_audios = self.vqgan.decode(indices=codes[None], feature_lengths=feature_lengths).squeeze()
 
         fake_audios: np.ndarray = fake_audios.float().cpu().numpy()
         return fake_audios

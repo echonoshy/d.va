@@ -30,7 +30,6 @@ class FF14_llama:
     MODEL_PATH = Path("./models/fish-speech-1_4")
 
     def __init__(self) -> None:
-
         self.model: Union[NaiveTransformer, DualARTransformer] = None
         self.decode_one_token: callable = None
 
@@ -55,9 +54,7 @@ class FF14_llama:
         device = self.device
         precision = devices.dtype
 
-        model: Union[NaiveTransformer, DualARTransformer] = (
-            BaseTransformer.from_pretrained(checkpoint_path, load_weights=True)
-        )
+        model: Union[NaiveTransformer, DualARTransformer] = BaseTransformer.from_pretrained(checkpoint_path, load_weights=True)
 
         model = model.to(device=device, dtype=precision)
         logger.info("Restored model from checkpoint")
@@ -107,14 +104,8 @@ class FF14_llama:
         temperature: float = 0.7,
         chunk_length: int = 150,
     ) -> np.ndarray:
-        if (
-            isinstance(prompt_text, list)
-            and isinstance(prompt_tokens, list)
-            and len(prompt_text) != len(prompt_tokens)
-        ):
-            raise ValueError(
-                f"Number of prompt text ({len(prompt_text)}) and prompt tokens ({len(prompt_tokens)}) should be the same"
-            )
+        if isinstance(prompt_text, list) and isinstance(prompt_tokens, list) and len(prompt_text) != len(prompt_tokens):
+            raise ValueError(f"Number of prompt text ({len(prompt_text)}) and prompt tokens ({len(prompt_tokens)}) should be the same")
 
         model = self.model
         decode_one_token = self.decode_one_token

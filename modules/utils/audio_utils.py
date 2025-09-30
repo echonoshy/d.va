@@ -35,7 +35,7 @@ def bytes_to_librosa_array(audio_bytes: bytes, sample_rate: int) -> npt.NDArray:
         if read_sr != sample_rate:
             raise ValueError(f"Sample rate mismatch: {read_sr} != {sample_rate}")
         return audio_data
-    except:
+    except Exception:
         _, audio_data = wavfile.read(byte_io)
         audio_float = audio_data.astype(np.float32) / np.iinfo(np.int16).max
         return audio_float
@@ -90,9 +90,7 @@ def audiosegment_to_librosawav(audiosegment: AudioSegment) -> np.ndarray:
     return fp_arr
 
 
-def ndarray_to_segment(
-    ndarray: np.ndarray, frame_rate: int, sample_width: int = None, channels: int = None
-) -> AudioSegment:
+def ndarray_to_segment(ndarray: np.ndarray, frame_rate: int, sample_width: int = None, channels: int = None) -> AudioSegment:
     buffer = BytesIO()
     sf.write(buffer, ndarray, frame_rate, format="wav", subtype="PCM_16")
     buffer.seek(0)
@@ -103,11 +101,7 @@ def ndarray_to_segment(
     if channels is None:
         channels = sound.channels
 
-    return (
-        sound.set_frame_rate(frame_rate)
-        .set_sample_width(sample_width)
-        .set_channels(channels)
-    )
+    return sound.set_frame_rate(frame_rate).set_sample_width(sample_width).set_channels(channels)
 
 
 def apply_prosody_to_audio_segment(
@@ -121,9 +115,7 @@ def apply_prosody_to_audio_segment(
 
     audio_data = apply_prosody_to_audio_data(audio_data, rate, volume, pitch, sr)
 
-    audio_segment = ndarray_to_segment(
-        audio_data, sr, audio_segment.sample_width, audio_segment.channels
-    )
+    audio_segment = ndarray_to_segment(audio_data, sr, audio_segment.sample_width, audio_segment.channels)
 
     return audio_segment
 

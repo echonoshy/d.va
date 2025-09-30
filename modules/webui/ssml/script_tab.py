@@ -63,7 +63,6 @@ script_default_value = [
 
 # 脚本页面，纯脚本列表，用于编辑
 def create_script_tab(ssml_input, tabs1, tabs2):
-
     table_headers = [
         "index",
         "type",
@@ -112,11 +111,7 @@ def create_script_tab(ssml_input, tabs1, tabs2):
 
     def _add_message(sheet: pd.DataFrame, data: pd.DataFrame):
         # 如果只有一行 并且是空的
-        is_empty = (
-            sheet.empty
-            or (sheet.shape[0] == 1 and "text" not in sheet.iloc[0])
-            or (sheet.shape[0] == 1 and sheet.iloc[0]["text"] == "")
-        )
+        is_empty = sheet.empty or (sheet.shape[0] == 1 and "text" not in sheet.iloc[0]) or (sheet.shape[0] == 1 and sheet.iloc[0]["text"] == "")
 
         if is_empty:
             sheet = data

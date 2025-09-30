@@ -49,9 +49,7 @@ def do_load_chat_tts():
     # 如果 device 为 cpu 同时，又是 dtype == float16 那么报 warn
     # 提示可能无法正常运行，建议使用 float32 即开启 `--no_half` 参数
     if device == devices.cpu and dtype == torch.float16:
-        logger.warning(
-            "The device is CPU and dtype is float16, which may not work properly. It is recommended to use float32 by enabling the `--no_half` parameter."
-        )
+        logger.warning("The device is CPU and dtype is float16, which may not work properly. It is recommended to use float32 by enabling the `--no_half` parameter.")
 
     devices.torch_gc()
     logger.info("ChatTTS models loaded")

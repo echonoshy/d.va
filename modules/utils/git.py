@@ -33,10 +33,7 @@ def git_tag():
         ).strip()
     except Exception:
         try:
-
-            changelog_md = os.path.join(
-                os.path.dirname(os.path.dirname(__file__)), "CHANGELOG.md"
-            )
+            changelog_md = os.path.join(os.path.dirname(os.path.dirname(__file__)), "CHANGELOG.md")
             with open(changelog_md, "r", encoding="utf-8") as file:
                 line = next((line.strip() for line in file if line.strip()), "<none>")
                 line = line.replace("## ", "")

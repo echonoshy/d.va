@@ -86,9 +86,7 @@ def output_iter(_iter: int, iteration: int = None, iter_len: int = 4) -> str:
     else:
         iter_str = str(iteration)
         length = len(iter_str)
-        pattern = (
-            "{blue_light}[ {red}{0}{blue_light} " "/ {red}{1}{blue_light} ]{reset}"
-        )
+        pattern = "{blue_light}[ {red}{0}{blue_light} / {red}{1}{blue_light} ]{reset}"
         return pattern.format(str(_iter).rjust(length), iter_str, **ansi)
 
 

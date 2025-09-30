@@ -28,6 +28,7 @@ from modules.core.spk.TTSSpeaker import TTSSpeaker
 
 logger = logging.getLogger(__name__)
 
+
 class SpeakerReference(BaseModel):
     wav_b64: str
     text: str
@@ -44,7 +45,6 @@ class SpeakerConfig(BaseModel):
 
 
 class ForgeTextSynthesizeRequest(BaseModel):
-
     # audio
     adjuct: Optional[AdjustConfig] = None
     encoder: Optional[EncoderConfig] = None
@@ -130,6 +130,4 @@ async def forge_text_synthesize(request: ForgeTextSynthesizeRequest):
 
 
 def setup(api_manager: APIManager):
-    api_manager.post("/v2/tts", response_class=FileResponse, tags=["Forge V2"])(
-        forge_text_synthesize
-    )
+    api_manager.post("/v2/tts", response_class=FileResponse, tags=["Forge V2"])(forge_text_synthesize)

@@ -26,7 +26,6 @@ class Blob:
 
 
 class BlobStorage:
-
     def __init__(self, cleanup_interval: int = 60) -> None:
         self.blobs: Dict[str, Blob] = {}
         self.cleanup_interval = cleanup_interval

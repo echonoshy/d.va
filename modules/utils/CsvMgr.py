@@ -115,9 +115,7 @@ if __name__ == "__main__":
 
     try:
         # Add speaker
-        manager.add_item(
-            1, "Speaker1", "Description for speaker 1", '{"param1": "value1"}'
-        )
+        manager.add_item(1, "Speaker1", "Description for speaker 1", '{"param1": "value1"}')
     except DataExistsError as e:
         print(e)
 
@@ -134,9 +132,7 @@ if __name__ == "__main__":
 
     try:
         # Update speaker
-        manager.update_item(
-            1, name="Updated Speaker1", desc="Updated description for speaker 1"
-        )
+        manager.update_item(1, name="Updated Speaker1", desc="Updated description for speaker 1")
     except DataNotFoundError as e:
         print(e)
 

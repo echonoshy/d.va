@@ -2,7 +2,7 @@ try:
     from modules.repos_static.sys_paths import setup_repos_paths
 
     setup_repos_paths()
-except:
+except Exception:
     pass
 
 from typing import Dict, Union
@@ -10,13 +10,16 @@ from typing import Dict, Union
 from modules.core.models.BaseZooModel import BaseZooModel
 from modules.core.models.TTSModel import TTSModel
 from modules.core.models.enhancer.ResembleEnhanceModel import ResembleEnhanceModel
+
 # from modules.core.models.stt.Whisper import WhisperModel
 from modules.core.models.tts.ChatTtsModel import ChatTTSModel
+
 # from modules.core.models.tts.CosyVoiceModel import CosyVoiceTTSModel
 # from modules.core.models.tts.F5TtsModel import F5TtsModel
 # from modules.core.models.tts.FireRed.FireRedTTSModel import FireRedTTSModel
 # from modules.core.models.tts.FishSpeechModel import FishSpeechModel
 from modules.core.models.tts.fishspeech.FishSpeech14Model import FishSpeech14Model
+
 # from modules.core.models.vc.OpenVoice import OpenVoiceModel
 from modules.devices import devices
 

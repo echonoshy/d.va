@@ -20,6 +20,7 @@ from modules.utils.SeedContext import SeedContext
 
 logger = logging.getLogger(__name__)
 
+
 class ChatTTSModel(TTSModel):
     model_id = "chat-tts"
 
@@ -67,14 +68,10 @@ class ChatTTSModel(TTSModel):
         tokenizer = self.chat.tokenizer._tokenizer
         return tokenizer.decode(ids)
 
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         return self.generate_batch_base(segments, context, stream=False)
 
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], Any, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], Any, None]:
         return self.generate_batch_base(segments, context, stream=True)
 
     def get_infer(self, context: TTSPipelineContext):
@@ -85,9 +82,7 @@ class ChatTTSModel(TTSModel):
     def interrupt(self, context: TTSPipelineContext = None) -> None:
         self.current_infer.interrupt()
 
-    def generate_batch_base(
-        self, segments: list[TTSSegment], context: TTSPipelineContext, stream=False
-    ) -> Union[list[NP_AUDIO], Generator[list[NP_AUDIO], Any, None]]:
+    def generate_batch_base(self, segments: list[TTSSegment], context: TTSPipelineContext, stream=False) -> Union[list[NP_AUDIO], Generator[list[NP_AUDIO], Any, None]]:
         cached = self.get_cache(segments=segments, context=context)
         if cached is not None:
             if not stream:
@@ -215,9 +210,7 @@ if __name__ == "__main__":
         return TTSSegment(_type="text", text=text, infer_seed=seed, spk=spk)
 
     sr, audio_data = tts_model.generate(
-        segment=create_seg(
-            text="云想衣裳花想容，春风拂槛露华浓。若非群玉山头见，会向瑶台月下逢。"
-        ),
+        segment=create_seg(text="云想衣裳花想容，春风拂槛露华浓。若非群玉山头见，会向瑶台月下逢。"),
         context=TTSPipelineContext(),
     )
 

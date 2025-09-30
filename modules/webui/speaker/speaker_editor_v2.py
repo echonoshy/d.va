@@ -63,11 +63,7 @@ def speaker_editor_ui_v2():
                 "Please enter speaker name.",
             )
 
-        spk: TTSSpeaker = (
-            ChatTTSModel.create_speaker_from_seed(chat_tts_seed)
-            if chat_tts_seed >= 0
-            else TTSSpeaker.empty()
-        )
+        spk: TTSSpeaker = ChatTTSModel.create_speaker_from_seed(chat_tts_seed) if chat_tts_seed >= 0 else TTSSpeaker.empty()
         spk._data.meta.author = author
         spk._data.meta.name = name
         spk._data.meta.desc = desc
@@ -107,9 +103,7 @@ def speaker_editor_ui_v2():
                 "Please enter refrence text.",
             )
 
-        with tempfile.NamedTemporaryFile(
-            delete=False, suffix=".spkv1.json"
-        ) as tmp_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".spkv1.json") as tmp_file:
             json_str = spk.to_json_str()
             tmp_file.write(json_str.encode("utf-8"))
             tmp_file_path = tmp_file.name
@@ -149,20 +143,12 @@ def speaker_editor_ui_v2():
             with gr.Group():
                 # 设置推荐参数
                 gr.Markdown("🔊Recommend Config")
-                rec_temperature = gr.Slider(
-                    0.01, 2.0, value=0.1, step=0.01, label="Temperature"
-                )
+                rec_temperature = gr.Slider(0.01, 2.0, value=0.1, step=0.01, label="Temperature")
                 rec_top_p = gr.Slider(0.1, 1.0, value=0.7, step=0.1, label="Top P")
                 rec_top_k = gr.Slider(1, 50, value=20, step=1, label="Top K")
-                rec_max_tokens = gr.Slider(
-                    100, 2048, value=2048, step=1, label="Max Tokens"
-                )
-                rec_repetition_penalty = gr.Slider(
-                    0.0, 2.0, value=1.1, step=0.1, label="Repetition Penalty"
-                )
-                rec_emotion = gr.Textbox(
-                    label="Emotion", placeholder="Enter emotion", value="*"
-                )
+                rec_max_tokens = gr.Slider(100, 2048, value=2048, step=1, label="Max Tokens")
+                rec_repetition_penalty = gr.Slider(0.0, 2.0, value=1.1, step=0.1, label="Repetition Penalty")
+                rec_emotion = gr.Textbox(label="Emotion", placeholder="Enter emotion", value="*")
 
             with gr.Group():
                 gr.Markdown("🔊Generate speaker.json")
@@ -172,38 +158,31 @@ def speaker_editor_ui_v2():
             # TODO
             with gr.Group(visible=False):
                 gr.Markdown("🔊Embed to .png")
-                avatar_file = gr.File(label="avatar file", file_types=["image"])
+                gr.File(label="avatar file", file_types=["image"])
 
-                generate_png_button = gr.Button(
+                gr.Button(
                     "Save .png file",
                 )
-                output_png_file = gr.File(label="Save to File")
+                gr.File(label="Save to File")
 
         with gr.Column(scale=5):
-
             # NOTE: 这里暂时不显示了，需要创建的话可以从 ChatTTS/creator 里面创建
             with gr.Group(visible=False):
                 # 从种子创建 spk -1 为默认值，即不使用种子
                 gr.Markdown("From Seed")
-                chat_tts_seed = gr.Number(
-                    label="ChatTTS Seed", value=-1, minimum=-1, maximum=2**23
-                )
+                chat_tts_seed = gr.Number(label="ChatTTS Seed", value=-1, minimum=-1, maximum=2**23)
 
             with gr.Group():
                 # 上传参考音频 模型将参考此文件输出
                 gr.Markdown("🔊Refrence Audio")
                 ref_audio = gr.Audio(label="Refrence Audio")
-                ref_audio_text = gr.Textbox(
-                    label="Refrence Text", placeholder="Enter refrence text"
-                )
+                ref_audio_text = gr.Textbox(label="Refrence Text", placeholder="Enter refrence text")
 
             with gr.Group():
                 # 上传示例音频 仅用于演示api (xtts)
                 gr.Markdown("🔊Sample Audio")
                 sample_audio = gr.Audio(label="Sample Audio")
-                sample_audio_text = gr.Textbox(
-                    label="Sample Text", placeholder="Enter sample text"
-                )
+                sample_audio_text = gr.Textbox(label="Sample Text", placeholder="Enter sample text")
 
             with gr.Group(visible=False):
                 # 设置训练数据

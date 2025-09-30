@@ -40,15 +40,7 @@ def merge_spk(
     if tensor_a is None and tensor_b is None and tensor_c is None and tensor_d is None:
         raise gr.Error("At least one speaker should be selected")
 
-    merge_tensor = torch.zeros_like(
-        tensor_a
-        if tensor_a is not None
-        else (
-            tensor_b
-            if tensor_b is not None
-            else tensor_c if tensor_c is not None else tensor_d
-        )
-    )
+    merge_tensor = torch.zeros_like(tensor_a if tensor_a is not None else (tensor_b if tensor_b is not None else tensor_c if tensor_c is not None else tensor_d))
 
     total_weight = 0
     if tensor_a is not None:
@@ -115,9 +107,7 @@ def merge_spk_to_file(
     speaker_gender,
     speaker_desc,
 ):
-    merged_spk = merge_spk(
-        spk_a, spk_a_w, spk_b, spk_b_w, spk_c, spk_c_w, spk_d, spk_d_w
-    )
+    merged_spk = merge_spk(spk_a, spk_a_w, spk_b, spk_b_w, spk_c, spk_c_w, spk_d, spk_d_w)
     merged_spk.set_name(speaker_name)
     merged_spk.set_gender(speaker_gender)
     merged_spk.set_desc(speaker_desc)
@@ -143,9 +133,7 @@ def create_speaker_merger():
 
     def spk_picker(label_tail: str):
         with gr.Row():
-            spk_a = gr.Dropdown(
-                choices=get_spk_choices(), value="None", label=f"Speaker {label_tail}"
-            )
+            spk_a = gr.Dropdown(choices=get_spk_choices(), value="None", label=f"Speaker {label_tail}")
             refresh_a_btn = gr.Button("🔄", variant="secondary")
 
         def refresh_a():
@@ -183,9 +171,7 @@ def create_speaker_merger():
                     with gr.Group():
                         gr.Markdown("🎤Test voice")
                         with gr.Row():
-                            test_voice_btn = gr.Button(
-                                "Test Voice", variant="secondary"
-                            )
+                            test_voice_btn = gr.Button("Test Voice", variant="secondary")
 
                             with gr.Column(scale=4):
                                 test_text = gr.Textbox(
@@ -194,9 +180,7 @@ def create_speaker_merger():
                                     value=webui_config.localization.DEFAULT_SPEAKER_MERAGE_TEXT,
                                 )
 
-                                output_audio = gr.Audio(
-                                    label="Output Audio", format="mp3"
-                                )
+                                output_audio = gr.Audio(label="Output Audio", format="mp3")
 
         with gr.Column(scale=1):
             with gr.Group():
@@ -208,9 +192,7 @@ def create_speaker_merger():
 
                 save_btn = gr.Button("Save Speaker", variant="primary")
 
-                merged_spker = gr.File(
-                    label="Merged Speaker", interactive=False, type="binary"
-                )
+                merged_spker = gr.File(label="Merged Speaker", interactive=False, type="binary")
 
     test_voice_btn.click(
         merge_and_test_spk_voice,

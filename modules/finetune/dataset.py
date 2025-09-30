@@ -92,9 +92,7 @@ class AudioFolder(torch.utils.data.Dataset, abc.ABC):
             print("Processing data ...")
             for n, item in enumerate(tqdm(self.lazy_data)):
                 self.waveforms[n] = self.preprocess_audio(item["filepath"])
-                self.text_input_ids[n] = self.preprocess_text(
-                    item["text"], item["lang"]
-                )
+                self.text_input_ids[n] = self.preprocess_text(item["text"], item["lang"])
             if self.tar_file is not None:
                 self.tar_file.close()
             if self.tar_io is not None:
@@ -105,9 +103,7 @@ class AudioFolder(torch.utils.data.Dataset, abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def save_config(
-        save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./"
-    ) -> None: ...
+    def save_config(save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./") -> None: ...
 
     def __len__(self):
         return len(self.lazy_data)
@@ -127,9 +123,7 @@ class AudioFolder(torch.utils.data.Dataset, abc.ABC):
                     self.tar_file.close()
                 if self.tar_io is not None:
                     self.tar_io.close()
-        text_attention_mask = torch.ones(
-            len(text_input_ids), device=text_input_ids.device
-        )
+        text_attention_mask = torch.ones(len(text_input_ids), device=text_input_ids.device)
         waveform_attention_mask = torch.ones(len(waveforms), device=waveforms.device)
         return {
             "filepath": lazy_data["filepath"],
@@ -229,9 +223,7 @@ class JsonFolder(AudioFolder):
         return raw_data
 
     @staticmethod
-    def save_config(
-        save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./"
-    ) -> None:
+    def save_config(save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./") -> None:
         save_data = [item.copy() for item in lazy_data]
         for item in save_data:
             item["filepath"] = os.path.relpath(item["filepath"], rel_path)
@@ -266,17 +258,13 @@ class ListFolder(AudioFolder):
         return raw_data
 
     @staticmethod
-    def save_config(
-        save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./"
-    ) -> None:
+    def save_config(save_path: str, lazy_data: list[LazyDataType], rel_path: str = "./") -> None:
         save_data = [item.copy() for item in lazy_data]
         for item in save_data:
             item["filepath"] = os.path.relpath(item["filepath"], rel_path)
         with open(save_path, "w", encoding="utf-8") as f:
             for item in save_data:
-                f.write(
-                    f"{item['filepath']}|{item['speaker']}|{item['lang']}|{item['text']}\n"
-                )
+                f.write(f"{item['filepath']}|{item['speaker']}|{item['lang']}|{item['text']}\n")
 
 
 class XzListTar(ListFolder):
@@ -306,9 +294,7 @@ class XzListTar(ListFolder):
 
         super().__init__(root, *args, tar_path=tar_path, **kwargs)
 
-    def concat_dataset(
-        self, save_folder: str | None = None, langs: list[str] = ["zh", "en"]
-    ) -> None:
+    def concat_dataset(self, save_folder: str | None = None, langs: list[str] = ["zh", "en"]) -> None:
         if save_folder is None:
             save_folder = os.path.dirname(self.root)
         if os.path.isfile(save_folder):
@@ -440,9 +426,7 @@ def formalize_xz_list(src_folder: str):
                 XzListFolder.save_config(filepath, lazy_data, rel_path=src_folder)
 
 
-def concat_dataset(
-    src_folder: str, save_folder: str | None = None, langs: list[str] = ["zh", "en"]
-) -> None:
+def concat_dataset(src_folder: str, save_folder: str | None = None, langs: list[str] = ["zh", "en"]) -> None:
     if save_folder is None:
         save_folder = src_folder
     if os.path.isfile(save_folder):
@@ -464,10 +448,6 @@ def concat_dataset(
                 lazy_data += JsonFolder(filepath).lazy_data
     if langs is not None:
         lazy_data = [item for item in lazy_data if item["lang"] in langs]
-    ListFolder.save_config(
-        os.path.join(save_folder, "all.list"), lazy_data, rel_path=save_folder
-    )
-    JsonFolder.save_config(
-        os.path.join(save_folder, "all.json"), lazy_data, rel_path=save_folder
-    )
+    ListFolder.save_config(os.path.join(save_folder, "all.list"), lazy_data, rel_path=save_folder)
+    JsonFolder.save_config(os.path.join(save_folder, "all.json"), lazy_data, rel_path=save_folder)
     print(f"all.list and all.json are saved to {save_folder}")

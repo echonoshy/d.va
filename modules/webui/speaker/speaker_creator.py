@@ -54,9 +54,7 @@ names_list = [
 
 @torch.inference_mode()
 @spaces.GPU(duration=120)
-def create_spk_from_seed(
-    seed: int, name: str, gender: str, desc: str, author: str, version: str
-):
+def create_spk_from_seed(seed: int, name: str, gender: str, desc: str, author: str, version: str):
     spk = ChatTTSModel.create_speaker_from_seed(seed)
     spk.set_name(name=name)
     spk.set_desc(desc=desc)
@@ -129,12 +127,8 @@ def speaker_creator_ui():
             with gr.Group():
                 gr.Markdown("ℹ️Speaker info")
                 seed_input = gr.Number(label="Seed", value=2)
-                name_input = gr.Textbox(
-                    label="Name", placeholder="Enter speaker name", value="Bob"
-                )
-                gender_input = gr.Textbox(
-                    label="Gender", placeholder="Enter gender", value="*"
-                )
+                name_input = gr.Textbox(label="Name", placeholder="Enter speaker name", value="Bob")
+                gender_input = gr.Textbox(label="Gender", placeholder="Enter gender", value="*")
                 author_input = gr.Textbox(
                     label="Author",
                     placeholder="Enter author",

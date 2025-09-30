@@ -178,9 +178,7 @@ def insert_spaces_between_uppercase(text: str, guess_lang: GuessLang):
     )
 
 
-homo_replacer = HomophonesReplacer(
-    map_file_path="./modules/repos_static/ChatTTS/ChatTTS/res/homophones_map.json"
-)
+homo_replacer = HomophonesReplacer(map_file_path="./modules/repos_static/ChatTTS/ChatTTS/res/homophones_map.json")
 
 
 @BaseTN.block()

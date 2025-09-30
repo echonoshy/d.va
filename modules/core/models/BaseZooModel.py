@@ -1,5 +1,4 @@
 class BaseZooModel:
-
     def __init__(self, model_id: str) -> None:
         self.model_id = model_id
         self.hash = ""

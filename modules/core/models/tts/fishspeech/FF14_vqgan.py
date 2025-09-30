@@ -49,18 +49,12 @@ class FF14_vqgan:
             cfg = compose(config_name=config_name)
 
         model: FireflyArchitecture = instantiate(cfg)
-        state_dict = torch.load(
-            checkpoint_path, map_location=device, mmap=True, weights_only=True
-        )
+        state_dict = torch.load(checkpoint_path, map_location=device, mmap=True, weights_only=True)
         if "state_dict" in state_dict:
             state_dict = state_dict["state_dict"]
 
         if any("generator" in k for k in state_dict):
-            state_dict = {
-                k.replace("generator.", ""): v
-                for k, v in state_dict.items()
-                if "generator." in k
-            }
+            state_dict = {k.replace("generator.", ""): v for k, v in state_dict.items() if "generator." in k}
 
         result = model.load_state_dict(state_dict, strict=False, assign=True)
         model.eval()
@@ -76,9 +70,7 @@ class FF14_vqgan:
         ref_audio = torch.from_numpy(wav).clone()
         ref_audio = ref_audio[None].to(self.device)
         # print(ref_audio.shape, wav.shape)
-        audio_lengths = torch.tensor(
-            [ref_audio.shape[1]], device=self.device, dtype=torch.long
-        )
+        audio_lengths = torch.tensor([ref_audio.shape[1]], device=self.device, dtype=torch.long)
         indices = self.model.encode(ref_audio, audio_lengths)[0][0]
 
         return indices
@@ -92,9 +84,7 @@ class FF14_vqgan:
 
         indices = indices.to(device)
         feature_lengths = torch.tensor([indices.shape[1]], device=device)
-        fake_audios, _ = model.decode(
-            indices=indices[None], feature_lengths=feature_lengths
-        )
+        fake_audios, _ = model.decode(indices=indices[None], feature_lengths=feature_lengths)
 
         fake_audio = fake_audios[0, 0].detach().float().cpu().numpy()
         return fake_audio

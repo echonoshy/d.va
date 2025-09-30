@@ -6,10 +6,7 @@ from modules.core.pipeline.generate.dcls import SynthAudio
 
 
 class SynthStreamer:
-
-    def __init__(
-        self, segments: list[SynthAudio], context: TTSPipelineContext, model: TTSModel
-    ) -> None:
+    def __init__(self, segments: list[SynthAudio], context: TTSPipelineContext, model: TTSModel) -> None:
         self.segments = segments
         self.context = context
         self.model = model

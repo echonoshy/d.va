@@ -30,9 +30,7 @@ prompt_sr, target_sr = 16000, 16000
 
 
 def postprocess(speech: np.ndarray, top_db=60, hop_length=220, win_length=440):
-    speech, _ = librosa.effects.trim(
-        speech, top_db=top_db, frame_length=win_length, hop_length=hop_length
-    )
+    speech, _ = librosa.effects.trim(speech, top_db=top_db, frame_length=win_length, hop_length=hop_length)
     if speech.abs().max() > max_val:
         speech = speech / speech.abs().max() * max_val
     speech = torch.concat([speech, torch.zeros(1, int(target_sr * 0.2))], dim=1)
@@ -72,9 +70,7 @@ class CosyVoiceTTSModel(TTSModel):
         self.model = CosyVoiceTTSModel.model
         self.frontend = CosyVoiceTTSModel.frontend
 
-        self.hp_overrides = {
-            "qwen_pretrain_path": str(self.model_dir / "CosyVoice-BlankEN")
-        }
+        self.hp_overrides = {"qwen_pretrain_path": str(self.model_dir / "CosyVoice-BlankEN")}
 
         self.sample_rate = 24000
 
@@ -87,9 +83,7 @@ class CosyVoiceTTSModel(TTSModel):
     def reset(self) -> None:
         return super().reset()
 
-    def load(
-        self, context: TTSPipelineContext = None
-    ) -> tuple[CosyVoice2Model, CosyVoiceFrontEnd]:
+    def load(self, context: TTSPipelineContext = None) -> tuple[CosyVoice2Model, CosyVoiceFrontEnd]:
         with self.load_lock:
             if CosyVoiceTTSModel.model is not None:
                 return CosyVoiceTTSModel.model, CosyVoiceTTSModel.frontend
@@ -178,48 +172,32 @@ class CosyVoiceTTSModel(TTSModel):
     def inference_sft(self, tts_texts: list[str], spk_embedding: torch.Tensor):
         tts_speeches = []
         for text in tts_texts:
-            model_input = self.frontend.frontend_sft(
-                tts_text=text, spk_embedding=spk_embedding
-            )
+            model_input = self.frontend.frontend_sft(tts_text=text, spk_embedding=spk_embedding)
             for model_output in self.model.tts(**model_input):
                 tts_speeches.append(model_output["tts_speech"])
         return {"tts_speech": torch.concat(tts_speeches, dim=1)}
 
-    def inference_zero_shot(
-        self, tts_texts: list[str], prompt_text: str, prompt_speech_16k: torch.Tensor
-    ):
+    def inference_zero_shot(self, tts_texts: list[str], prompt_text: str, prompt_speech_16k: torch.Tensor):
         tts_speeches = []
         for text in tts_texts:
-            model_input = self.frontend.frontend_zero_shot(
-                text, prompt_text, prompt_speech_16k, resample_rate=self.sample_rate
-            )
+            model_input = self.frontend.frontend_zero_shot(text, prompt_text, prompt_speech_16k, resample_rate=self.sample_rate)
             for model_output in self.model.tts(**model_input):
                 tts_speeches.append(model_output["tts_speech"])
         return {"tts_speech": torch.concat(tts_speeches, dim=1)}
 
-    def inference_cross_lingual(
-        self, tts_texts: list[str], prompt_speech_16k: torch.Tensor
-    ):
+    def inference_cross_lingual(self, tts_texts: list[str], prompt_speech_16k: torch.Tensor):
         if self.frontend.instruct is True:
-            raise ValueError(
-                "{} do not support cross_lingual inference".format(self.model_dir)
-            )
+            raise ValueError("{} do not support cross_lingual inference".format(self.model_dir))
         tts_speeches = []
         for text in tts_texts:
-            model_input = self.frontend.frontend_cross_lingual(
-                text, prompt_speech_16k, resample_rate=self.sample_rate
-            )
+            model_input = self.frontend.frontend_cross_lingual(text, prompt_speech_16k, resample_rate=self.sample_rate)
             for model_output in self.model.tts(**model_input):
                 tts_speeches.append(model_output["tts_speech"])
         return {"tts_speech": torch.concat(tts_speeches, dim=1)}
 
-    def inference_instruct(
-        self, tts_texts: list[str], prompt_speech_16k: torch.Tensor, instruct_text: str
-    ):
+    def inference_instruct(self, tts_texts: list[str], prompt_speech_16k: torch.Tensor, instruct_text: str):
         if self.frontend.instruct is False:
-            raise ValueError(
-                "{} do not support instruct inference".format(self.model_dir)
-            )
+            raise ValueError("{} do not support instruct inference".format(self.model_dir))
         tts_speeches = []
         for text in tts_texts:
             model_input = self.frontend.frontend_instruct2(
@@ -233,11 +211,7 @@ class CosyVoiceTTSModel(TTSModel):
         return {"tts_speech": torch.concat(tts_speeches, dim=1)}
 
     def spk_to_embedding(self, spk: TTSSpeaker):
-        token_cfg = (
-            spk.get_token(self.model_id)
-            or spk.get_token("cosyvoice_300m_instruct")
-            or spk.get_token("cosyvoice_instruct")
-        )
+        token_cfg = spk.get_token(self.model_id) or spk.get_token("cosyvoice_300m_instruct") or spk.get_token("cosyvoice_instruct")
         if token_cfg is None:
             return None
         if len(token_cfg.embedding) > 0:
@@ -248,25 +222,17 @@ class CosyVoiceTTSModel(TTSModel):
         ref_data = spk.get_ref(lambda x: x.emotion == emotion)
         if ref_data is None:
             return None, None
-        wav = audio_utils.bytes_to_librosa_array(
-            audio_bytes=ref_data.wav, sample_rate=ref_data.wav_sr
-        )
-        _, wav = AudioReshaper.normalize_audio(
-            audio=(ref_data.wav_sr, wav), target_sr=target_sr
-        )
+        wav = audio_utils.bytes_to_librosa_array(audio_bytes=ref_data.wav, sample_rate=ref_data.wav_sr)
+        _, wav = AudioReshaper.normalize_audio(audio=(ref_data.wav_sr, wav), target_sr=target_sr)
         return wav, ref_data.text
 
     def get_sample_rate(self) -> int:
         return self.sample_rate
 
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         return next(self.generate_batch_stream(segments, context))
 
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], None, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], None, None]:
         cached = self.get_cache(segments=segments, context=context)
         if cached is not None:
             yield cached
@@ -284,10 +250,6 @@ class CosyVoiceTTSModel(TTSModel):
             raise ValueError("spk is None")
 
         # TODO 目前不能传递这些值
-        temperature = seg0.temperature
-        top_p = seg0.top_p
-        top_k = seg0.top_k
-
         emotion = seg0.emotion
         prompt2 = seg0.prompt2
         infer_seed = seg0.infer_seed
@@ -296,9 +258,7 @@ class CosyVoiceTTSModel(TTSModel):
 
         # NOTE: v2 版本不需要 token 可以直接用 prompt speech
         # spk_embedding = self.spk_to_embedding(spk) if spk else None
-        ref_wav, ref_text = (
-            self.spk_to_ref_wav(spk, emotion=emotion) if spk else (None, None)
-        )
+        ref_wav, ref_text = self.spk_to_ref_wav(spk, emotion=emotion) if spk else (None, None)
 
         infer_func: callable = None
         if instruct_text is not None:

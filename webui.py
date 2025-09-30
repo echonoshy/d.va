@@ -43,9 +43,7 @@ if sys.platform == "darwin":
 def setup_webui_args(parser: argparse.ArgumentParser):
     parser.add_argument("--server_name", type=str, help="server name")
     parser.add_argument("--server_port", type=int, help="server port")
-    parser.add_argument(
-        "--share", action="store_true", help="share the gradio interface"
-    )
+    parser.add_argument("--share", action="store_true", help="share the gradio interface")
     parser.add_argument("--debug", action="store_true", help="enable debug mode")
     parser.add_argument("--auth", type=str, help="username:password for authentication")
     parser.add_argument(
@@ -95,19 +93,13 @@ def process_webui_args(args):
     # language = get_and_update_env(args, "language", "zh-CN", str)
     api = get_and_update_env(args, "api", False, bool)
 
-    webui_config.off_track_tqdm = get_and_update_env(
-        args, "off_track_tqdm", False, bool
-    )
-    webui_config.experimental = get_and_update_env(
-        args, "webui_experimental", False, bool
-    )
+    webui_config.off_track_tqdm = get_and_update_env(args, "off_track_tqdm", False, bool)
+    webui_config.experimental = get_and_update_env(args, "webui_experimental", False, bool)
     webui_config.tts_max = get_and_update_env(args, "tts_max_len", 1000, int)
     webui_config.ssml_max = get_and_update_env(args, "ssml_max_len", 5000, int)
     webui_config.max_batch_size = get_and_update_env(args, "max_batch_size", 8, int)
 
-    webui_config.experimental = get_and_update_env(
-        args, "webui_experimental", False, bool
-    )
+    webui_config.experimental = get_and_update_env(args, "webui_experimental", False, bool)
     webui_config.tts_max = get_and_update_env(args, "tts_max_len", 1000, int)
     webui_config.ssml_max = get_and_update_env(args, "ssml_max_len", 5000, int)
     webui_config.max_batch_size = get_and_update_env(args, "max_batch_size", 8, int)
@@ -132,25 +124,15 @@ def process_webui_args(args):
             "title": app_title,
             "description": app_description,
             "version": app_version,
-            "redoc_url": (
-                None
-                if api is False
-                else None if config.runtime_env_vars.no_docs else "/redoc"
-            ),
-            "docs_url": (
-                None
-                if api is False
-                else None if config.runtime_env_vars.no_docs else "/docs"
-            ),
+            "redoc_url": (None if api is False else None if config.runtime_env_vars.no_docs else "/redoc"),
+            "docs_url": (None if api is False else None if config.runtime_env_vars.no_docs else "/docs"),
         },
     )
     # gradio uses a very open CORS policy via app.user_middleware, which makes it possible for
     # an attacker to trick the user into opening a malicious HTML page, which makes a request to the
     # running web ui and do whatever the attacker wants, including installing an extension and
     # running its code. We disable this here. Suggested by RyotaK.
-    app.user_middleware = [
-        x for x in app.user_middleware if x.cls.__name__ != "CustomCORSMiddleware"
-    ]
+    app.user_middleware = [x for x in app.user_middleware if x.cls.__name__ != "CustomCORSMiddleware"]
 
     if api:
         process_api_args(args, app)

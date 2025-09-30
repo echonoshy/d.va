@@ -55,9 +55,7 @@ if __name__ == "__main__":
         help="the data_path to json/list file",
     )
     parser.add_argument("--tar_path", type=str, help="the tarball path with wavs")
-    parser.add_argument(
-        "--tar_in_memory", action="store_true", help="load tarball in memory"
-    )
+    parser.add_argument("--tar_in_memory", action="store_true", help="load tarball in memory")
 
     args = parser.parse_args()
 
@@ -110,19 +108,11 @@ if __name__ == "__main__":
         spk.set_name(name)
         return spk
 
-    speaker_outs = {
-        speaker: create_spk(
-            token=speaker_embed.detach().cpu(), name=f"ep{epochs}_{speaker}"
-        )
-        for speaker, speaker_embed in speaker_embeds.items()
-    }
+    speaker_outs = {speaker: create_spk(token=speaker_embed.detach().cpu(), name=f"ep{epochs}_{speaker}") for speaker, speaker_embed in speaker_embeds.items()}
     time_str = np.datetime_as_string(np.datetime64("now", "s"))
     time_str = time_str.replace(":", "_").replace(" ", "_").replace("-", "_")
     for speaker, speaker_out in speaker_outs.items():
-        filepath = (
-            pathlib.Path(save_folder)
-            / f"spk_{speaker}_{time_str}_ep{epochs}.spkv1.json"
-        )
+        filepath = pathlib.Path(save_folder) / f"spk_{speaker}_{time_str}_ep{epochs}.spkv1.json"
         json_str = speaker_out.to_json_str()
         with open(filepath, "+w", encoding="utf-8") as f:
             f.write(json_str)

@@ -34,20 +34,14 @@ class StreamEncoder:
         self.sample_width = 2
         self.sample_rate = 24000
 
-    def set_header(
-        self, *, frame_input=b"", channels=1, sample_width=2, sample_rate=24000
-    ):
+    def set_header(self, *, frame_input=b"", channels=1, sample_width=2, sample_rate=24000):
         if self.header:
             return
-        header_bytes = wave_header_chunk(
-            frame_input, channels, sample_width, sample_rate
-        )
+        header_bytes = wave_header_chunk(frame_input, channels, sample_width, sample_rate)
         self.header = header_bytes
         self.write(header_bytes)
 
-    def open(
-        self, format: str = "mp3", acodec: str = "libmp3lame", bitrate: str = "320k"
-    ):
+    def open(self, format: str = "mp3", acodec: str = "libmp3lame", bitrate: str = "320k"):
         encoder = self.encoder
         self.p = subprocess.Popen(
             [

@@ -8,9 +8,7 @@ from modules.webui.speaker.spk_hub import create_spk_hub_ui
 
 
 def create_speaker_panel():
-
     with gr.Tabs():
-
         with gr.Tab("Builder"):
             speaker_editor_ui_v2()
         with gr.Tab("Test Voice"):

@@ -6,7 +6,7 @@ from modules.webui import webui_utils
 from modules.webui.webui_utils import get_styles, split_long_text
 
 
-def merge_dataframe_to_ssml(dataframe, spk, style):
+def merge_dataframe_to_ssml(dataframe, spk, style, seed=None):
     if style == "*auto":
         style = None
     if spk == "-1" or spk == -1:

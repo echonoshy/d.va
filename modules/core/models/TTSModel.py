@@ -9,7 +9,6 @@ from modules.utils import audio_utils
 
 
 class TTSModel(BaseZooModel):
-
     def __init__(self, model_id: str) -> None:
         super().__init__(model_id=model_id)
 
@@ -26,20 +25,14 @@ class TTSModel(BaseZooModel):
         return self.generate_batch([segment], context=context)[0]
 
     # NOTE: 这里会有假设，所有的 segments 除了文本以外所有配置相同，具体调用逻辑在 core.pipeline.generate 中
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         raise NotImplementedError("generate_batch method is not implemented")
 
-    def generate_stream(
-        self, segment: TTSSegment, context: TTSPipelineContext
-    ) -> Generator[NP_AUDIO, None, None]:
+    def generate_stream(self, segment: TTSSegment, context: TTSPipelineContext) -> Generator[NP_AUDIO, None, None]:
         for batch in self.generate_batch_stream([segment], context=context):
             yield batch[0]
 
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], None, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], None, None]:
         raise NotImplementedError("generate_batch_stream method is not implemented")
 
     def get_spk_emb(self, segment: TTSSegment, context: TTSPipelineContext):
@@ -95,9 +88,7 @@ class TTSModel(BaseZooModel):
 
         return False
 
-    def get_cache(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Union[list[NP_AUDIO], None]:
+    def get_cache(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Union[list[NP_AUDIO], None]:
         if self._is_skip_cache(segments=segments, context=context):
             return None
 
@@ -126,9 +117,7 @@ class TTSModel(BaseZooModel):
         ref_data = spk.get_ref(lambda x: x.emotion == emotion)
         if ref_data is None:
             return None, None
-        wav = audio_utils.bytes_to_librosa_array(
-            audio_bytes=ref_data.wav, sample_rate=ref_data.wav_sr
-        )
+        wav = audio_utils.bytes_to_librosa_array(audio_bytes=ref_data.wav, sample_rate=ref_data.wav_sr)
         _, wav = AudioReshaper.normalize_audio(
             audio=(ref_data.wav_sr, wav),
             target_sr=self.get_sample_rate(),

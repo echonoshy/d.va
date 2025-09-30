@@ -46,7 +46,7 @@ def javascript_html():
 
 
 def css_html():
-    head = f'<style>{read_file("css/style.css")}</style>'
+    head = f"<style>{read_file('css/style.css')}</style>"
     return head
 
 

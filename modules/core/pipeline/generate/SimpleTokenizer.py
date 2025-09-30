@@ -2,7 +2,6 @@ import re
 
 
 class TokenizerLike:
-
     def encode(self, text: str) -> list[int]:
         pass
 
@@ -11,7 +10,6 @@ class TokenizerLike:
 
 
 class SimpleTokenizer(TokenizerLike):
-
     def encode(self, text: str) -> list[int]:
         return [ord(char) for char in text]
 
@@ -20,7 +18,6 @@ class SimpleTokenizer(TokenizerLike):
 
 
 class RegexpTokenizer(SimpleTokenizer):
-
     def encode(self, text: str) -> list[int]:
         # NOTE: 略微比纯基于char的好一点，因为只是给 spliter 用，所以大概能计算出一个结果即可
         tokens = re.findall(r"\w{1,4}|[^\w\s]", text, re.UNICODE)

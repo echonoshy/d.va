@@ -21,7 +21,6 @@ from modules.core.handler.datacls.vc_model import VCConfig
 from modules.core.handler.TTSHandler import TTSHandler
 from modules.core.models.tts import ChatTtsModel
 from modules.core.spk import TTSSpeaker, spk_mgr
-from modules.core.spk.TTSSpeaker import TTSSpeaker
 from modules.core.ssml.SSMLParser import SSMLBreak, SSMLSegment, create_ssml_v01_parser
 from modules.core.tn import ChatTtsTN
 from modules.core.tools.SentenceSplitter import SentenceSplitter
@@ -73,7 +72,6 @@ def load_spk_info(file):
     if file is None:
         return "empty"
     try:
-
         spk: TTSSpeaker = TTSSpeaker.from_file(file)
         return f"""
 - name: {spk.name}
@@ -85,9 +83,7 @@ def load_spk_info(file):
         return "load failed"
 
 
-def segments_length_limit(
-    segments: list[Union[SSMLBreak, SSMLSegment]], total_max: int
-) -> list[Union[SSMLBreak, SSMLSegment]]:
+def segments_length_limit(segments: list[Union[SSMLBreak, SSMLSegment]], total_max: int) -> list[Union[SSMLBreak, SSMLSegment]]:
     ret_segments = []
     total_len = 0
     for seg in segments:
@@ -188,7 +184,6 @@ def run_tts_pipe(
     enhancer_config: EnhancerConfig,
     encoder_config: EncoderConfig,
 ):
-
     handler = TTSHandler(
         text_content=text,
         spk=spk,
@@ -353,16 +348,16 @@ def tts_generate(
 # @torch.inference_mode()
 @spaces.GPU(duration=120)
 def dit_tts_generate(
-    text:str,
-    spk:Optional[TTSSpeaker] = None,
+    text: str,
+    spk: Optional[TTSSpeaker] = None,
     infer_seed=-1,
     disable_normalize=False,
     batch_size=4,
     # dit configs
-    nfe_step = 32,
-    cfg_strength = 2.0,
-    sway_sampling_coef = -1.0,
-    speed_scale = 1.0,
+    nfe_step=32,
+    cfg_strength=2.0,
+    sway_sampling_coef=-1.0,
+    speed_scale=1.0,
     # enhancer
     enable_enhance=False,
     enable_denoise=False,
@@ -392,9 +387,7 @@ def dit_tts_generate(
 
 @torch.inference_mode()
 def text_normalize(text: str) -> str:
-    return ChatTtsTN.ChatTtsTN.normalize(
-        text, config=TNConfig(disabled=["replace_unk_tokens"])
-    )
+    return ChatTtsTN.ChatTtsTN.normalize(text, config=TNConfig(disabled=["replace_unk_tokens"]))
 
 
 @torch.inference_mode()
@@ -419,9 +412,7 @@ def refine_text(
         prompt.append(f"[break_{rf_break}]")
     if laugh != -1:
         prompt.append(f"[laugh_{laugh}]")
-    return refiner.refine_text(
-        text, prompt="".join(prompt), spliter_threshold=spliter_threshold
-    )
+    return refiner.refine_text(text, prompt="".join(prompt), spliter_threshold=spliter_threshold)
 
 
 @torch.inference_mode()

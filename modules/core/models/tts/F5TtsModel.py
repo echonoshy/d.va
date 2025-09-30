@@ -37,9 +37,7 @@ sway_sampling_coef = -1.0
 speed = 1.0
 # fix_duration = 27  # None or float (duration in seconds)
 fix_duration = None
-F5TTS_model_cfg = dict(
-    dim=1024, depth=22, heads=16, ff_mult=2, text_dim=512, conv_layers=4
-)
+F5TTS_model_cfg = dict(dim=1024, depth=22, heads=16, ff_mult=2, text_dim=512, conv_layers=4)
 
 
 class F5TtsModel(TTSModel):
@@ -85,9 +83,7 @@ class F5TtsModel(TTSModel):
 
         vocab_char_map, vocab_size = get_tokenizer("Emilia_ZH_EN", "pinyin")
         model = CFM(
-            transformer=model_cls(
-                **model_cfg, text_num_embeds=vocab_size, mel_dim=n_mel_channels
-            ),
+            transformer=model_cls(**model_cfg, text_num_embeds=vocab_size, mel_dim=n_mel_channels),
             mel_spec_kwargs=dict(
                 target_sample_rate=target_sample_rate,
                 n_mel_channels=n_mel_channels,
@@ -110,10 +106,7 @@ class F5TtsModel(TTSModel):
         model = Vocos.from_hparams(config_path)
         state_dict = torch.load(model_path, map_location="cpu")
         if isinstance(model.feature_extractor, EncodecFeatures):
-            encodec_parameters = {
-                "feature_extractor.encodec." + key: value
-                for key, value in model.feature_extractor.encodec.state_dict().items()
-            }
+            encodec_parameters = {"feature_extractor.encodec." + key: value for key, value in model.feature_extractor.encodec.state_dict().items()}
             state_dict.update(encodec_parameters)
         model.load_state_dict(state_dict)
         model.eval()
@@ -133,9 +126,7 @@ class F5TtsModel(TTSModel):
     def get_sample_rate(self) -> int:
         return target_sample_rate
 
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         # TODO: 缓存
         self.load()
 
@@ -144,19 +135,6 @@ class F5TtsModel(TTSModel):
         texts = [segment.text for segment in segments]
 
         seg0 = segments[0]
-        # NOTE: 虽然用不到这些参数...但是还是列出来先
-        top_P = seg0.top_p
-        top_K = seg0.top_k
-        temperature = seg0.temperature
-        # repetition_penalty = seg0.repetition_penalty
-        # max_new_token = seg0.max_new_token
-        prompt = seg0.prompt
-        prompt1 = seg0.prompt1
-        prompt2 = seg0.prompt2
-        prefix = seg0.prefix
-        # use_decoder = seg0.use_decoder
-        seed = seg0.infer_seed
-        chunk_size = context.infer_config.stream_chunk_size
 
         ref_wav, ref_txt = self.get_ref_wav(seg0)
         if ref_wav is None:
@@ -166,15 +144,11 @@ class F5TtsModel(TTSModel):
         ref_audio = (sr, ref_wav)
 
         with SeedContext(seed=seg0.infer_seed):
-            generated_waves = self.infer_batch(
-                ref_audio=ref_audio, ref_text=ref_txt, gen_text_batches=texts
-            )
+            generated_waves = self.infer_batch(ref_audio=ref_audio, ref_text=ref_txt, gen_text_batches=texts)
 
         return [(sr, generated_wave) for generated_wave in generated_waves]
 
-    def infer_batch(
-        self, ref_audio: NP_AUDIO, ref_text: str, gen_text_batches: list[str]
-    ):
+    def infer_batch(self, ref_audio: NP_AUDIO, ref_text: str, gen_text_batches: list[str]):
         device = self.device
         ema_model = self.model
         vocos = self.vocos
@@ -204,23 +178,15 @@ class F5TtsModel(TTSModel):
             text_list = [ref_text + gen_text]
 
             # final_text_list = convert_char_to_pinyin(text_list)
-            final_text_list = [
-                self.annotation.convert_to_pinyin(text) for text in text_list
-            ]
+            final_text_list = [self.annotation.convert_to_pinyin(text) for text in text_list]
             # print(final_text_list)
 
             # Calculate duration
             ref_audio_len = audio.shape[-1] // hop_length
             zh_pause_punc = r"。，、；：？！"
-            ref_text_len = len(ref_text.encode("utf-8")) + 3 * len(
-                re.findall(zh_pause_punc, ref_text)
-            )
-            gen_text_len = len(gen_text.encode("utf-8")) + 3 * len(
-                re.findall(zh_pause_punc, gen_text)
-            )
-            duration = ref_audio_len + int(
-                ref_audio_len / ref_text_len * gen_text_len / speed
-            )
+            ref_text_len = len(ref_text.encode("utf-8")) + 3 * len(re.findall(zh_pause_punc, ref_text))
+            gen_text_len = len(gen_text.encode("utf-8")) + 3 * len(re.findall(zh_pause_punc, gen_text))
+            duration = ref_audio_len + int(ref_audio_len / ref_text_len * gen_text_len / speed)
 
             # inference
             with torch.inference_mode():
@@ -248,9 +214,7 @@ class F5TtsModel(TTSModel):
 
         return generated_waves
 
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], None, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], None, None]:
         # NOTE: 不支持 stream
         generated_waves = self.generate_batch(segments=segments, context=context)
         yield generated_waves

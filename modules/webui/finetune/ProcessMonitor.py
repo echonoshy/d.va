@@ -43,7 +43,7 @@ class ProcessMonitor:
                 if output:
                     with self.lock:
                         self.stdout += output
-            except:
+            except Exception:
                 pass
 
     def _read_stderr(self):
@@ -53,7 +53,7 @@ class ProcessMonitor:
                 if error:
                     with self.lock:
                         self.stderr += error
-            except:
+            except Exception:
                 pass
 
     def get_output(self):

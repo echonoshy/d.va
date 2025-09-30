@@ -4,7 +4,7 @@ try:
     import spaces
 
     is_spaces_env = True
-except:
+except Exception:
 
     class NoneSpaces:
         def __init__(self):

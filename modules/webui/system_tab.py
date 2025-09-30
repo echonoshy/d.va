@@ -24,6 +24,7 @@ def get_system_status():
     )
     return status
 
+
 # NOTE: 这样写会抢占输出队列...
 # def update_markdown():
 #     while True:
@@ -32,7 +33,7 @@ def get_system_status():
 
 
 def create_system_tab(demo: gr.Blocks):
-    with gr.Row() as r:
+    with gr.Row():
         with gr.Column(scale=1):
             gr.Markdown("info")
 
@@ -46,7 +47,7 @@ def create_system_tab(demo: gr.Blocks):
         with gr.Column(scale=5):
             with gr.Group():
                 gr.Markdown("🚩 Features")
-                toggle_experimental = gr.Checkbox(
+                gr.Checkbox(
                     label="Enable Experimental Features",
                     value=webui_config.experimental,
                     interactive=False,

@@ -3,7 +3,7 @@ try:
     from modules.repos_static.sys_paths import setup_repos_paths
 
     setup_repos_paths()
-except:
+except Exception:
     pass
 
 import torch

@@ -18,9 +18,7 @@ class SegmentProcessor:
     比如 vc 模块
     """
 
-    def pre_process(
-        self, segment: TTSSegment, context: TTSPipelineContext
-    ) -> TTSSegment:
+    def pre_process(self, segment: TTSSegment, context: TTSPipelineContext) -> TTSSegment:
         return segment
 
     def after_process(self, result: SynthAudio, context: TTSPipelineContext) -> None:
@@ -50,9 +48,7 @@ class AudioProcessor:
         processed_segment = self._process_segment(segment, context)
         return audio_utils.audiosegment_to_librosawav(processed_segment)
 
-    def _process_segment(
-        self, audio: AudioSegment, context: TTSPipelineContext
-    ) -> AudioSegment:
+    def _process_segment(self, audio: AudioSegment, context: TTSPipelineContext) -> AudioSegment:
         ndarray = audio_utils.audiosegment_to_librosawav(audio)
         processed_ndarray = self._process_array(ndarray, context)
         return audio_utils.ndarray_to_segment(processed_ndarray)

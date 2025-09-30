@@ -72,6 +72,9 @@ url = "https://mirrors.aliyun.com/pypi/simple"
 
 [tool.ruff]
 line-length = 200
+extend-exclude = [
+    "modules/repos_static",
+]
 
 [tool.ruff.lint]
 extend-select = ["ASYNC", "ASYNC1"]

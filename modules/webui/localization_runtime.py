@@ -253,9 +253,7 @@ class ENLocalizationVars(LocalizationVars):
         super().__init__()
         self.DEFAULT_TTS_TEXT = "D.Va is a project developed around TTS generation model, implementing an API Server and a Gradio-based WebUI."
         self.DEFAULT_SPEAKER_TEST_TEXT = "Speaker test 123456789. ok, test done ."
-        self.DEFAULT_SPEAKER_MERAGE_TEXT = (
-            "Speaker merge test 123456789. ok, test done ."
-        )
+        self.DEFAULT_SPEAKER_MERAGE_TEXT = "Speaker merge test 123456789. ok, test done ."
         self.DEFAULT_SSML_TEXT = """
 <speak version="0.1">
     <voice spk="mona" seed="42">

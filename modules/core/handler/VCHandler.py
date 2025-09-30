@@ -11,7 +11,6 @@ from modules.core.spk.TTSSpeaker import TTSSpeaker
 
 
 class VCHandler(AudioHandler):
-
     def __init__(
         self,
         input_audio: NP_AUDIO,
@@ -33,25 +32,15 @@ class VCHandler(AudioHandler):
             raise Exception(f"Model {self.vc_config.mid} is not supported")
 
     def get_model(self):
-        model_id = (
-            self.vc_config.mid.lower()
-            .replace(" ", "")
-            .replace("-", "")
-            .replace("_", "")
-            .strip()
-        )
+        model_id = self.vc_config.mid.lower().replace(" ", "").replace("-", "").replace("_", "").strip()
         if model_id.startswith("openvoice"):
             return model_zoo.get_model(model_id="open-voice")
 
         raise Exception(f"Model {model_id} is not supported")
 
     def enqueue(self) -> NP_AUDIO:
-        result = self.model.convert(
-            src_audio=self.input_audio, config=self.vc_config, ref_spk=self.ref_spk
-        )
+        result = self.model.convert(src_audio=self.input_audio, config=self.vc_config, ref_spk=self.ref_spk)
         return result
 
     def enqueue_stream(self) -> Generator[NP_AUDIO, None, None]:
-        raise NotImplementedError(
-            "Method 'enqueue_stream' not implemented in VCHandler"
-        )
+        raise NotImplementedError("Method 'enqueue_stream' not implemented in VCHandler")

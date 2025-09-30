@@ -23,9 +23,7 @@ from modules.utils.torch_opt import configure_torch_optimizations
 dotenv.load_dotenv(
     dotenv_path=os.getenv("ENV_FILE", ".env.api"),
 )
-parser = argparse.ArgumentParser(
-    description="Start the FastAPI server with command line arguments"
-)
+parser = argparse.ArgumentParser(description="Start the FastAPI server with command line arguments")
 setup_api_args(parser)
 setup_model_args(parser)
 setup_uvicon_args(parser)

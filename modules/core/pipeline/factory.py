@@ -19,8 +19,8 @@ from modules.core.pipeline.processors.VoiceClone import VoiceCloneProcessor
 from modules.core.spk.SpkMgr import spk_mgr
 from modules.core.spk.TTSSpeaker import TTSSpeaker
 from modules.core.tn.ChatTtsTN import ChatTtsTN
-# from modules.core.tn.CosyVoiceTN import CosyVoiceTN
-# from modules.core.tn.FireRedTtsTN import FireRedTtsTN
+from modules.core.tn.CosyVoiceTN import CosyVoiceTN
+from modules.core.tn.FireRedTtsTN import FireRedTtsTN
 from modules.core.tn.FishSpeechTN import FishSpeechTN
 from modules.core.tn.F5TtsTN import F5TtsTN
 from modules.core.tn.TNPipeline import TNPipeline
@@ -30,14 +30,11 @@ logger = logging.getLogger(__name__)
 
 
 class TNProcess(SegmentProcessor):
-
     def __init__(self, tn_pipeline: TNPipeline) -> None:
         super().__init__()
         self.tn = tn_pipeline
 
-    def pre_process(
-        self, segment: TTSSegment, context: TTSPipelineContext
-    ) -> TTSSegment:
+    def pre_process(self, segment: TTSSegment, context: TTSPipelineContext) -> TTSSegment:
         segment.text = self.tn.normalize(text=segment.text, config=context.tn_config)
         return segment
 
@@ -54,25 +51,13 @@ class TTSStyleProcessor(SegmentProcessor):
         params = styles_mgr.find_params_by_name(style)
         return params
 
-    def pre_process(
-        self, segment: TTSSegment, context: TTSPipelineContext
-    ) -> TTSSegment:
+    def pre_process(self, segment: TTSSegment, context: TTSPipelineContext) -> TTSSegment:
         params = self.get_style_params(context)
-        segment.prompt = (
-            segment.prompt or context.tts_config.prompt or params.get("prompt", "")
-        )
-        segment.prompt1 = (
-            segment.prompt1 or context.tts_config.prompt1 or params.get("prompt1", "")
-        )
-        segment.prompt2 = (
-            segment.prompt2 or context.tts_config.prompt2 or params.get("prompt2", "")
-        )
-        segment.prefix = (
-            segment.prefix or context.tts_config.prefix or params.get("prefix", "")
-        )
-        segment.emotion = (
-            segment.emotion or context.tts_config.emotion or params.get("emotion", "")
-        )
+        segment.prompt = segment.prompt or context.tts_config.prompt or params.get("prompt", "")
+        segment.prompt1 = segment.prompt1 or context.tts_config.prompt1 or params.get("prompt1", "")
+        segment.prompt2 = segment.prompt2 or context.tts_config.prompt2 or params.get("prompt2", "")
+        segment.prefix = segment.prefix or context.tts_config.prefix or params.get("prefix", "")
+        segment.emotion = segment.emotion or context.tts_config.emotion or params.get("emotion", "")
 
         spk = segment.spk or context.spk
 
@@ -91,16 +76,13 @@ class TTSStyleProcessor(SegmentProcessor):
 
 
 class FromAudioPipeline(AudioPipeline):
-
     def __init__(self, audio: NP_AUDIO, ctx: TTSPipelineContext) -> None:
         super().__init__(context=ctx)
         self.audio = audio
 
     def generate(self):
         audio_data = self.audio
-        audio_data = AudioReshaper.normalize_audio(
-            audio=audio_data, target_sr=self.audio_sr
-        )
+        audio_data = AudioReshaper.normalize_audio(audio=audio_data, target_sr=self.audio_sr)
         # audio_data = AudioReshaper.normalize_audio_type(audio=audio_data)
         audio_data = self.process_np_audio(audio=audio_data)
         return audio_data

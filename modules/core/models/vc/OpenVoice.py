@@ -84,9 +84,7 @@ class OpenVoiceModel(VCModel):
             return g
 
     @torch.inference_mode()
-    def _convert(
-        self, audio: npt.NDArray, src_se: torch.Tensor, tgt_se: torch.Tensor, tau: float
-    ) -> npt.NDArray:
+    def _convert(self, audio: npt.NDArray, src_se: torch.Tensor, tgt_se: torch.Tensor, tau: float) -> npt.NDArray:
         hps = self.model.hps
         device = self.device
         model = self.model.model
@@ -103,19 +101,10 @@ class OpenVoiceModel(VCModel):
                 center=False,
             ).to(device)
             spec_lengths = torch.LongTensor([spec.size(-1)]).to(device)
-            audio = (
-                model.voice_conversion(
-                    spec, spec_lengths, sid_src=src_se, sid_tgt=tgt_se, tau=tau
-                )[0][0, 0]
-                .data.cpu()
-                .float()
-                .numpy()
-            )
+            audio = model.voice_conversion(spec, spec_lengths, sid_src=src_se, sid_tgt=tgt_se, tau=tau)[0][0, 0].data.cpu().float().numpy()
             return audio
 
-    def convert_audio(
-        self, src_audio: NP_AUDIO, ref_audio: NP_AUDIO, tau=0.3
-    ) -> NP_AUDIO:
+    def convert_audio(self, src_audio: NP_AUDIO, ref_audio: NP_AUDIO, tau=0.3) -> NP_AUDIO:
         self.load()
 
         tau = tau or 0.3
@@ -124,12 +113,8 @@ class OpenVoiceModel(VCModel):
         # TODO 支持多ref mean
         ref_se = self.audio_to_se(ref_audio)
 
-        sr, audio = AudioReshaper.normalize_audio(
-            audio=src_audio, target_sr=self.sampling_rate
-        )
-        output: npt.NDArray = self._convert(
-            audio=audio, src_se=src_se, tgt_se=ref_se, tau=tau
-        )
+        sr, audio = AudioReshaper.normalize_audio(audio=src_audio, target_sr=self.sampling_rate)
+        output: npt.NDArray = self._convert(audio=audio, src_se=src_se, tgt_se=ref_se, tau=tau)
 
         return sr, output
 
@@ -140,17 +125,13 @@ class OpenVoiceModel(VCModel):
         if not isinstance(spk, TTSSpeaker):
             raise ValueError("spk must be a TTSSpeaker")
 
-        sr, wav, text = spk.get_ref_wav(
-            lambda spk_ref: True if emotion is None else spk_ref.emotion == emotion
-        )
+        sr, wav, text = spk.get_ref_wav(lambda spk_ref: True if emotion is None else spk_ref.emotion == emotion)
         if wav is None:
             raise ValueError("this speaker has no reference audio")
 
         return sr, wav
 
-    def convert(
-        self, src_audio: NP_AUDIO, ref_spk: TTSSpeaker, config: VCConfig
-    ) -> NP_AUDIO:
+    def convert(self, src_audio: NP_AUDIO, ref_spk: TTSSpeaker, config: VCConfig) -> NP_AUDIO:
         if config.enabled is False:
             return src_audio
 
@@ -174,8 +155,6 @@ if __name__ == "__main__":
     src_audio, _ = librosa.load(src_audio_path, sr=sr)
     ref_audio, _ = librosa.load(ref_audio_path, sr=sr)
 
-    sr, output = model.convert(
-        src_audio=(sr, src_audio), ref_audio=(sr, ref_audio), config=VCConfig()
-    )
+    sr, output = model.convert(src_audio=(sr, src_audio), ref_audio=(sr, ref_audio), config=VCConfig())
 
     wavfile.write("./openvoice_output.wav", sr, output)

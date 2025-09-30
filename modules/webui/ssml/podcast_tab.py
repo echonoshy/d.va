@@ -114,18 +114,10 @@ def create_ssml_podcast_tab(
 
             with gr.Group():
                 gr.Markdown("🎶Refiner (ChatTTS)")
-                rf_oral_input = gr.Slider(
-                    label="Oral", value=2, minimum=-1, maximum=9, step=1
-                )
-                rf_speed_input = gr.Slider(
-                    label="Speed", value=2, minimum=-1, maximum=9, step=1
-                )
-                rf_break_input = gr.Slider(
-                    label="Break", value=2, minimum=-1, maximum=7, step=1
-                )
-                rf_laugh_input = gr.Slider(
-                    label="Laugh", value=0, minimum=-1, maximum=2, step=1
-                )
+                rf_oral_input = gr.Slider(label="Oral", value=2, minimum=-1, maximum=9, step=1)
+                rf_speed_input = gr.Slider(label="Speed", value=2, minimum=-1, maximum=9, step=1)
+                rf_break_input = gr.Slider(label="Break", value=2, minimum=-1, maximum=7, step=1)
+                rf_laugh_input = gr.Slider(label="Laugh", value=0, minimum=-1, maximum=2, step=1)
                 refine_button = gr.Button("✍️Refine Text")
 
         with gr.Column(scale=5):
@@ -164,11 +156,7 @@ def create_ssml_podcast_tab(
         )
 
         # 如果只有一行 并且是空的
-        is_empty = (
-            sheet.empty
-            or (sheet.shape[0] == 1 and "text" not in sheet.iloc[0])
-            or (sheet.shape[0] == 1 and sheet.iloc[0]["text"] == "")
-        )
+        is_empty = sheet.empty or (sheet.shape[0] == 1 and "text" not in sheet.iloc[0]) or (sheet.shape[0] == 1 and sheet.iloc[0]["text"] == "")
 
         if is_empty:
             sheet = data

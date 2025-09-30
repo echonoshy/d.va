@@ -16,9 +16,7 @@ def create_audio_separator():
         audio_clip = video_clip.audio
 
         # 在临时文件夹中保存音频
-        with tempfile.NamedTemporaryFile(
-            delete=False, suffix=".mp3"
-        ) as temp_audio_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
             temp_audio_file_path = temp_audio_file.name
             audio_clip.write_audiofile(temp_audio_file_path)
 

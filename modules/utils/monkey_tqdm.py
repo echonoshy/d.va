@@ -20,9 +20,7 @@ def disable_tqdm(enabled=True):
     original_exit = _tqdm.tqdm.__exit__
     original_iter = _tqdm.tqdm.__iter__
 
-    def init_tqdm(
-        self, iterable=None, desc=None, total=None, disable=True, *args, **kwargs
-    ):
+    def init_tqdm(self, iterable=None, desc=None, total=None, disable=True, *args, **kwargs):
         kwargs.setdefault("disable", disable)
         self.__init__orig__(iterable, desc, total, *args, **kwargs)
 

@@ -20,14 +20,10 @@ class ResultWriter:
     def __init__(self, output: TextIO = None):
         self.output: TextIO = output or io.StringIO()
 
-    def __call__(
-        self, result: WhisperTranscribeResult, options: Optional[dict] = None, **kwargs
-    ):
+    def __call__(self, result: WhisperTranscribeResult, options: Optional[dict] = None, **kwargs):
         return self.write(result=result, options=options, **kwargs)
 
-    def write(
-        self, result: WhisperTranscribeResult, options: Optional[dict] = None, **kwargs
-    ):
+    def write(self, result: WhisperTranscribeResult, options: Optional[dict] = None, **kwargs):
         self.output.seek(0)
         self.output.truncate(0)
 

@@ -21,10 +21,10 @@ def conditional_cache(maxsize: int, condition: Callable):
     return decorator
 
 
-def hash_list(l: list) -> int:
+def hash_list(items: list) -> int:
     __hash = 0
-    for i, e in enumerate(l):
-        __hash = hash((__hash, i, hash_item(e)))
+    for index, element in enumerate(items):
+        __hash = hash((__hash, index, hash_item(element)))
     return __hash
 
 
@@ -53,9 +53,7 @@ PT = ParamSpec("PT")
 RT = TypeVar("RT")
 
 
-def lru_cache_ext(
-    *opts, hashfunc: Callable[..., int] = hash_item, **kwopts
-) -> Callable[[Callable[PT, RT]], Callable[PT, RT]]:
+def lru_cache_ext(*opts, hashfunc: Callable[..., int] = hash_item, **kwopts) -> Callable[[Callable[PT, RT]], Callable[PT, RT]]:
     def decorator(func: Callable[PT, RT]) -> Callable[PT, RT]:
         class _lru_cache_ext_wrapper:
             args: tuple

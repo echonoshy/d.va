@@ -13,7 +13,6 @@ from modules.devices import devices
 
 
 class CosyVoiceFrontEnd:
-
     def __init__(
         self,
         get_tokenizer: Callable,
@@ -28,23 +27,13 @@ class CosyVoiceFrontEnd:
         self.feat_extractor = feat_extractor
         self.device = devices.get_device_for("cosy-voice")
         option = onnxruntime.SessionOptions()
-        option.graph_optimization_level = (
-            onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
-        )
+        option.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
         option.intra_op_num_threads = 1
-        self.campplus_session = onnxruntime.InferenceSession(
-            campplus_model, sess_options=option, providers=["CPUExecutionProvider"]
-        )
+        self.campplus_session = onnxruntime.InferenceSession(campplus_model, sess_options=option, providers=["CPUExecutionProvider"])
         self.speech_tokenizer_session = onnxruntime.InferenceSession(
             speech_tokenizer_model,
             sess_options=option,
-            providers=[
-                (
-                    "CUDAExecutionProvider"
-                    if torch.cuda.is_available()
-                    else "CPUExecutionProvider"
-                )
-            ],
+            providers=[("CUDAExecutionProvider" if torch.cuda.is_available() else "CPUExecutionProvider")],
         )
         if os.path.exists(spk2info):
             self.spk2info = torch.load(spk2info, map_location="cpu")
@@ -55,9 +44,7 @@ class CosyVoiceFrontEnd:
     def _extract_text_token(self, text):
         text_token = self.tokenizer.encode(text, allowed_special=self.allowed_special)
         text_token = torch.tensor([text_token], dtype=torch.int32).to(self.device)
-        text_token_len = torch.tensor([text_token.shape[1]], dtype=torch.int32).to(
-            self.device
-        )
+        text_token_len = torch.tensor([text_token.shape[1]], dtype=torch.int32).to(self.device)
         return text_token, text_token_len
 
     def _extract_speech_token(self, speech):
@@ -66,22 +53,15 @@ class CosyVoiceFrontEnd:
             self.speech_tokenizer_session.run(
                 None,
                 {
-                    self.speech_tokenizer_session.get_inputs()[0]
-                    .name: feat.detach()
-                    .cpu()
-                    .numpy(),
-                    self.speech_tokenizer_session.get_inputs()[1].name: np.array(
-                        [feat.shape[2]], dtype=np.int32
-                    ),
+                    self.speech_tokenizer_session.get_inputs()[0].name: feat.detach().cpu().numpy(),
+                    self.speech_tokenizer_session.get_inputs()[1].name: np.array([feat.shape[2]], dtype=np.int32),
                 },
             )[0]
             .flatten()
             .tolist()
         )
         speech_token = torch.tensor([speech_token], dtype=torch.int32).to(self.device)
-        speech_token_len = torch.tensor([speech_token.shape[1]], dtype=torch.int32).to(
-            self.device
-        )
+        speech_token_len = torch.tensor([speech_token.shape[1]], dtype=torch.int32).to(self.device)
         return speech_token, speech_token_len
 
     def _extract_spk_embedding(self, speech):
@@ -90,12 +70,7 @@ class CosyVoiceFrontEnd:
         embedding = (
             self.campplus_session.run(
                 None,
-                {
-                    self.campplus_session.get_inputs()[0]
-                    .name: feat.unsqueeze(dim=0)
-                    .cpu()
-                    .numpy()
-                },
+                {self.campplus_session.get_inputs()[0].name: feat.unsqueeze(dim=0).cpu().numpy()},
             )[0]
             .flatten()
             .tolist()
@@ -104,13 +79,9 @@ class CosyVoiceFrontEnd:
         return embedding
 
     def _extract_speech_feat(self, speech):
-        speech_feat = (
-            self.feat_extractor(speech).squeeze(dim=0).transpose(0, 1).to(self.device)
-        )
+        speech_feat = self.feat_extractor(speech).squeeze(dim=0).transpose(0, 1).to(self.device)
         speech_feat = speech_feat.unsqueeze(dim=0)
-        speech_feat_len = torch.tensor([speech_feat.shape[1]], dtype=torch.int32).to(
-            self.device
-        )
+        speech_feat_len = torch.tensor([speech_feat.shape[1]], dtype=torch.int32).to(self.device)
         return speech_feat, speech_feat_len
 
     def frontend_sft(self, tts_text, spk_id):
@@ -124,14 +95,10 @@ class CosyVoiceFrontEnd:
         }
         return model_input
 
-    def frontend_zero_shot(
-        self, tts_text, prompt_text, prompt_speech_16k, resample_rate
-    ):
+    def frontend_zero_shot(self, tts_text, prompt_text, prompt_speech_16k, resample_rate):
         tts_text_token, tts_text_token_len = self._extract_text_token(tts_text)
         prompt_text_token, prompt_text_token_len = self._extract_text_token(prompt_text)
-        prompt_speech_resample = torchaudio.transforms.Resample(
-            orig_freq=16000, new_freq=resample_rate
-        )(prompt_speech_16k)
+        prompt_speech_resample = torchaudio.transforms.Resample(orig_freq=16000, new_freq=resample_rate)(prompt_speech_16k)
         speech_feat, speech_feat_len = self._extract_speech_feat(prompt_speech_resample)
         speech_token, speech_token_len = self._extract_speech_token(prompt_speech_16k)
         if resample_rate == 24000:
@@ -160,9 +127,7 @@ class CosyVoiceFrontEnd:
         return model_input
 
     def frontend_cross_lingual(self, tts_text, prompt_speech_16k, resample_rate):
-        model_input = self.frontend_zero_shot(
-            tts_text, "", prompt_speech_16k, resample_rate
-        )
+        model_input = self.frontend_zero_shot(tts_text, "", prompt_speech_16k, resample_rate)
         # in cross lingual mode, we remove prompt in llm
         del model_input["prompt_text"]
         del model_input["prompt_text_len"]
@@ -174,23 +139,15 @@ class CosyVoiceFrontEnd:
         model_input = self.frontend_sft(tts_text, spk_id)
         # in instruct mode, we remove spk_embedding in llm due to information leakage
         del model_input["llm_embedding"]
-        instruct_text_token, instruct_text_token_len = self._extract_text_token(
-            instruct_text + "<endofprompt>"
-        )
+        instruct_text_token, instruct_text_token_len = self._extract_text_token(instruct_text + "<endofprompt>")
         model_input["prompt_text"] = instruct_text_token
         model_input["prompt_text_len"] = instruct_text_token_len
         return model_input
 
-    def frontend_instruct2(
-        self, tts_text, instruct_text, prompt_speech_16k, resample_rate
-    ):
+    def frontend_instruct2(self, tts_text, instruct_text, prompt_speech_16k, resample_rate):
         tts_text_token, tts_text_token_len = self._extract_text_token(tts_text)
-        prompt_text_token, prompt_text_token_len = self._extract_text_token(
-            instruct_text + "<|endofprompt|>"
-        )
-        prompt_speech_resample = torchaudio.transforms.Resample(
-            orig_freq=16000, new_freq=resample_rate
-        )(prompt_speech_16k)
+        prompt_text_token, prompt_text_token_len = self._extract_text_token(instruct_text + "<|endofprompt|>")
+        prompt_speech_resample = torchaudio.transforms.Resample(orig_freq=16000, new_freq=resample_rate)(prompt_speech_16k)
         speech_feat, speech_feat_len = self._extract_speech_feat(prompt_speech_resample)
         speech_token, speech_token_len = self._extract_speech_token(prompt_speech_16k)
         if resample_rate == 24000:
@@ -217,19 +174,11 @@ class CosyVoiceFrontEnd:
         return model_input
 
     def frontend_vc(self, source_speech_16k, prompt_speech_16k, resample_rate):
-        prompt_speech_token, prompt_speech_token_len = self._extract_speech_token(
-            prompt_speech_16k
-        )
-        prompt_speech_resample = torchaudio.transforms.Resample(
-            orig_freq=16000, new_freq=resample_rate
-        )(prompt_speech_16k)
-        prompt_speech_feat, prompt_speech_feat_len = self._extract_speech_feat(
-            prompt_speech_resample
-        )
+        prompt_speech_token, prompt_speech_token_len = self._extract_speech_token(prompt_speech_16k)
+        prompt_speech_resample = torchaudio.transforms.Resample(orig_freq=16000, new_freq=resample_rate)(prompt_speech_16k)
+        prompt_speech_feat, prompt_speech_feat_len = self._extract_speech_feat(prompt_speech_resample)
         embedding = self._extract_spk_embedding(prompt_speech_16k)
-        source_speech_token, source_speech_token_len = self._extract_speech_token(
-            source_speech_16k
-        )
+        source_speech_token, source_speech_token_len = self._extract_speech_token(source_speech_16k)
         model_input = {
             "source_speech_token": source_speech_token,
             "source_speech_token_len": source_speech_token_len,

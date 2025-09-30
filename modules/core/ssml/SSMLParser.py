@@ -60,9 +60,7 @@ class SSMLParser:
 
         return decorator
 
-    def parse(
-        self, ssml: str, root_ctx=SSMLContext()
-    ) -> List[Union[SSMLSegment, SSMLBreak]]:
+    def parse(self, ssml: str, root_ctx=SSMLContext()) -> List[Union[SSMLSegment, SSMLBreak]]:
         root = etree.fromstring(ssml)
 
         segments: List[Union[SSMLSegment, SSMLBreak]] = []
@@ -70,9 +68,7 @@ class SSMLParser:
 
         return segments
 
-    def resolve(
-        self, element: etree.Element, context: SSMLContext, segments: List[SSMLSegment]
-    ):
+    def resolve(self, element: etree.Element, context: SSMLContext, segments: List[SSMLSegment]):
         resolver = [resolver for tag, resolver in self.resolvers if tag == element.tag]
         if len(resolver) == 0:
             raise NotImplementedError(f"Tag {element.tag} not supported.")

@@ -19,6 +19,7 @@ from modules.core.spk.TTSSpeaker import TTSSpeaker
 
 from modules.api.constants import support_bitrates
 
+
 class SynthesisInput(BaseModel):
     text: Union[str, None] = None
     ssml: Union[str, None] = None
@@ -73,7 +74,6 @@ async def google_text_synthesize(request: GoogleTextSynthesizeRequest):
     # 提取参数
 
     # TODO 这个也许应该传给 normalizer
-    language_code = voice.languageCode
     voice_name = voice.name
     voice_model = voice.model
     infer_seed = voice.seed or 42
@@ -97,21 +97,14 @@ async def google_text_synthesize(request: GoogleTextSynthesizeRequest):
 
     spliter_threshold = audioConfig.spliterThreshold or 100
 
-    # TODO
-    sample_rate = audioConfig.sampleRateHertz or 24000
-
     params = api_utils.calc_spk_style(spk=voice.name, style=voice.style)
 
     # 虽然 calc_spk_style 可以解析 seed 形式，但是这个接口只准备支持 speakers list 中存在的 speaker
     if spk_mgr.get_speaker(voice_name) is None:
-        raise HTTPException(
-            status_code=422, detail="The specified voice name is not supported."
-        )
+        raise HTTPException(status_code=422, detail="The specified voice name is not supported.")
 
     if not isinstance(params.get("spk"), TTSSpeaker):
-        raise HTTPException(
-            status_code=422, detail="The specified voice name is not supported."
-        )
+        raise HTTPException(status_code=422, detail="The specified voice name is not supported.")
 
     speaker = params.get("spk")
     tts_config = TTSConfig(
@@ -155,15 +148,14 @@ async def google_text_synthesize(request: GoogleTextSynthesizeRequest):
         media_type = handler.get_media_type()
         base64_string = handler.enqueue_to_base64()
         return {"audioContent": f"data:{media_type};base64,{base64_string}"}
-    except Exception as e:
+    except Exception as exc:
         import logging
 
-        logging.exception(e)
+        logging.exception(exc)
 
-        if isinstance(e, HTTPException):
-            raise e
-        else:
-            raise HTTPException(status_code=500, detail=str(e))
+        if isinstance(exc, HTTPException):
+            raise exc
+        raise HTTPException(status_code=500, detail=str(exc))
 
 
 def setup(app: APIManager):

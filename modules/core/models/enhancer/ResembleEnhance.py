@@ -79,9 +79,7 @@ class ResembleEnhance:
         enhancer.configurate_(nfe=nfe, solver=solver, lambd=lambd, tau=tau)
 
         with disable_tqdm(enabled=config.runtime_env_vars.off_tqdm):
-            return inference(
-                model=enhancer, dwav=dwav, sr=sr, device=self.device, dtype=self.dtype
-            )
+            return inference(model=enhancer, dwav=dwav, sr=sr, device=self.device, dtype=self.dtype)
 
 
 def load_enhancer() -> ResembleEnhance:
@@ -89,9 +87,7 @@ def load_enhancer() -> ResembleEnhance:
     with lock:
         if resemble_enhance is None:
             logger.info("Loading ResembleEnhance model")
-            resemble_enhance = ResembleEnhance(
-                device=devices.get_device_for("enhancer"), dtype=devices.dtype
-            )
+            resemble_enhance = ResembleEnhance(device=devices.get_device_for("enhancer"), dtype=devices.dtype)
             resemble_enhance.load_model()
             logger.info("ResembleEnhance model loaded")
     return resemble_enhance
@@ -117,7 +113,6 @@ def reload_enhancer():
 
 
 if __name__ == "__main__":
-
     device = torch.device("cuda")
 
     # def enhance(file):

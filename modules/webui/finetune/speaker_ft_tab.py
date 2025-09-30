@@ -81,16 +81,10 @@ def create_speaker_ft_tab(demo: gr.Blocks):
         with gr.Column(scale=2):
             with gr.Group():
                 gr.Markdown("🎛️hparams")
-                dataset_input = gr.Dropdown(
-                    label="Dataset", choices=get_datasets_listfile()
-                )
+                dataset_input = gr.Dropdown(label="Dataset", choices=get_datasets_listfile())
                 lr_input = gr.Textbox(label="Learning Rate", value="1e-2")
-                epochs_input = gr.Slider(
-                    label="Epochs", value=10, minimum=1, maximum=100, step=1
-                )
-                batch_size_input = gr.Slider(
-                    label="Batch Size", value=4, minimum=1, maximum=64, step=1
-                )
+                epochs_input = gr.Slider(label="Epochs", value=10, minimum=1, maximum=100, step=1)
+                batch_size_input = gr.Slider(label="Batch Size", value=4, minimum=1, maximum=64, step=1)
                 train_text_checkbox = gr.Checkbox(label="Train text_loss", value=True)
                 init_spk_dropdown = gr.Dropdown(
                     label="Initial Speaker",
@@ -106,9 +100,7 @@ def create_speaker_ft_tab(demo: gr.Blocks):
             with gr.Group():
                 # log
                 gr.Markdown("📜logs")
-                log_output = gr.Textbox(
-                    show_label=False, label="Log", value="", lines=20, interactive=True
-                )
+                log_output = gr.Textbox(show_label=False, label="Log", value="", lines=20, interactive=True)
 
     start_train_btn.click(
         spk_ft.run,

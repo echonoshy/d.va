@@ -63,9 +63,7 @@ class FishSpeechModel(TTSModel):
     def reset(self):
         self.encoded_prefix = []
 
-    def load(
-        self, context: TTSPipelineContext = None
-    ) -> tuple[FISH_SPEECH_LLAMA, FireflyArchitecture]:
+    def load(self, context: TTSPipelineContext = None) -> tuple[FISH_SPEECH_LLAMA, FireflyArchitecture]:
         llama = self.load_llama()
         vqgan = self.load_vqgan()
         return llama, vqgan
@@ -75,9 +73,7 @@ class FishSpeechModel(TTSModel):
             return FishSpeechModel.model
 
         with self.lock:
-            logger.info(
-                f"loading FishSpeech llama on device [{self.device}] with dtype [{self.dtype}]"
-            )
+            logger.info(f"loading FishSpeech llama on device [{self.device}] with dtype [{self.dtype}]")
 
             model, token_decoder = load_llama_model(
                 checkpoint_path=str(self.MODEL_PATH),
@@ -99,13 +95,9 @@ class FishSpeechModel(TTSModel):
             return FishSpeechModel.vqgan
 
         with self.lock:
-            logger.info(
-                f"loading FishSpeech vqgan on device [{self.device}] with dtype [{self.dtype}]"
-            )
+            logger.info(f"loading FishSpeech vqgan on device [{self.device}] with dtype [{self.dtype}]")
             config_name = "firefly_gan_vq"
-            checkpoint_path = str(
-                self.MODEL_PATH / "firefly-gan-vq-fsq-8x1024-21hz-generator.pth"
-            )
+            checkpoint_path = str(self.MODEL_PATH / "firefly-gan-vq-fsq-8x1024-21hz-generator.pth")
             model: FireflyArchitecture = load_vqgan_model(
                 config_name=config_name,
                 checkpoint_path=checkpoint_path,
@@ -148,16 +140,12 @@ class FishSpeechModel(TTSModel):
         tokenizer: PreTrainedTokenizer = self.model.tokenizer
         return tokenizer.decode(ids)
 
-    def generate_batch(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> list[NP_AUDIO]:
+    def generate_batch(self, segments: list[TTSSegment], context: TTSPipelineContext) -> list[NP_AUDIO]:
         generator = self.generate_batch_stream(segments, context)
         return next(generator)
 
     # NOTE: 不支持batch生成 所以基本上是同步的
-    def generate_batch_stream(
-        self, segments: list[TTSSegment], context: TTSPipelineContext
-    ) -> Generator[list[NP_AUDIO], None, None]:
+    def generate_batch_stream(self, segments: list[TTSSegment], context: TTSPipelineContext) -> Generator[list[NP_AUDIO], None, None]:
         cached = self.get_cache(segments=segments, context=context)
         if cached is not None:
             yield cached
@@ -224,9 +212,7 @@ if __name__ == "__main__":
     ) = """
 大家好，我是 Fish Audio 开发的开源文本转语音模型。经过十五万小时的数据训练，
 我已经能够熟练掌握中文、日语和英语，我的语言处理能力接近人类水平，声音表现形式丰富多变。
-    """.strip().split(
-        "\n"
-    )
+    """.strip().split("\n")
 
     for seed in seeds:
 

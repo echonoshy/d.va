@@ -7,7 +7,6 @@ from modules.core.pipeline.processor import NP_AUDIO
 
 
 class STTHandler:
-
     def __init__(self, input_audio: NP_AUDIO, stt_config: STTConfig) -> None:
         assert isinstance(stt_config, STTConfig), "stt_config must be STTConfig"
 
@@ -30,6 +29,4 @@ class STTHandler:
         return result
 
     def enqueue_stream(self) -> Generator[TranscribeResult, None, None]:
-        raise NotImplementedError(
-            "Method 'enqueue_stream' must be implemented by subclass"
-        )
+        raise NotImplementedError("Method 'enqueue_stream' must be implemented by subclass")

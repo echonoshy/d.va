@@ -23,12 +23,7 @@ def has_mps() -> bool:
 
 
 def get_cuda_device_id():
-    return (
-        int(config.runtime_env_vars.device_id)
-        if config.runtime_env_vars.device_id is not None
-        and config.runtime_env_vars.device_id.isdigit()
-        else 0
-    ) or torch.cuda.current_device()
+    return (int(config.runtime_env_vars.device_id) if config.runtime_env_vars.device_id is not None and config.runtime_env_vars.device_id.isdigit() else 0) or torch.cuda.current_device()
 
 
 def get_cuda_device_string():
@@ -54,9 +49,7 @@ def get_available_gpus() -> list[tuple[int, int]]:
 
 def get_memory_available_gpus(min_memory=2048):
     available_gpus = get_available_gpus()
-    memory_available_gpus = [
-        gpu for gpu, free_memory in available_gpus if free_memory > min_memory
-    ]
+    memory_available_gpus = [gpu for gpu, free_memory in available_gpus if free_memory > min_memory]
     return memory_available_gpus
 
 
@@ -65,14 +58,10 @@ def get_target_device_id_or_memory_available_gpu():
     device_id = get_cuda_device_id()
     if device_id not in memory_available_gpus:
         if len(memory_available_gpus) != 0:
-            logger.warning(
-                f"Device {device_id} is not available or does not have enough memory. will try to use {memory_available_gpus}"
-            )
+            logger.warning(f"Device {device_id} is not available or does not have enough memory. will try to use {memory_available_gpus}")
             config.runtime_env_vars.device_id = str(memory_available_gpus[0])
         else:
-            logger.warning(
-                f"Device {device_id} is not available or does not have enough memory. Using CPU instead."
-            )
+            logger.warning(f"Device {device_id} is not available or does not have enough memory. Using CPU instead.")
             return "cpu"
     return get_cuda_device_string()
 
@@ -101,10 +90,7 @@ def get_device_for(task):
     if config.runtime_env_vars.use_cpu is None:
         config.runtime_env_vars.use_cpu = []
 
-    if (
-        task in config.runtime_env_vars.use_cpu
-        or "all" in config.runtime_env_vars.use_cpu
-    ):
+    if task in config.runtime_env_vars.use_cpu or "all" in config.runtime_env_vars.use_cpu:
         return cpu
 
     return get_optimal_device()
@@ -139,9 +125,7 @@ def reset_device():
         config.runtime_env_vars.use_cpu = []
 
     if "all" in config.runtime_env_vars.use_cpu and not config.runtime_env_vars.no_half:
-        logger.warning(
-            "Cannot use half precision with CPU, using full precision instead"
-        )
+        logger.warning("Cannot use half precision with CPU, using full precision instead")
         config.runtime_env_vars.no_half = True
 
     if not config.runtime_env_vars.no_half:

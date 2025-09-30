@@ -87,10 +87,8 @@ class TranscriptionsResponse(BaseModel):
 
 
 def setup(app: APIManager):
-
     def pydub_to_numpy(audio_segment: AudioSegment) -> np.ndarray:
         raw_data = audio_segment.raw_data
-        sample_width = audio_segment.sample_width
         channels = audio_segment.channels
         audio_data = np.frombuffer(raw_data, dtype=np.int16)
         if channels > 1:
@@ -158,15 +156,14 @@ def setup(app: APIManager):
 
             result = handler.enqueue()
             return api_utils.success_response(result.__dict__)
-        except Exception as e:
+        except Exception as exc:
             import logging
 
-            logging.exception(e)
+            logging.exception(exc)
 
-            if isinstance(e, HTTPException):
-                raise e
-            else:
-                raise HTTPException(status_code=500, detail=str(e))
+            if isinstance(exc, HTTPException):
+                raise exc
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @app.post(
         "/v1/stt/stream",

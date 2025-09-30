@@ -17,15 +17,11 @@ class BatchSynth:
         model: TTSModel,
     ) -> None:
         self.segments = [SynthAudio(segment=segment) for segment in input_segments]
-        self.streamer = SynthStreamer(
-            segments=self.segments, context=context, model=model
-        )
+        self.streamer = SynthStreamer(segments=self.segments, context=context, model=model)
         self.bucketizer = Bucketizer(segments=self.segments)
         self.buckets = self.bucketizer.build_buckets()
 
-        self.generator = BatchGenerate(
-            buckets=self.buckets, context=context, model=model
-        )
+        self.generator = BatchGenerate(buckets=self.buckets, context=context, model=model)
         self.context = context
 
         self.thread1 = None

@@ -33,11 +33,7 @@ class SSMLRequest(BaseModel):
     stream: bool = False
 
 
-async def synthesize_ssml_api(
-    request: SSMLRequest = Body(
-        ..., description="JSON body with SSML string and format"
-    )
-):
+async def synthesize_ssml_api(request: SSMLRequest = Body(..., description="JSON body with SSML string and format")):
     try:
         ssml = request.ssml
         format = request.format.lower()
@@ -50,26 +46,18 @@ async def synthesize_ssml_api(
         model = request.model
 
         if batch_size < 1:
-            raise HTTPException(
-                status_code=400, detail="Batch size must be greater than 0."
-            )
+            raise HTTPException(status_code=400, detail="Batch size must be greater than 0.")
 
         if spliter_thr < 50:
-            raise HTTPException(
-                status_code=400, detail="Spliter threshold must be greater than 50."
-            )
+            raise HTTPException(status_code=400, detail="Spliter threshold must be greater than 50.")
 
         if not ssml or ssml == "":
             raise HTTPException(status_code=400, detail="SSML content is required.")
 
         if format not in ["mp3", "wav"]:
-            raise HTTPException(
-                status_code=400, detail="Format must be 'mp3' or 'wav'."
-            )
+            raise HTTPException(status_code=400, detail="Format must be 'mp3' or 'wav'.")
 
-        infer_config = InferConfig(
-            batch_size=batch_size, spliter_threshold=spliter_thr, eos=eos, stream=stream
-        )
+        infer_config = InferConfig(batch_size=batch_size, spliter_threshold=spliter_thr, eos=eos, stream=stream)
         adjust_config = adjuster
         enhancer_config = enhancer
         encoder_config = EncoderConfig(
@@ -101,6 +89,4 @@ async def synthesize_ssml_api(
 
 
 def setup(api_manager: APIManager):
-    api_manager.post("/v1/ssml", response_class=FileResponse, tags=["SSML"])(
-        synthesize_ssml_api
-    )
+    api_manager.post("/v1/ssml", response_class=FileResponse, tags=["SSML"])(synthesize_ssml_api)

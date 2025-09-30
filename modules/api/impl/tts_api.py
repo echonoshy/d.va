@@ -27,23 +27,13 @@ logger = logging.getLogger(__name__)
 class TTSParams(BaseModel):
     text: str = Query(..., description="Text to synthesize")
 
-    spk: str = Query(
-        "female2", description="Specific speaker by speaker name or speaker seed"
-    )
+    spk: str = Query("female2", description="Specific speaker by speaker name or speaker seed")
 
     style: str = Query("chat", description="Specific style by style name")
-    temperature: float = Query(
-        0.3, description="Temperature for sampling (may be overridden by style or spk)"
-    )
-    top_p: float = Query(
-        0.5, description="Top P for sampling (may be overridden by style or spk)"
-    )
-    top_k: int = Query(
-        20, description="Top K for sampling (may be overridden by style or spk)"
-    )
-    seed: int = Query(
-        42, description="Seed for generate (may be overridden by style or spk)"
-    )
+    temperature: float = Query(0.3, description="Temperature for sampling (may be overridden by style or spk)")
+    top_p: float = Query(0.5, description="Top P for sampling (may be overridden by style or spk)")
+    top_k: int = Query(20, description="Top K for sampling (may be overridden by style or spk)")
+    seed: int = Query(42, description="Seed for generate (may be overridden by style or spk)")
 
     format: str = Query("mp3", description="Response audio format: [mp3,wav]")
     bitrate: str = Query("64k", description="Response audio bitrate")
@@ -66,9 +56,7 @@ class TTSParams(BaseModel):
     stream: bool = Query(False, description="Enable streaming generation")
     chunk_size: int = Query(64, description="Chunk size for streaming generation")
 
-    no_cache: Union[bool, Literal["on", "off"]] = Query(
-        False, description="Disable cache"
-    )
+    no_cache: Union[bool, Literal["on", "off"]] = Query(False, description="Disable cache")
 
     model: str = Query(
         "chat-tts",
@@ -81,15 +69,11 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
     try:
         # Validate text
         if not params.text.strip():
-            raise HTTPException(
-                status_code=422, detail="Text parameter cannot be empty"
-            )
+            raise HTTPException(status_code=422, detail="Text parameter cannot be empty")
 
         # Validate temperature
         if not (0 <= params.temperature <= 1):
-            raise HTTPException(
-                status_code=422, detail="Temperature must be between 0 and 1"
-            )
+            raise HTTPException(status_code=422, detail="Temperature must be between 0 and 1")
 
         # Validate top_p
         if not (0 <= params.top_p <= 1):
@@ -97,13 +81,9 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
 
         # Validate top_k
         if params.top_k <= 0:
-            raise HTTPException(
-                status_code=422, detail="top_k must be a positive integer"
-            )
+            raise HTTPException(status_code=422, detail="top_k must be a positive integer")
         if params.top_k > 100:
-            raise HTTPException(
-                status_code=422, detail="top_k must be less than or equal to 100"
-            )
+            raise HTTPException(status_code=422, detail="top_k must be less than or equal to 100")
         if params.bitrate not in support_bitrates:
             raise HTTPException(
                 status_code=422,
@@ -125,9 +105,7 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
                 detail=f"Invalid model_id. Supported model_ids are {model_ids}",
             )
         if params.chunk_size <= 0:
-            raise HTTPException(
-                status_code=422, detail="chunk_size must be a positive integer"
-            )
+            raise HTTPException(status_code=422, detail="chunk_size must be a positive integer")
 
         calc_params = api_utils.calc_spk_style(spk=params.spk, style=params.style)
 
@@ -137,9 +115,7 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
 
         style = calc_params.get("style", params.style)
         seed = params.seed or calc_params.get("seed", params.seed)
-        temperature = params.temperature or calc_params.get(
-            "temperature", params.temperature
-        )
+        temperature = params.temperature or calc_params.get("temperature", params.temperature)
         prefix = params.prefix or calc_params.get("prefix", params.prefix)
         prompt = params.prompt or calc_params.get("prompt", params.prompt)
         prompt1 = params.prompt1 or calc_params.get("prompt1", params.prompt1)
@@ -147,11 +123,7 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
         eos = params.eos or ""
         stream = params.stream
         chunk_size = params.chunk_size
-        no_cache = (
-            params.no_cache
-            if isinstance(params.no_cache, bool)
-            else params.no_cache == "on"
-        )
+        no_cache = params.no_cache if isinstance(params.no_cache, bool) else params.no_cache == "on"
 
         if eos == "[uv_break]" and params.model != "chat-tts":
             eos = " "
@@ -219,6 +191,4 @@ async def synthesize_tts(request: Request, params: TTSParams = Depends()):
 
 
 def setup(api_manager: APIManager):
-    api_manager.get("/v1/tts", response_class=FileResponse, tags=["TTS"])(
-        synthesize_tts
-    )
+    api_manager.get("/v1/tts", response_class=FileResponse, tags=["TTS"])(synthesize_tts)

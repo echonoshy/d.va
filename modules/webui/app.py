@@ -33,9 +33,9 @@ def webui_init():
 
 def create_app_footer():
     gradio_version = gr.__version__
-    git_tag = os.environ.get("V_GIT_TAG") or config.versions.git_tag
-    git_commit = os.environ.get("V_GIT_COMMIT") or config.versions.git_commit
-    git_branch = os.environ.get("V_GIT_BRANCH") or config.versions.git_branch
+    config.versions.git_tag = os.environ.get("V_GIT_TAG") or config.versions.git_tag
+    config.versions.git_commit = os.environ.get("V_GIT_COMMIT") or config.versions.git_commit
+    config.versions.git_branch = os.environ.get("V_GIT_BRANCH") or config.versions.git_branch
     python_version = config.versions.python_version
     torch_version = config.versions.torch_version
     ffmpeg_version = config.versions.ffmpeg_version
@@ -103,9 +103,7 @@ def create_interface():
                     with gr.TabItem("Editor", id="ssml.editor"):
                         ssml_input = create_ssml_interface()
                     with gr.TabItem("Script", id="ssml.script"):
-                        script_table = create_script_tab(
-                            ssml_input=ssml_input, tabs1=tabs, tabs2=ssml_tabs
-                        )
+                        script_table = create_script_tab(ssml_input=ssml_input, tabs1=tabs, tabs2=ssml_tabs)
                     with gr.TabItem("Spilter"):
                         create_spliter_tab(
                             ssml_input=ssml_input,
@@ -133,7 +131,6 @@ def create_interface():
                 with gr.Tabs():
                     with gr.TabItem("readme"):
                         create_readme_tab()
-
 
         create_app_footer()
 

@@ -4,7 +4,6 @@ import struct
 
 
 class WAVFileBytes:
-
     def __init__(self, wav_bytes):
         self.wav_bytes = wav_bytes
         self.riff = None
@@ -61,9 +60,7 @@ class WAVFileBytes:
                 if subchunk2id == b"LIST":
                     listtype = struct.unpack("<4s", fh.read(4))
                     subchunk_data["listtype"] = listtype
-                    logging.info(
-                        "\tList Type: %s, List Size: %i", listtype, subchunk2size
-                    )
+                    logging.info("\tList Type: %s, List Size: %i", listtype, subchunk2size)
 
                     listOffset = 0
                     list_items = []

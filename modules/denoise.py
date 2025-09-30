@@ -13,7 +13,6 @@ ad: Union[AudioDenoiser, None] = None
 
 
 class TTSAudioDenoiser:
-
     def load_ad(self):
         global ad
         if ad is None:

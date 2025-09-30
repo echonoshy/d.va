@@ -7,9 +7,7 @@ import gradio as gr
 logger = logging.getLogger(__name__)
 
 current_translation = {}
-localization_root = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "language"
-)
+localization_root = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "language")
 
 
 def localization_js(filename):
@@ -24,9 +22,7 @@ def localization_js(filename):
                     assert isinstance(current_translation, dict)
                     for k, v in current_translation.items():
                         assert isinstance(k, str), f"Key is not a string, got {k}"
-                        assert isinstance(v, str) or isinstance(
-                            v, list
-                        ), f"Value for key {k} is not a string or list"
+                        assert isinstance(v, str) or isinstance(v, list), f"Value for key {k} is not a string or list"
 
                     logger.info(f"Loaded localization file {full_name}")
             except Exception as e:

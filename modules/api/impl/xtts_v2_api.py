@@ -91,15 +91,11 @@ def setup(app: APIManager):
             for spk in spks
         ]
 
-    @app.post(
-        "/v1/xtts_v2/tts_to_audio", response_class=StreamingResponse, tags=["XTTS"]
-    )
+    @app.post("/v1/xtts_v2/tts_to_audio", response_class=StreamingResponse, tags=["XTTS"])
     async def tts_to_audio(request: SynthesisRequest):
         text = request.text
         # speaker_wav 就是 speaker id 。。。
         voice_id = request.speaker_wav
-        language = request.language
-
         spk = spk_mgr.get_speaker_by_id(voice_id) or spk_mgr.get_speaker(voice_id)
         if spk is None:
             raise HTTPException(status_code=400, detail="Invalid speaker id")
@@ -210,33 +206,19 @@ def setup(app: APIManager):
     async def set_tts_settings(request: TTSSettingsRequest):
         try:
             if request.stream_chunk_size < 50:
-                raise HTTPException(
-                    status_code=400, detail="stream_chunk_size must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="stream_chunk_size must be greater than 0")
             if request.temperature < 0:
-                raise HTTPException(
-                    status_code=400, detail="temperature must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="temperature must be greater than 0")
             if request.speed < 0:
-                raise HTTPException(
-                    status_code=400, detail="speed must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="speed must be greater than 0")
             if request.length_penalty < 0:
-                raise HTTPException(
-                    status_code=400, detail="length_penalty must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="length_penalty must be greater than 0")
             if request.repetition_penalty < 0:
-                raise HTTPException(
-                    status_code=400, detail="repetition_penalty must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="repetition_penalty must be greater than 0")
             if request.top_p < 0:
-                raise HTTPException(
-                    status_code=400, detail="top_p must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="top_p must be greater than 0")
             if request.top_k < 0:
-                raise HTTPException(
-                    status_code=400, detail="top_k must be greater than 0"
-                )
+                raise HTTPException(status_code=400, detail="top_k must be greater than 0")
 
             XTTSV2.stream_chunk_size = request.stream_chunk_size
             XTTSV2.spliter_threshold = request.stream_chunk_size

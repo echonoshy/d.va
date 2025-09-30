@@ -64,19 +64,13 @@ class ChatTTSInfer:
             cls.logger.info("Interrupted current infer")
 
     @torch.inference_mode()
-    def _sample_audio_speaker(
-        self, wav: Union[np.ndarray, torch.Tensor]
-    ) -> torch.Tensor:
+    def _sample_audio_speaker(self, wav: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
         if isinstance(wav, np.ndarray):
             wav = torch.from_numpy(wav)
         wav = wav.to(device=self.device, dtype=self.dtype)
         # TODO: 最好不要 autocast ，但是得改 dvae 的代码
         with torch.autocast(device_type=self.device.type, dtype=self.dtype):
-            return (
-                self.instance.dvae(wav, "encode")
-                .squeeze_(0)
-                .to(device=self.device, dtype=self.dtype)
-            )
+            return self.instance.dvae(wav, "encode").squeeze_(0).to(device=self.device, dtype=self.dtype)
 
     def infer(
         self,
@@ -122,16 +116,11 @@ class ChatTTSInfer:
         # smooth_decoding = stream
         smooth_decoding = False
 
-        self.logger.debug(
-            f"Start infer: stream={stream}, skip_refine_text={skip_refine_text}, refine_text_only={refine_text_only}, use_decoder={use_decoder}, smooth_decoding={smooth_decoding}"
-        )
-        self.logger.debug(
-            f"params_refine_text={params_refine_text}, params_infer_code={params_infer_code}"
-        )
+        self.logger.debug(f"Start infer: stream={stream}, skip_refine_text={skip_refine_text}, refine_text_only={refine_text_only}, use_decoder={use_decoder}, smooth_decoding={smooth_decoding}")
+        self.logger.debug(f"params_refine_text={params_refine_text}, params_infer_code={params_infer_code}")
         self.logger.debug(f"Text: {text}")
 
         with torch.no_grad():
-
             if not skip_refine_text:
                 refined = self.instance._refine_text(
                     text,
@@ -139,9 +128,7 @@ class ChatTTSInfer:
                     params_refine_text,
                 )
                 text_tokens = refined.ids
-                text_tokens = [
-                    i[i.less(self.instance.tokenizer.break_0_ids)] for i in text_tokens
-                ]
+                text_tokens = [i[i.less(self.instance.tokenizer.break_0_ids)] for i in text_tokens]
                 text = self.instance.tokenizer.decode(text_tokens)
                 refined.destroy()
                 if refine_text_only:
@@ -193,14 +180,8 @@ class ChatTTSInfer:
 
                         chunk_data = x[start_seek - prev_token_len :]
 
-                        decoder = (
-                            self.instance.decoder if use_decoder else self.instance.dvae
-                        )
-                        input_data = (
-                            chunk_data[None]
-                            .permute(0, 2, 1)
-                            .to(device=self.instance.device)
-                        )
+                        decoder = self.instance.decoder if use_decoder else self.instance.dvae
+                        input_data = chunk_data[None].permute(0, 2, 1).to(device=self.instance.device)
                         if use_decoder:
                             input_data = input_data.to(dtype=self.instance.dtype)
                         mel_spec = decoder(input_data)
@@ -253,9 +234,7 @@ class ChatTTSInfer:
 
                     pass
 
-    def _decode_to_wavs(
-        self, result: GPT.GenerationOutputs, start_seeks: List[int], use_decoder: bool
-    ):
+    def _decode_to_wavs(self, result: GPT.GenerationOutputs, start_seeks: List[int], use_decoder: bool):
         x = result.hiddens if use_decoder else result.ids
         wavs: List[np.ndarray] = []
         for i, chunk_data in enumerate(x):
@@ -267,9 +246,7 @@ class ChatTTSInfer:
             start_seeks[i] = length
             chunk_data = chunk_data[start_seek:]
             decoder = self.instance.decoder if use_decoder else self.instance.dvae
-            input_data = (
-                chunk_data[None].permute(0, 2, 1).to(device=self.instance.device)
-            )
+            input_data = chunk_data[None].permute(0, 2, 1).to(device=self.instance.device)
             if use_decoder:
                 input_data = input_data.to(dtype=self.dtype)
             mel_spec = decoder(input_data)

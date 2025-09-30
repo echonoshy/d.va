@@ -176,23 +176,14 @@ class SsmlNormalizer:
         # 将 none_speak 合并到前一个 speak segment
         for i in range(1, len(ret_segments)):
             segment = ret_segments[i]
-            if not isinstance(segment, SSMLBreak) and is_none_speak_segment(
-                segment=segment
-            ):
+            if not isinstance(segment, SSMLBreak) and is_none_speak_segment(segment=segment):
                 ret_segments[i - 1].text += ret_segments[i].text
                 ret_segments[i].text = ""
         # 移除空的 segment
-        ret_segments = [
-            seg
-            for seg in ret_segments
-            if (isinstance(seg, SSMLSegment) and seg.text.strip())
-            or isinstance(seg, SSMLBreak)
-        ]
+        ret_segments = [seg for seg in ret_segments if (isinstance(seg, SSMLSegment) and seg.text.strip()) or isinstance(seg, SSMLBreak)]
 
         return ret_segments
 
-    def normalize(
-        self, segments: list[Union[SSMLSegment, SSMLBreak]]
-    ) -> list[TTSSegment]:
+    def normalize(self, segments: list[Union[SSMLSegment, SSMLBreak]]) -> list[TTSSegment]:
         segments = self.split_segments(segments)
         return [self.convert_ssml_seg(seg) for seg in segments]
