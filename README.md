@@ -1,130 +1,44 @@
-# 🎮 D.VA - AI Podcast Creation Engine
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Python Version](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/release/python-3120/)
+# D.Va 播客工作室
 
-> D.Va拥有一部强大的机甲，它具有两台全自动的近距离聚变机炮、可以使机甲飞跃敌人或障碍物的推进器、 还有可以抵御来自正面的远程攻击的防御矩阵
->
-> —— From [OverWatch](http://ow.blizzard.cn/heroes/dva)
+在浏览器里编写双人对话，给主持人和嘉宾选音色，再把整期节目导出为 MP3。可以从手写脚本开始，也可以用 DeepSeek 根据话题起草，再逐段修改。上传配乐后，工作室会把它循环铺在对白下方。
 
-<p align="left">
-  <img src="https://upload.wikimedia.org/wikipedia/zh/5/55/D.Va_Overwatch.png" width="200" height="200" alt="D.Va Overwatch" />
-</p>
+## 启动
 
-## 🚀 项目简介 (Introduction)
+需要 Node.js 22.12 或更高版本，以及带 libmp3lame 编码器的 FFmpeg。macOS 可以直接使用系统自带的语音；Linux 可安装 eSpeak NG。在 Ubuntu 或 Debian 上运行 `sudo apt install ffmpeg espeak-ng`，在 macOS 上可用 `brew install ffmpeg`。
 
-D.VA 是一个基于大模型优化的端到端多人TTS引擎，专注于播客节目创作。
-
-https://github.com/user-attachments/assets/703eddfa-f641-4a23-b54f-c666a9263709
-
-### ✨ 主要特性 (Features)
-
-*   **端到端多人TTS**: 支持生成包含多个说话人的音频。
-*   **定制化音色**: 允许用户设计和使用独特的音色。
-*   **拟人化输出**: 生成更自然、更像人类说话的语音。
-*   **背景音乐定制**: 支持添加和调整背景音乐。
-*   **关键词生成播客**: 输入关键词即可自动生成多人音频播客节目。
-
-### 🎧 音频示例 (Audio Demo)
-
-[ai_podcast.webm](https://github.com/user-attachments/assets/a64f099a-7455-4142-af2f-0b68cb7e0679)
-
-> 提示：如果无法在线播放，请尝试[下载音频文件](assets/ai_podcast_v1.MP3) (注意：此链接可能指向项目内的相对路径)。
-
-## 🎯 应用场景 (Use Cases)
-
-*   **AI语音新闻**: 自动生成每日AI语音新闻。
-*   **内容创作**: 为播客频道、小红书等平台持续产出音频内容。
-
-### 🗺️ 实现路径 (Workflow)
-
-1.  🗞️ **智能采集**: 每日自动采集多领域专业新闻。
-2.  ✂️ **稿件整理**: 自动分解整理成高质量新闻稿。
-3.  🎤 **语音合成**: 转化为包含片头片尾的精美语音内容（建议时长控制在4分钟以内）。
-
-## 🛠️ 快速上手 (Quick Start)
-
-### 1️⃣ 环境准备 (Prerequisites)
-
-*   **操作系统**: Linux (推荐)
-*   **Python**: 3.12+
-*   **系统依赖**: `ffmpeg`, `rubberband-cli`
-
-```bash
-# 更新包列表并安装系统依赖
-sudo apt update
-sudo apt install ffmpeg rubberband-cli git-lfs -y
+```sh
+npm ci
+npm run build
+npm start
 ```
 
-### 2️⃣ 模型下载 (Download Models)
+打开 **http://127.0.0.1:8787**。首次尝试可以直接使用编辑台中的示例。给两个角色选好音色后点击「生成 MP3」，在「成品试听」播放或下载。脚本和下载结果仅保存在当前页面中，刷新前请下载要保留的节目。
 
-```bash
-# 启用 Git LFS
-git lfs install
+### 本地中文神经音色
 
-# 在项目根目录运行，模型会下载到 models/ (选择一个源)
-# Hugging Face (推荐)
-git clone https://huggingface.co/echonoshy/d.va models
-
-# 或者使用镜像站 (如果访问Hugging Face困难)
-# git clone https://hf-mirror.com/echonoshy/d.va models
+```sh
+npm run model:install
 ```
 
-### 3️⃣ 安装依赖 (Install Dependencies)
+该命令从 sherpa-onnx 官方发布下载约 30 MiB 的 AISHELL-3 模型包，核对 SHA-256 并将运行所需的文件安装到 `models/vits-icefall-zh-aishell3/`。刷新编辑台即可选择中文神经音色。模型使用 CPU 合成，适合普通话对白。编辑台从 174 位说话人中提供 8 个音色供选择；其他语言可以使用系统语音或配置语音服务。安装这一模型也需要系统的 `tar` 支持 bzip2 解压。
 
-推荐使用 `uv` 进行环境管理。
+如果已经下载了官方压缩包，可以运行 `npm run model:install -- /path/to/vits-icefall-zh-aishell3.tar.bz2`。已有解压目录可以通过 `DVA_MODEL_DIR` 指定。模型及训练数据遵循各自的使用条款，项目源码与模型分开发行。[模型说明与示例](https://k2-fsa.github.io/sherpa/onnx/tts/pretrained_models/vits.html#aishell3-chinese-multi-speaker-174-speakers) · [模型发布](https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models)
 
-```bash
-# 安装 uv (如果尚未安装)
-# curl -LsSf https://astral.sh/uv/install.sh | sh
-# source $HOME/.cargo/env
-# 或者使用 pip 安装: pip install uv
+### 用话题起草脚本
 
-# (可选) 更换为国内 PyPI 镜像源以加速下载
-export UV_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+在项目根目录复制 `.env.example` 为 `.env`，填写 `DEEPSEEK_API_KEY`，重启服务。点击「话题生成」后输入主题，生成的对话可以继续编辑。通过 `DEEPSEEK_MODEL` 选择账号可用的模型。手写脚本和本机配音均可离线使用。
 
-# (可选) 创建并激活虚拟环境 (如果需要指定Python版本)
-# uv venv --python 3.12 .venv
-# source .venv/bin/activate
+### 使用已有的语音服务
 
-# 使用 uv 同步依赖 (会自动读取 pyproject.toml)
-uv sync
+在 `.env` 中填写 `DVA_TTS_BASE_URL`（例如 `http://127.0.0.1:8000/v1`）、`DVA_TTS_MODEL` 和逗号分隔的 `DVA_TTS_VOICES`。如果服务需要认证，再填写 `DVA_TTS_API_KEY`。重启后，编辑台会使用这些服务端音色。语音端点需要支持 `POST /audio/speech` 并返回音频。
 
-```
-*注意：项目依赖定义在 `pyproject.toml` 中，推荐使用 `uv sync` 或 `pip install .` 来安装。*
+选择话题生成时，服务会向 DeepSeek 发送主题；选择兼容语音服务时，台词会发往所配置的端点。本机系统语音与本地 ONNX 推理直接在运行 D.Va 的电脑上处理台词。密钥仅由服务器读取。服务器默认监听回环地址；要开放给其他人，应在入口配置鉴权和 HTTPS。
 
-### 4️⃣ 配置 (Configuration)
+## 项目与验收
 
-在项目根目录创建 `.env` 文件，并添加你的 DeepSeek API Key：
+- `web/src/` 是 React 编辑台。运行 `npm run build` 后，由同一 Node 服务提供页面和 API。
+- `server/` 实现脚本生成、声线选择、音频合成与混音。配乐上限 20 MiB，每次请求单独使用临时目录，返回 MP3 后清理文件。默认端口可通过 `PORT` 设置，FFmpeg 可通过 `FFMPEG_PATH` 指定。
+- `npm test` 运行 HTTP 和音频回归。要运行真实系统语音与混音用例，请安装 FFmpeg 及可用的系统语音引擎。安装中文模型后还可直接验证双音色神经合成。
+- `npm audit --audit-level=low` 检查 npm 锁文件。源码采用 [AGPL-3.0](LICENSE)。
 
-```dotenv
-# .env
-DEEPSEEK_API_KEY=your_api_key_here
-```
-
-### 5️⃣ 启动服务 (Launch)
-
-启动 Web 界面：
-
-```bash
-uv run webui.py
-```
-
-或者直接使用 Python：
-
-```bash
-source .venv/bin/activate
-python webui.py
-```
-
-## 📜 许可证 (License)
-
-本项目采用 [GNU Affero General Public License v3.0](LICENSE)。
-
-## 💖 致谢 (Acknowledgements)
-
-本项目借鉴了众多开源项目的思路和解决方案，在此感谢他们的贡献：
-
-*   [ChatTTS](https://github.com/2noise/ChatTTS)
-*   [Awesome-ChatTTS](https://github.com/panyanyany/Awesome-ChatTTS)
-*   [ChatTTS-Forge](https://github.com/lenML/ChatTTS-Forge)
-*   [ChatTTS_WebUI](https://github.com/craii/ChatTTS_WebUI)
+这个版本移除了旧 Gradio 页面、Python 训练和声音克隆工具、自带的第三方模型源码及其依赖。此前保存的模型文件可继续在原版本中使用；新版使用上述声线来源。
