@@ -31,7 +31,7 @@ from modules.models_setup import process_model_args, setup_model_args
 from modules.utils.env import get_and_update_env
 from modules.utils.ignore_warn import ignore_useless_warnings
 from modules.utils.torch_opt import configure_torch_optimizations
-from modules.webui.app import create_interface, webui_init
+from modules.webui.app import DARK_THEME_JS, create_interface, webui_init
 
 dcls_patch()
 ignore_useless_warnings()
@@ -117,7 +117,8 @@ def process_webui_args(args):
         share=share,
         debug=debug,
         auth=auth,
-        show_api=False,
+        js=DARK_THEME_JS,
+        footer_links=["gradio", "settings"],
         prevent_thread_lock=True,
         inbrowser=sys.platform == "win32",
         app_kwargs={

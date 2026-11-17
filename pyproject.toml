@@ -16,7 +16,7 @@ dependencies = [
     "faster_whisper==1.1.1",
     "ftfy>=6.3.1",
     "funasr==1.2.3",
-    "gradio>=5.12",
+    "gradio>=6.17.3,<7",
     "huggingface-hub>=0.30.2",
     "hyperpyyaml>=1.2.2",
     "inflect==7.5.0",

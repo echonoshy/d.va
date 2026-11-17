@@ -57,26 +57,22 @@ def create_app_footer():
     )
 
 
+DARK_THEME_JS = """
+function refresh() {
+    const url = new URL(window.location);
+
+    if (url.searchParams.get('__theme') !== 'dark') {
+        url.searchParams.set('__theme', 'dark');
+        window.location.href = url.href;
+    }
+}
+"""
+
+
 def create_interface():
     gradio_extensions.reload_javascript()
 
-    js_func = """
-    function refresh() {
-        const url = new URL(window.location);
-
-        if (url.searchParams.get('__theme') !== 'dark') {
-            url.searchParams.set('__theme', 'dark');
-            window.location.href = url.href;
-        }
-    }
-    """
-
-    head_js = """
-    <script>
-    </script>
-    """
-
-    with gr.Blocks(js=js_func, head=head_js, title="D.Va WebUI") as demo:
+    with gr.Blocks(title="D.Va WebUI") as demo:
         css = """
         <style>
         .big-button {
