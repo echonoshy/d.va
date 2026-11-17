@@ -58,21 +58,15 @@ sudo apt install ffmpeg rubberband-cli git-lfs -y
 ### 2️⃣ 模型下载 (Download Models)
 
 ```bash
-# 进入模型目录
-cd models/
-
 # 启用 Git LFS
 git lfs install
 
-# 克隆模型仓库 (选择一个源)
+# 在项目根目录运行，模型会下载到 models/ (选择一个源)
 # Hugging Face (推荐)
-git clone https://huggingface.co/echonoshy/d.va .
+git clone https://huggingface.co/echonoshy/d.va models
 
 # 或者使用镜像站 (如果访问Hugging Face困难)
-# git clone https://hf-mirror.com/echonoshy/d.va .
-
-# 返回项目根目录
-cd ..
+# git clone https://hf-mirror.com/echonoshy/d.va models
 ```
 
 ### 3️⃣ 安装依赖 (Install Dependencies)

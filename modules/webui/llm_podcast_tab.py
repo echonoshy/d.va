@@ -1,6 +1,8 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 import gradio as gr
 from pipeline import PodcastPipeline
-from modules.webui.webui_utils import synthesize_ssml
 
 # Initialize pipeline once
 podcast_pipeline = PodcastPipeline()
@@ -22,7 +24,8 @@ def create_llm_podcast_tab():
                 )
 
                 bgm_input = gr.Audio(
-                    label="背景音乐(mp3)",
+                    label="背景音乐",
+                    type="filepath",
                 )
 
                 generate_btn = gr.Button("生成播客", variant="primary")
@@ -38,25 +41,23 @@ def create_llm_podcast_tab():
                 return "请输入话题", None
 
             try:
-                # Process BGM path
-                bgm_path = bgm.name if bgm else None
-
                 # Generate SSML content
                 ssml_content = podcast_pipeline.generate_ssml(topic, model=model)
                 if not ssml_content:
                     return "SSML 生成失败，请重试", None
 
                 # Generate and process audio
-                audio_data = synthesize_ssml(ssml=ssml_content, batch_size=16, enable_enhance=True, enable_denoise=True, speed_rate=1.1)
+                audio_data = podcast_pipeline.synthesize_speech(ssml_content)
                 if not audio_data:
                     return "音频生成失败，请重试", None
 
                 # Post-process audio with BGM
-                success = podcast_pipeline.audio_postprocess(audio_data, bgm_path=bgm_path or podcast_pipeline.default_bgm_path)
-                if not success:
-                    return "音频后期处理失败，请重试", None
-
-                return ssml_content, "final_output.mp3"
+                with TemporaryDirectory() as directory:
+                    output_path = str(Path(directory) / "podcast.mp3")
+                    success = podcast_pipeline.audio_postprocess(audio_data, bgm_path=bgm or podcast_pipeline.default_bgm_path, output_path=output_path)
+                    if not success:
+                        return "音频后期处理失败，请重试", None
+                    return ssml_content, audio_output.move_resource_to_block_cache(output_path)
 
             except Exception as e:
                 error_msg = f"生成过程发生错误: {str(e)}"

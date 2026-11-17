@@ -1,7 +1,6 @@
 import numpy as np
 from pydub import AudioSegment
 from modules.llm_ssml_service.ssml_service import DeepSeekClient
-from modules.webui.webui_utils import synthesize_ssml
 
 
 class PodcastPipeline:
@@ -22,9 +21,15 @@ class PodcastPipeline:
         """
         ssml_content = self.generate_ssml(topic, model=model)
         if ssml_content:
-            audio_data = synthesize_ssml(ssml=ssml_content, batch_size=16, enable_enhance=True, enable_denoise=True, speed_rate=1.1)
+            audio_data = self.synthesize_speech(ssml_content)
             if audio_data:
                 self.audio_postprocess(audio_data, bgm_path=bgm_path or self.default_bgm_path)
+
+    @staticmethod
+    def synthesize_speech(ssml: str) -> tuple[int, np.ndarray]:
+        from modules.webui.webui_utils import synthesize_ssml
+
+        return synthesize_ssml(ssml=ssml, batch_size=16, enable_enhance=True, enable_denoise=True, speed_rate=1.1)
 
     def clean_ssml_content(self, content: str) -> str:
         """Remove markdown code block markers from SSML content"""
@@ -68,28 +73,33 @@ class PodcastPipeline:
             podcast = AudioSegment(samples.tobytes(), frame_rate=sample_rate, sample_width=samples.dtype.itemsize, channels=1)
 
             # Load and process background music
-            bgm = AudioSegment.from_mp3(bgm_path)
+            with open(bgm_path, "rb") as bgm_file:
+                bgm = AudioSegment.from_file(bgm_file)
+            if not bgm or not podcast:
+                raise ValueError("Speech and background music must both contain audio")
             bgm_intro = bgm[:5000]  # First 5 seconds
-            bgm_main = bgm[5000:]
+            # Short tracks can accompany the narration by looping the whole track.
+            bgm_main = bgm[5000:] or bgm
 
             # Adjust background music length
             podcast_length = len(podcast)
             bgm_main_length = len(bgm_main)
             if bgm_main_length < podcast_length:
-                repeats = (podcast_length // bgm_main_length) + 1
+                repeats = (podcast_length + bgm_main_length - 1) // bgm_main_length
                 bgm_main = bgm_main * repeats
             bgm_main = bgm_main[:podcast_length]
 
             # Adjust volume and add fade effects
             bgm_main = bgm_main - 25  # Reduce volume by 25dB
-            bgm_main = bgm_main.fade_out(duration=3000)
+            bgm_main = bgm_main.fade_out(duration=min(3000, podcast_length))
 
             # Mix audio streams
-            mixed = bgm_intro
-            mixed = mixed.append(podcast.overlay(bgm_main), crossfade=500)
+            crossfade = min(500, len(bgm_intro), podcast_length)
+            mixed = bgm_intro.append(podcast.overlay(bgm_main), crossfade=crossfade)
 
             # Export final audio
-            mixed.export(output_path, format="mp3")
+            with open(output_path, "wb") as output_file:
+                mixed.export(output_file, format="mp3")
             print(f"Audio post-processing completed: {output_path}")
             return True
 

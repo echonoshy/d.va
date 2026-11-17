@@ -68,7 +68,7 @@ dependencies = [
 
 
 [[tool.uv.index]]
-url = "https://mirrors.aliyun.com/pypi/simple"
+url = "https://mirrors.aliyun.com/pypi/simple/"
 
 [tool.ruff]
 line-length = 200
