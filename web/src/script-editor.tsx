@@ -1,6 +1,7 @@
 import { useId, useRef, useState } from 'react';
-import type { ComponentPropsWithoutRef, Dispatch, FormEvent, RefCallback, SetStateAction } from 'react';
+import type { Dispatch, FormEvent, RefCallback, SetStateAction } from 'react';
 import { Icon } from './graphics';
+import { Select } from './select';
 import { isRole } from './studio-types';
 import type { Busy, DraftSegment, Role, Segment as SegmentValue } from './studio-types';
 
@@ -19,15 +20,6 @@ export const EXAMPLE: SegmentValue[] = [
     text: '那我们明早试一试，出门时先摘下耳机，听一听自己那条街的开场白。有些细节，光用眼睛看很容易错过。',
   },
 ];
-
-export function Select({ className = '', children, ...props }: ComponentPropsWithoutRef<'select'>) {
-  return (
-    <span className={'select-wrap ' + className}>
-      <select {...props}>{children}</select>
-      <Icon name="chevron" size={15} />
-    </span>
-  );
-}
 
 type SegmentProps = {
   segment: DraftSegment;

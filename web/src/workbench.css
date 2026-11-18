@@ -110,9 +110,8 @@
   font-weight: 650;
 }
 .wf-field input:not([type='checkbox']),
-.wf-field select,
 .wf-field textarea,
-.wf-group > label :is(input:not([type='checkbox']), select),
+.wf-group > label input:not([type='checkbox']),
 .wf-sheet input,
 .wf-range input[type='number'] {
   width: 100%;

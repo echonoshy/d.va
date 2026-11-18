@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Select } from "./select";
 
 type Card = {
   id: string;
@@ -154,12 +155,12 @@ export function SpeakerHub({
       </label>
       <label>
         排序
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+        <Select value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="newest">最新</option>
           <option value="oldest">最早</option>
           <option value="az">A–Z</option>
           <option value="za">Z–A</option>
-        </select>
+        </Select>
       </label>
       {Array.from(
         new Set(

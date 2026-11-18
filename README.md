@@ -1,5 +1,7 @@
 # D.Va 语音与播客工作室
 
+![D.Va 播客编辑台 · 城市猫电台界面](docs/studio-preview.png)
+
 D.Va 在本机完成语音合成、多角色 SSML 配音、音色卡制作、ChatTTS 音色训练和 OpenVoice 声音转换。网页使用 TypeScript 和 React，模型推理和训练继续使用 Python。导航栏同时保留了双人播客编辑台。
 
 ## 启动完整工作室

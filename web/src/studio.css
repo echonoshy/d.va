@@ -141,11 +141,14 @@ svg {
   top: calc(100% + 11px);
   display: grid;
   grid-template-columns: 1.18fr 1fr 0.85fr;
-  width: min(540px, 88vw);
-  padding: 22px 17px;
+  width: min(510px, calc(100vw - 30px));
+  max-height: min(440px, calc(100dvh - 65px));
+  overflow: auto;
+  padding: 14px 10px;
   background: var(--paper);
-  border: 1px solid var(--ink);
-  box-shadow: 0 6px 18px #302b2126;
+  border: 1px solid #918a7e;
+  border-radius: 10px;
+  box-shadow: 0 9px 22px #302b2130;
 }
 .nav-group {
   min-width: 0;
@@ -155,7 +158,7 @@ svg {
   border-left: var(--line);
 }
 .nav-group p {
-  margin: 0 6px 9px;
+  margin: 3px 8px 8px;
   color: var(--muted);
   font-size: 11px;
   letter-spacing: 0.12em;
@@ -164,10 +167,10 @@ svg {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 7px;
+  gap: 8px;
   min-height: 38px;
-  padding: 5px 6px;
-  border-radius: 3px;
+  padding: 6px 8px;
+  border-radius: 5px;
   font-size: 13px;
   text-align: left;
 }
@@ -175,8 +178,8 @@ svg {
   background: var(--pale);
 }
 .nav-group button[aria-pressed='true'] {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--pale);
+  font-weight: 650;
 }
 .workspace,
 .studio > *,
@@ -458,37 +461,117 @@ h2 {
 .select-wrap select {
   appearance: none;
   width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 7px 32px 7px 11px;
+  overflow: hidden;
+  border: 1px solid #8a8377;
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
   text-overflow: ellipsis;
+}
+.select-wrap select:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: #f0ece1;
 }
 .select-wrap > svg {
   position: absolute;
-  right: 7px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+  color: var(--muted);
 }
 .role select {
   min-height: 28px;
-  border: 1px solid var(--ink);
+  padding-block: 3px;
   border-radius: 20px;
+  border-color: var(--ink);
   background: var(--ink);
   color: var(--paper);
   font-size: 12px;
-  padding: 2px 26px 2px 11px;
 }
-.role svg {
+.role select:hover:not(:disabled) {
+  background: #48443d;
+}
+.role > svg {
   color: var(--paper);
 }
 .role-B select {
-  background: var(--canvas);
-  color: var(--ink);
-}
-.role-B svg {
-  color: var(--ink);
-}
-select option {
+  border-color: #8a8377;
   background: var(--paper);
   color: var(--ink);
+}
+.role-B select:hover:not(:disabled) {
+  background: var(--pale);
+}
+.role-B > svg {
+  color: var(--muted);
+}
+.select-wrap option {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@supports (appearance: base-select) and selector(select::picker(select)) {
+  .select-wrap select,
+  .select-wrap select::picker(select) {
+    appearance: base-select;
+  }
+  .select-wrap select {
+    align-items: center;
+  }
+  .select-wrap select::picker-icon {
+    display: none;
+  }
+  .select-wrap select:open {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 1px var(--ink);
+  }
+  .select-wrap select:open + svg {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  .select-wrap select::picker(select) {
+    min-inline-size: anchor-size(width);
+    max-inline-size: min(30rem, calc(100vw - 28px));
+    max-block-size: min(21rem, 60dvh);
+    margin-block: 5px;
+    padding: 4px;
+    overflow: auto;
+    border: 1px solid #918a7e;
+    border-radius: 9px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 9px 22px #302b2130;
+    overscroll-behavior: contain;
+  }
+  .select-wrap option {
+    gap: 6px;
+    min-height: 34px;
+    padding: 6px 9px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .select-wrap option:checked {
+    background: var(--pale);
+    font-weight: 650;
+  }
+  .select-wrap option:hover,
+  .select-wrap option:focus-visible {
+    background: #ddd7c9;
+    outline: none;
+  }
+  .select-wrap option::checkmark {
+    order: 1;
+    flex: none;
+    margin-inline-start: auto;
+  }
 }
 .icon-button {
   display: grid;
@@ -574,8 +657,8 @@ select option {
 .voice {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
-  gap: 1px 11px;
-  padding: 8px 1px;
+  gap: 4px 11px;
+  padding: 10px 1px;
   border-top: var(--line);
 }
 .voice:last-child {
@@ -611,12 +694,7 @@ select option {
   grid-column: 2;
 }
 .voice-control select {
-  min-height: 25px;
-  padding: 2px 25px 2px 0;
-  border: 0;
-  background: transparent;
-  font-size: 15px;
-  font-weight: 600;
+  font-weight: 550;
 }
 .music-group {
   display: grid;
@@ -773,7 +851,7 @@ select option {
   }
   .tool-menu {
     grid-template-columns: 1fr 1fr;
-    width: min(94vw, 380px);
+    width: min(380px, calc(100vw - 30px));
     padding: 12px 5px;
     gap: 11px 0;
   }
@@ -781,7 +859,9 @@ select option {
     padding: 0 6px;
   }
   .nav-group:last-child {
-    border: 0;
+    border-left: 0;
+    border-top: var(--line);
+    padding-top: 8px;
     grid-column: 1/-1;
     display: flex;
     align-items: center;
@@ -908,6 +988,13 @@ select option {
   }
   .voice label {
     align-self: end;
+  }
+  .select-wrap select,
+  .select-wrap option {
+    min-height: 42px;
+  }
+  .nav-group button {
+    min-height: 42px;
   }
 }
 @media (max-width: 355px) {

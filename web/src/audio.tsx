@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { Icon, Wave } from './graphics';
-import { ROLES, Select } from './script-editor';
+import { ROLES } from './script-editor';
+import { Select } from './select';
 import type { Busy, Output, Voice, VoiceSelection } from './studio-types';
 
 type MusicProps = {

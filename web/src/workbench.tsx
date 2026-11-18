@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Select } from "./select";
 import { ToolIntro } from "./studio-shell";
 import { Microphone } from "./microphone";
 import Markdown from "react-markdown";
@@ -452,7 +453,7 @@ export function Workbench({
     }
     if (k === "Dropdown" || k === "Radio") {
       control = (
-        <select
+        <Select
           disabled={disabled}
           value={String(value ?? "")}
           onChange={(e) => change(key, e.target.value)}
@@ -466,7 +467,7 @@ export function Workbench({
               </option>
             );
           })}
-        </select>
+        </Select>
       );
     } else if (k === "Checkbox")
       control = (
