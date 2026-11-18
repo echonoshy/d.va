@@ -83,7 +83,10 @@ if (process.argv[1] === modulePath && process.argv[2] === '--synthesize' && proc
       console.error(error.message);
       process.exitCode = 1;
     } finally {
-      process.disconnect();
+      // Node 22.12 still has IPC callbacks queued when the message handler returns.
+      setImmediate(() => {
+        if (process.connected) process.disconnect();
+      });
     }
   });
 }

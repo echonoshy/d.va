@@ -1,0 +1,135 @@
+[
+  {
+    "file": "ChatTTS/asset/DVAE_full.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/DVAE_full.pt",
+    "size": 60402442,
+    "sha256": "553eb75763511e23f3e5f86303e2163c5ca775489d637fb635d979c8ae58bbe5",
+    "git_blob": "c02e25f85e677059af27137c9ec566bc6f3b0f20"
+  },
+  {
+    "file": "ChatTTS/asset/Decoder.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/Decoder.pt",
+    "size": 103718156,
+    "sha256": "9964e36e840f0e3a748c5f716fe6de6490d2135a5f5155f4a642d51860e2ec38",
+    "git_blob": "f15ee0b814281e7378af51d4bf25af57d29ed3b4"
+  },
+  {
+    "file": "ChatTTS/asset/GPT.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/GPT.pt",
+    "size": 900746442,
+    "sha256": "d7d4ee6461ea097a2be23eb40d73fb94ad3b3d39cb64fbb50cb3357fd466cadb",
+    "git_blob": "d4feaa219d849b8fc56a66bc3efc032455b37bc4"
+  },
+  {
+    "file": "ChatTTS/asset/Vocos.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/Vocos.pt",
+    "size": 54363119,
+    "sha256": "09a670eda1c08b740013679c7a90ebb7f1a97646ea7673069a6838e6b51d6c58",
+    "git_blob": "e7f521d0407e975101a66dd94bcadbb122a46893"
+  },
+  {
+    "file": "ChatTTS/asset/spk_stat.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/spk_stat.pt",
+    "size": 4257,
+    "sha256": "3228d8a4cbbf349d107a1b76d2f47820865bd3c9928c4bdfe1cefd5c7071105f",
+    "git_blob": "c21dae672dd323c62dd9d53f9fcae77071983515"
+  },
+  {
+    "file": "ChatTTS/asset/tokenizer/special_tokens_map.json",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/tokenizer/special_tokens_map.json",
+    "size": 7847,
+    "sha256": null,
+    "git_blob": "42cfc10c507baddea0a6ee0db879a93a6e7621c4"
+  },
+  {
+    "file": "ChatTTS/asset/tokenizer/tokenizer.json",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/tokenizer/tokenizer.json",
+    "size": 448604,
+    "sha256": null,
+    "git_blob": "d6e380b8cb88c10c9c68f6180c5ddd2ab3053f65"
+  },
+  {
+    "file": "ChatTTS/asset/tokenizer/tokenizer_config.json",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/ChatTTS/asset/tokenizer/tokenizer_config.json",
+    "size": 11028,
+    "sha256": null,
+    "git_blob": "b62fb7fbd3c9b91498b869b32343642d03a25fc0"
+  },
+  {
+    "file": "resemble-enhance/hparams.yaml",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/resemble-enhance/hparams.yaml",
+    "size": 718,
+    "sha256": null,
+    "git_blob": "f19e12b0f3ef512e750d209b33ba333436d02b7f"
+  },
+  {
+    "file": "resemble-enhance/models_resemble-enhance_hparams.yaml",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/resemble-enhance/models_resemble-enhance_hparams.yaml",
+    "size": 717,
+    "sha256": null,
+    "git_blob": "0946d9553860e839892e9fe1a3433b364952a93c"
+  },
+  {
+    "file": "resemble-enhance/mp_rank_00_model_states.pt",
+    "url": "https://huggingface.co/echonoshy/d.va/resolve/bf974cd1effd2eaeb599e8f3b4e17c4e48b7feaf/resemble-enhance/mp_rank_00_model_states.pt",
+    "size": 713176232,
+    "sha256": "f9d035f318de3e6d919bc70cf7ad7d32b4fe92ec5cbe0b30029a27f5db07d9d6",
+    "git_blob": "a73468ffd3b1959b6734c4a2501485398230051d"
+  },
+  {
+    "file": "fish-speech-1_4/config.json",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/config.json",
+    "size": 493,
+    "sha256": null,
+    "git_blob": "966eef0416c72fbe6b2938856c28707e3710b072"
+  },
+  {
+    "file": "fish-speech-1_4/firefly-gan-vq-fsq-8x1024-21hz-generator.pth",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/firefly-gan-vq-fsq-8x1024-21hz-generator.pth",
+    "size": 188518579,
+    "sha256": "01b81dbf753224a156c3fe139b88bf0b9a0f54b11bee864f95e66511c3ccd754",
+    "git_blob": "6ecbf6f09ffcea321b078b4c01c170acf75c27ba"
+  },
+  {
+    "file": "fish-speech-1_4/model.pth",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/model.pth",
+    "size": 988991358,
+    "sha256": "5792b78b48d1f92d0b2cef8f07aad6b7ac19db2aff23a2054a5cce1d019ab4fb",
+    "git_blob": "7cc0877f8ceae9bd71d68d7a7caa3932fde95135"
+  },
+  {
+    "file": "fish-speech-1_4/special_tokens_map.json",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/special_tokens_map.json",
+    "size": 449,
+    "sha256": null,
+    "git_blob": "afaceb358180a0ba4d0ae9bd3b915b1ed43aa99d"
+  },
+  {
+    "file": "fish-speech-1_4/tokenizer.json",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/tokenizer.json",
+    "size": 1602412,
+    "sha256": null,
+    "git_blob": "1cc11817db7392d66ef4e47766ea7a887a9e4909"
+  },
+  {
+    "file": "fish-speech-1_4/tokenizer_config.json",
+    "url": "https://huggingface.co/fishaudio/fish-speech-1.4/resolve/069c573759936b35191d3380deb89183c0656f59/tokenizer_config.json",
+    "size": 1854,
+    "sha256": null,
+    "git_blob": "3893b6bd0ce8c421066cb5895d88803a6d00fc33"
+  },
+  {
+    "file": "OpenVoiceV2/converter/checkpoint.pth",
+    "url": "https://huggingface.co/myshell-ai/OpenVoiceV2/resolve/f36e7edfe1684461a8343844af60babc2efbb727/converter/checkpoint.pth",
+    "size": 131320490,
+    "sha256": "9652c27e92b6b2a91632590ac9962ef7ae2b712e5c5b7f4c34ec55ee2b37ab9e",
+    "git_blob": "fa2f9421735901fd3db22a904f07b5a591faad7d"
+  },
+  {
+    "file": "OpenVoiceV2/converter/config.json",
+    "url": "https://huggingface.co/myshell-ai/OpenVoiceV2/resolve/f36e7edfe1684461a8343844af60babc2efbb727/converter/config.json",
+    "size": 838,
+    "sha256": null,
+    "git_blob": "3e33566b0d976167bd5f15801ef7005d59143e2f"
+  }
+]

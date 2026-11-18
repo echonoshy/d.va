@@ -1,0 +1,131 @@
+.studio-navigation,
+.wf-tabs > nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.studio-navigation {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  border-bottom: 1px solid #d9d9d2;
+}
+.studio-navigation button,
+.workbench button,
+.workbench select,
+.workbench input,
+.workbench textarea {
+  font: inherit;
+}
+.studio-navigation button,
+.workbench button {
+  color: #292d25;
+  border: 1px solid #cccfc5;
+  background: #fff;
+  border-radius: 5px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+.studio-navigation button[aria-pressed="true"],
+.wf-tabs button[aria-pressed="true"],
+button.wf-primary {
+  background: #343d30;
+  border-color: #343d30;
+  color: white;
+}
+.workbench {
+  max-width: 1450px;
+  margin: auto;
+  padding: 1.2rem clamp(1rem, 4vw, 4rem) 3rem;
+}
+.wf-tabs > nav {
+  margin: 0.5rem 0 1rem;
+}
+.wf-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.wf-column {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.wf-group {
+  background: #fff;
+  border: 1px solid #d9dbd3;
+  border-radius: 9px;
+  padding: 1rem;
+  margin: 0 0 0.75rem;
+  min-width: 0;
+}
+.wf-field,
+.wf-media,
+.wf-group > label {
+  display: grid;
+  gap: 4px;
+  margin: 0.45rem 0;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+.wf-checkbox {
+  display: flex;
+  align-items: center;
+}
+.wf-field > input:not([type="checkbox"]),
+.wf-field > select,
+.wf-field > textarea,
+.wf-group > label > input,
+.wf-group > label > select,
+.wf-sheet input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #c7cabf;
+  border-radius: 4px;
+  padding: 0.4rem;
+  background: white;
+  color: #20221f;
+}
+.wf-sheet {
+  overflow-x: auto;
+}
+.wf-sheet table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.wf-sheet th,
+.wf-sheet td {
+  padding: 0.2rem;
+  text-align: left;
+}
+.wf-sheet input {
+  min-width: 65px;
+}
+.wf-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+.wf-media audio {
+  width: 100%;
+}
+.workbench button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+[hidden] {
+  display: none !important;
+}
+.wf-text p {
+  margin: 0.3rem 0;
+}
+.wf-text pre {
+  overflow: auto;
+  background: #f5f6f3;
+  padding: 0.7rem;
+}
+.wf-text {
+  white-space: normal;
+}

@@ -1,3 +1,5 @@
+import {createHash, timingSafeEqual} from 'node:crypto';
+import { serveStudio, serveLegacy, stopStudio } from './studio.mjs';
 import { createServer } from 'node:http';
 import { createReadStream } from 'node:fs';
 import { mkdtemp, realpath, rm, stat, writeFile } from 'node:fs/promises';
@@ -13,7 +15,7 @@ const MAX_MUSIC = 20 * MIB;
 const LIMITS = { render: 2, script: 4, voices: 8 };
 const TIMEOUTS = { render: 180_000, script: 60_000, voices: 30_000 };
 const STATIC_TYPES = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.md': 'text/plain; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
   '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp',
   '.ico': 'image/x-icon', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf',
@@ -123,8 +125,12 @@ async function readRenderRequest(req) {
   }
   const music = files[0];
   if (music?.size > MAX_MUSIC) throw new HttpError(413, '背景音乐文件最多 20 MiB。');
-  if (music && !music.type.startsWith('audio/') && !((!music.type || music.type === 'application/octet-stream' || music.type === 'video/mp4') && /\.(mp3|wav|m4a|aac|flac|oga|ogg|opus)$/i.test(music.name))) {
-    throw new HttpError(415, '请选择 MP3、WAV、M4A、OGG 或 FLAC 等音频文件。');
+  if (music && !music.type.startsWith('audio/')) {
+    const accepted = ((!music.type || music.type === 'application/octet-stream') &&
+      /\.(mp3|wav|m4a|mp4|aac|flac|oga|ogg|opus|aiff?|webm)$/i.test(music.name)) ||
+      (music.type === 'video/mp4' && /\.(m4a|mp4)$/i.test(music.name)) ||
+      (music.type === 'video/webm' && /\.webm$/i.test(music.name));
+    if (!accepted) throw new HttpError(415, '请选择 MP3、WAV、M4A 等音频文件，或含音轨的 MP4、WebM 文件。');
   }
   return { segments, voices, music };
 }
@@ -216,8 +222,32 @@ export function createAppServer({ distDir = join(ROOT, 'dist'), bindHost = proce
       let pathname;
       try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
       catch { throw new HttpError(400, '请求路径无效。'); }
+      if (process.env.DVA_AUTH) {
+        const digest = value => createHash('sha256').update(value).digest();
+        const expected = 'Basic ' + Buffer.from(process.env.DVA_AUTH).toString('base64');
+        if (!timingSafeEqual(digest(req.headers.authorization || ''), digest(expected))) {
+          res.setHeader('WWW-Authenticate', 'Basic realm="D.Va"');
+          return json(res,401,{error:'请输入工作室的用户名和密码。'});
+        }
+      }
+      if (process.env.DVA_ENABLE_API === '1' && (/^\/v[12]\//.test(pathname) || ['/docs','/openapi.json'].includes(pathname))) {
+        checkApiOrigin(req,bindHost);
+        return await serveLegacy(req,res,readBody);
+      }
       if (!pathname.startsWith('/api/')) return await serveStatic(req, res, pathname, distDir);
       checkApiOrigin(req, bindHost);
+      if (pathname === '/api/capabilities' && req.method === 'GET') return json(res, 200, {
+        scriptAvailable: Boolean(apiKey), externalVoices: Boolean(process.env.DVA_TTS_BASE_URL)
+      });
+      if (pathname.startsWith('/api/studio/')) {
+        try { await serveStudio(req, res, pathname, readBody); }
+        catch (error) {
+          if (res.headersSent) { res.destroy(); return; }
+          if (error instanceof HttpError) throw error;
+          return json(res, 503, { error: '语音工作台服务无法连接，请确认已运行 uv sync --frozen，并查看服务日志。' });
+        }
+        return;
+      }
       const route = pathname.slice(5);
       if (!Object.hasOwn(LIMITS, route)) throw new HttpError(404, '接口不存在。');
       if (req.method !== (route === 'voices' ? 'GET' : 'POST')) throw new HttpError(405, '请求方法不受支持。');
@@ -256,6 +286,8 @@ export function createAppServer({ distDir = join(ROOT, 'dist'), bindHost = proce
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   const port = Number(process.env.PORT || 8787);
   const host = process.env.HOST || '127.0.0.1';
+  process.once("exit", stopStudio);
+  for (const sig of ["SIGINT","SIGTERM"]) process.once(sig, () => { stopStudio(); process.exit(0); });
   createAppServer().listen(port, host, function () {
     console.log(`D.va listening on http://${host.includes(':') ? `[${host}]` : host}:${this.address().port}`);
   });

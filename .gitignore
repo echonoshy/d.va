@@ -2,6 +2,16 @@ node_modules/
 dist/
 .env
 .env.local
-models/
+.env.webui
+/models/
 *.log
 .DS_Store
+
+.venv/
+__pycache__/
+.pytest_cache/
+/datasets/
+.studio-cache/
+
+/data/speakers/imported/
+/data/speakers/spk_*_ep*.spkv1.json

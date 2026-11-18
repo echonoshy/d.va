@@ -63,13 +63,18 @@ test('lists voices and allows manual rendering without a script provider', async
   const noKey = await fetch(`${origin}/api/script`, scriptPost());
   assert.equal(noKey.status, 503);
   assert.match((await noKey.json()).error, /DEEPSEEK_API_KEY/);
-  const form = renderForm();
-  form.append('music', new Blob(['local upload'], { type: 'audio/wav' }), 'theme.wav');
-  const response = await fetch(`${origin}/api/render`, { method: 'POST', body: form });
-  assert.equal(response.status, 200);
-  assert.equal(response.headers.get('content-type'), 'audio/mpeg');
-  assert.deepEqual(Buffer.from(await response.arrayBuffer()), sample);
-  await waitUntilRemoved(directory);
+  for (const [filename, type] of [
+    ['theme.wav', 'audio/wav'], ['theme.webm', 'video/webm'],
+    ['theme.mp4', 'video/mp4'], ['theme.aiff', 'application/octet-stream'],
+  ]) {
+    const form = renderForm();
+    form.append('music', new Blob(['local upload'], { type }), filename);
+    const response = await fetch(`${origin}/api/render`, { method: 'POST', body: form });
+    assert.equal(response.status, 200, filename);
+    assert.equal(response.headers.get('content-type'), 'audio/mpeg');
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()), sample);
+    await waitUntilRemoved(directory);
+  }
 });
 
 test('calls the configured DeepSeek model and validates structured responses', async t => {

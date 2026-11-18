@@ -9,7 +9,7 @@ await rm(out, {recursive: true, force: true});
 await mkdir(path.join(out, 'assets'), {recursive: true});
 await build({
   absWorkingDir: root,
-  entryPoints: ['web/src/main.jsx'],
+  entryPoints: ['web/src/main.tsx'],
   outfile: 'dist/assets/app.js',
   bundle: true,
   format: 'esm',
@@ -23,3 +23,7 @@ await build({
   logLevel: 'info',
 });
 await cp(path.join(root, 'web/index.html'), path.join(out, 'index.html'));
+
+await mkdir(path.join(out, "docs"), {recursive: true});
+await cp(path.join(root, "docs/5518052-parity.md"), path.join(out, "docs/5518052-parity.md"));
+await cp(path.join(root, "LICENSE"), path.join(out, "LICENSE"));
