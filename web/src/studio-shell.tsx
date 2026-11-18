@@ -120,7 +120,7 @@ export function WorkspaceBar({
 
 export function PodcastIntro({ speakers, characters }: { speakers: number; characters: number }) {
   return (
-    <header className="podcast-hero">
+    <header className="podcast-hero studio-banner">
       <div className="hero-copy">
         <h1>播客编辑台</h1>
         <p>编辑对话、分配音色，生成可播放的 MP3。</p>
@@ -134,7 +134,7 @@ export function PodcastIntro({ speakers, characters }: { speakers: number; chara
           </span>
         </div>
       </div>
-      <div className="hosts-art" aria-hidden="true" />
+      <div className="studio-gear" aria-hidden="true" />
     </header>
   );
 }
@@ -153,7 +153,7 @@ const instructions: Record<string, string> = {
 export function ToolIntro({ section }: { section: string }) {
   const tool = groups.flatMap((g) => g.tools).find((t) => t.name === section);
   return (
-    <header className="tool-intro">
+    <header className="tool-intro studio-banner">
       <span className="tool-mark" aria-hidden="true">
         <Icon name={tool?.icon || 'tune'} size={28} />
       </span>

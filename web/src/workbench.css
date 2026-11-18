@@ -7,8 +7,11 @@
   border: var(--line);
   border-radius: 22px;
   box-shadow: 0 3px 0 var(--ink);
-  background: #fff0b9;
   margin-bottom: 23px;
+}
+.tool-intro::before {
+  inset: 15% 2% 15% 64%;
+  mask-image: linear-gradient(to right, transparent, black 40%);
 }
 .tool-intro h1 {
   font-size: clamp(30px, 3vw, 44px);
@@ -26,19 +29,13 @@
   height: 54px;
   border: var(--line);
   background: var(--sun);
+  color: var(--ink);
   border-radius: 18px;
   transform: rotate(-4deg);
 }
 .workbench:is([data-tool='音色管理'], [data-tool='声音克隆'], [data-tool='训练'], [data-tool='音频工具'])
-  .tool-intro {
-  background: #d8eedf;
-}
-.workbench:is([data-tool='音色管理'], [data-tool='声音克隆'], [data-tool='训练'], [data-tool='音频工具'])
   .tool-mark {
-  background: #91d4b4;
-}
-.workbench:is([data-tool='系统'], [data-tool='使用说明']) .tool-intro {
-  background: #ffead8;
+  background: var(--ice);
 }
 .workbench:is([data-tool='系统'], [data-tool='使用说明']) .tool-mark {
   background: #ffad77;
@@ -63,11 +60,12 @@
 .workbench button:hover:not(:disabled) {
   background: #fff0bd;
 }
-.workbench .wf-primary,
 .workbench .wf-tabs > nav > button[aria-pressed='true'] {
-  background: var(--sun);
+  background: var(--cobalt);
+  color: white;
 }
 .workbench .wf-primary {
+  background: var(--sun);
   box-shadow: 0 2px 0 var(--ink);
   padding-inline: 20px;
   margin-block: 6px;
@@ -338,6 +336,9 @@
     padding: 14px;
     border-radius: 17px;
     margin-bottom: 17px;
+  }
+  .tool-intro::before {
+    left: 78%;
   }
   .tool-intro h1 {
     font-size: 29px;

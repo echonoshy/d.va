@@ -1,17 +1,19 @@
 :root {
   color-scheme: light;
-  --ink: #201e18;
-  --muted: #676357;
+  --ink: #172132;
+  --cobalt: #095ad9;
+  --blue-ink: #103d82;
+  --ice: #cce4fc;
+  --muted: #535c66;
   --rule: #d7d2bc;
-  --canvas: #faf9ee;
-  --paper: #fffef5;
-  --sun: #ffbe13;
-  --mint: #b6e5d1;
+  --canvas: #f8f7ef;
+  --paper: #fffef7;
+  --sun: #ffd23e;
   --orange: #ff8849;
   --line: 1.7px solid var(--ink);
   --radius: 20px;
   --pad: clamp(22px, 3vw, 50px);
-  font-family: Nunito, 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  font-family: 'Avenir Next', 'Hedvig Letters Sans', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
   font-weight: 500;
   color: var(--ink);
   background: var(--canvas);
@@ -98,7 +100,7 @@ a {
   height: 100dvh;
   overflow: auto;
   padding: 29px 15px 20px;
-  background: #f5f3e2;
+  background: #f1f1e7;
   border-right: var(--line);
 }
 .brand-row {
@@ -191,10 +193,11 @@ a {
   transition: background 0.12s;
 }
 .studio-navigation button:hover {
-  background: #ebe7cf;
+  background: #e1e9f5;
 }
 .studio-navigation button[aria-pressed='true'] {
-  background: var(--sun);
+  background: var(--cobalt);
+  color: white;
   border-color: var(--ink);
   font-weight: 800;
 }
@@ -202,7 +205,7 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--sun);
   margin-left: auto;
 }
 .workspace {
@@ -263,22 +266,38 @@ a {
   margin: 0 auto;
   padding: 0 var(--pad) 38px;
 }
-.podcast-hero {
+.studio-banner {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
+  background-color: var(--cobalt);
+  color: white;
+}
+.studio-banner::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: 13% 3% 13% 43%;
+  border: 1px solid rgb(222 239 255 / 42%);
+  background-image:
+    linear-gradient(to right, rgb(222 239 255 / 17%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(222 239 255 / 17%) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.podcast-hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 205px;
-  overflow: hidden;
+  min-height: clamp(220px, 17.5vw, 274px);
   padding: 24px clamp(25px, 3vw, 48px);
   border: var(--line);
-  border-radius: 26px;
-  background: #fff0b9;
+  border-radius: 21px;
   box-shadow: 0 3px 0 var(--ink);
 }
 .hero-copy {
+  max-width: 43%;
   position: relative;
   z-index: 1;
 }
@@ -287,6 +306,10 @@ h1 {
   font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 1.12;
+}
+.hero-copy h1 {
+  font-size: clamp(40px, 4.2vw, 69px);
+  letter-spacing: -0.065em;
 }
 .hero-copy p {
   margin: 10px 0 17px;
@@ -313,14 +336,15 @@ h1 {
   font-weight: 700;
 }
 .hero-meta span {
-  background: #fff9e3;
+  background: #eaf4ff;
+  color: var(--blue-ink);
+  border-color: #9fceff;
 }
-.hosts-art {
+.studio-gear {
   position: absolute;
-  inset: 6px 3% 4px auto;
-  width: min(38%, 380px);
-  background: url('./art/radio-hosts.webp') center bottom / contain no-repeat;
-  mix-blend-mode: multiply;
+  inset: 4.5% 4% 3% 44%;
+  pointer-events: none;
+  background: url('./art/studio-gear.webp') center / contain no-repeat;
 }
 .studio {
   display: grid;
@@ -378,10 +402,11 @@ h1 {
   background: #ffca40;
 }
 .mixer-icon {
-  background: var(--mint);
+  background: var(--ice);
 }
 .result-icon {
-  background: var(--orange);
+  background: var(--cobalt);
+  color: white;
 }
 .count {
   color: #514d3f;
@@ -428,7 +453,8 @@ h1 {
   background: #fffef8;
 }
 .segment:focus-within {
-  border-color: #846326;
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 1px var(--cobalt);
 }
 .segment-toolbar {
   display: flex;
@@ -468,10 +494,10 @@ h1 {
   border-radius: 20px;
   font-size: 12px;
   font-weight: 750;
-  background: #ffcf52;
+  background: #ffe18b;
 }
 .role-B select {
-  background: #a5dfc7;
+  background: var(--ice);
 }
 .icon-button {
   display: grid;
@@ -561,10 +587,10 @@ h1 {
   border: 1.5px solid var(--ink);
   padding: 9px 12px;
   border-radius: 15px;
-  background: #ffde80;
+  background: #fff0bf;
 }
 .voice-B {
-  background: #aee2cb;
+  background: #e1eefc;
 }
 .voice label {
   grid-column: 2;
@@ -575,27 +601,30 @@ h1 {
   line-height: 1.3;
   font-weight: 750;
 }
-.channel-letter {
-  font-family: 'Avenir Next', sans-serif;
-  font-size: 11px;
-  font-weight: 850;
-}
 .voice-control {
   display: contents;
 }
-.voice-portrait {
+.channel-key {
   grid-column: 1;
   grid-row: 1 / 3;
   align-self: center;
-  width: 44px;
-  height: 44px;
-  background: #fff8dd url('./art/host-cat.webp') center/97% no-repeat;
-  border: 1.45px solid var(--ink);
-  border-radius: 50%;
-  background-blend-mode: multiply;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1.4px solid var(--ink);
+  border-radius: 12px;
+  background: var(--sun);
+  color: var(--ink);
+  font:
+    800 23px/1 'Avenir Next',
+    system-ui,
+    sans-serif;
+  box-shadow: 1px 2px 0 var(--ink);
 }
-.voice-B .voice-portrait {
-  background-image: url('./art/guest-dog.webp');
+.voice-B .channel-key {
+  background: var(--cobalt);
+  color: white;
 }
 .voice-control .select-wrap {
   grid-column: 2;
@@ -708,7 +737,7 @@ h1 {
   margin-bottom: 9px;
 }
 .result {
-  background: #ffead8;
+  background: #deebfc;
 }
 .result-head {
   display: grid;
@@ -723,7 +752,7 @@ h1 {
   grid-column: 1 / -1;
   font-size: 12px;
   line-height: 1.5;
-  color: #61574a;
+  color: #374d6b;
 }
 .wave {
   display: flex;
@@ -736,7 +765,7 @@ h1 {
   flex: 0 0 2px;
   max-height: 24px;
   border-radius: 5px;
-  background: #8a583a;
+  background: var(--cobalt);
 }
 .player {
   flex-wrap: wrap;
@@ -761,9 +790,6 @@ h1 {
 @media (min-width: 1550px) {
   .app-frame {
     grid-template-columns: 230px minmax(0, 1fr);
-  }
-  .podcast-hero {
-    min-height: 219px;
   }
 }
 @media (max-width: 1130px) {
@@ -863,7 +889,7 @@ h1 {
     min-height: 53px;
   }
   .podcast-hero {
-    min-height: 173px;
+    min-height: 200px;
   }
 }
 @media (max-width: 700px) {
@@ -875,8 +901,14 @@ h1 {
     min-height: 153px;
     border-radius: 20px;
   }
+  .studio-gear {
+    left: 49%;
+  }
+  .podcast-hero::before {
+    left: 48%;
+  }
   .hero-copy {
-    max-width: 65%;
+    max-width: 46%;
   }
   .hero-copy h1 {
     font-size: clamp(31px, 6vw, 40px);
@@ -896,12 +928,6 @@ h1 {
   .hero-meta svg {
     width: 12px;
     height: 12px;
-  }
-  .hosts-art {
-    width: 36%;
-    right: 1.5%;
-    inset-block: 10px;
-    background-position: center;
   }
   .studio {
     grid-template-columns: minmax(0, 1fr);
@@ -930,6 +956,30 @@ h1 {
   }
   .icon-button {
     width: 40px;
+  }
+}
+@media (max-width: 520px) {
+  .podcast-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 18px 17px 8px;
+  }
+  .hero-copy {
+    max-width: none;
+  }
+  .hero-copy p {
+    margin: 5px 0 9px;
+  }
+  .studio-gear {
+    position: static;
+    width: 100%;
+    height: clamp(94px, 26vw, 126px);
+  }
+  .podcast-hero::before {
+    inset: auto 12px 10px;
+    height: clamp(78px, 22vw, 101px);
+    background-size: 16px 16px;
   }
 }
 @media (max-width: 390px) {

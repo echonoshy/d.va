@@ -121,11 +121,11 @@ export function Mixer({
         {(['A', 'B'] as const).map((role) => (
           <div className={'voice voice-' + role} key={role}>
             <label htmlFor={'voice-' + role}>
-              <span className="channel-letter">{role}</span>
+              <span className="sr-only">{role} </span>
               {ROLES[role]}
             </label>
             <div className="voice-control">
-              <span aria-hidden="true" className="voice-portrait" />
+              <span aria-hidden="true" className="channel-key">{role}</span>
               <Select
                 id={'voice-' + role}
                 value={selected[role]}
