@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { Icon, Meter, Wave } from './graphics';
+import { Icon, Wave } from './graphics';
 import { ROLES, Select } from './script-editor';
 import type { Busy, Output, Voice, VoiceSelection } from './studio-types';
 
@@ -111,18 +111,21 @@ export function Mixer({
     <aside className="paper mixer" aria-labelledby="mix-title">
       <div className="section-head">
         <h2 id="mix-title">
-          <Icon name="tune" size={23} />
+          <span className="heading-icon mixer-icon">
+            <Icon name="tune" size={21} />
+          </span>
           声音设置
         </h2>
       </div>
       <div className="voice-group">
         {(['A', 'B'] as const).map((role) => (
-          <div className="voice" key={role}>
-            <label htmlFor={'voice-' + role}>{ROLES[role]}</label>
+          <div className={'voice voice-' + role} key={role}>
+            <label htmlFor={'voice-' + role}>
+              <span className="channel-letter">{role}</span>
+              {ROLES[role]}
+            </label>
             <div className="voice-control">
-              <span aria-hidden="true" className={'role-key role-' + role}>
-                {role}
-              </span>
+              <span aria-hidden="true" className="voice-portrait" />
               <Select
                 id={'voice-' + role}
                 value={selected[role]}
@@ -164,8 +167,9 @@ export function Mixer({
           disabled={disabled || loading || !available}
           onClick={render}
         >
-          <Meter small />
+          <Icon name="play" size={17} />
           {busy === 'render' ? '正在合成音频…' : '生成 MP3'}
+          <Icon name="arrow" size={19} />
         </button>
       </div>
     </aside>
@@ -181,7 +185,9 @@ export function Result({ output, changed, busy }: { output: Output | null; chang
     >
       <div className="result-head">
         <h2 id="result-title">
-          <Icon name="headphones" size={21} />
+          <span className="heading-icon result-icon">
+            <Icon name="headphones" size={21} />
+          </span>
           成品试听
         </h2>
         <Wave />

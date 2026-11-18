@@ -1,131 +1,369 @@
-.studio-navigation,
+.tool-intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px clamp(18px, 2.4vw, 36px);
+  min-height: 111px;
+  border: var(--line);
+  border-radius: 22px;
+  box-shadow: 0 3px 0 var(--ink);
+  background: #fff0b9;
+  margin-bottom: 23px;
+}
+.tool-intro h1 {
+  font-size: clamp(30px, 3vw, 44px);
+}
+.tool-intro p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.tool-mark {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  border: var(--line);
+  background: var(--sun);
+  border-radius: 18px;
+  transform: rotate(-4deg);
+}
+.workbench:is([data-tool='音色管理'], [data-tool='声音克隆'], [data-tool='训练'], [data-tool='音频工具'])
+  .tool-intro {
+  background: #d8eedf;
+}
+.workbench:is([data-tool='音色管理'], [data-tool='声音克隆'], [data-tool='训练'], [data-tool='音频工具'])
+  .tool-mark {
+  background: #91d4b4;
+}
+.workbench:is([data-tool='系统'], [data-tool='使用说明']) .tool-intro {
+  background: #ffead8;
+}
+.workbench:is([data-tool='系统'], [data-tool='使用说明']) .tool-mark {
+  background: #ffad77;
+}
+.workbench > :is(.notice, [role='status']) {
+  margin: 10px 0;
+}
+.workbench button {
+  border: 1.4px solid var(--ink);
+  border-radius: 12px;
+  padding: 7px 12px;
+  min-height: 36px;
+  background: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: normal;
+}
+.workbench button + button {
+  margin-left: 5px;
+}
+.workbench button:hover:not(:disabled) {
+  background: #fff0bd;
+}
+.workbench .wf-primary,
+.workbench .wf-tabs > nav > button[aria-pressed='true'] {
+  background: var(--sun);
+}
+.workbench .wf-primary {
+  box-shadow: 0 2px 0 var(--ink);
+  padding-inline: 20px;
+  margin-block: 6px;
+}
 .wf-tabs > nav {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 7px;
+  margin-bottom: 15px;
 }
-.studio-navigation {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 1rem clamp(1rem, 4vw, 4rem);
-  border-bottom: 1px solid #d9d9d2;
+.workbench .wf-tabs > nav > button {
+  min-height: 38px;
+  padding: 7px 16px;
+  margin: 0;
+  border-radius: 30px;
 }
-.studio-navigation button,
-.workbench button,
-.workbench select,
-.workbench input,
-.workbench textarea {
-  font: inherit;
-}
-.studio-navigation button,
-.workbench button {
-  color: #292d25;
-  border: 1px solid #cccfc5;
-  background: #fff;
-  border-radius: 5px;
-  padding: 0.45rem 0.8rem;
-  cursor: pointer;
-}
-.studio-navigation button[aria-pressed="true"],
-.wf-tabs button[aria-pressed="true"],
-button.wf-primary {
-  background: #343d30;
-  border-color: #343d30;
-  color: white;
-}
-.workbench {
-  max-width: 1450px;
-  margin: auto;
-  padding: 1.2rem clamp(1rem, 4vw, 4rem) 3rem;
-}
-.wf-tabs > nav {
-  margin: 0.5rem 0 1rem;
+.wf-tabs .wf-tabs > nav > button {
+  min-height: 32px;
+  padding: 5px 11px;
+  font-size: 12px;
 }
 .wf-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
+  gap: 13px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 .wf-column {
-  flex: 1 1 260px;
+  flex: 1 1 220px;
   min-width: 0;
 }
-.wf-group {
-  background: #fff;
-  border: 1px solid #d9dbd3;
-  border-radius: 9px;
-  padding: 1rem;
-  margin: 0 0 0.75rem;
+.wf-group,
+.workbench:is([data-tool='声音克隆'], [data-tool='使用说明'], [data-tool='话题转 SSML 播客'])
+  .tool-body
+  > .wf-tab {
   min-width: 0;
+  padding: 16px;
+  background: var(--paper);
+  border: var(--line);
+  border-radius: 17px;
+  margin-bottom: 13px;
+}
+.wf-group .wf-group {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: #f9f7e9;
+  box-shadow: none;
+}
+.wf-group:empty,
+.wf-row:empty {
+  display: none;
+}
+.wf-group > .wf-text:first-child > p:only-child {
+  font-weight: 750;
 }
 .wf-field,
 .wf-media,
 .wf-group > label {
   display: grid;
-  gap: 4px;
-  margin: 0.45rem 0;
+  gap: 5px;
+  margin: 9px 0;
   min-width: 0;
-  font-size: 0.9rem;
+  font-size: 13px;
+  font-weight: 650;
 }
-.wf-checkbox {
-  display: flex;
-  align-items: center;
-}
-.wf-field > input:not([type="checkbox"]),
-.wf-field > select,
-.wf-field > textarea,
-.wf-group > label > input,
-.wf-group > label > select,
-.wf-sheet input {
+.wf-field input:not([type='checkbox']),
+.wf-field select,
+.wf-field textarea,
+.wf-group > label :is(input:not([type='checkbox']), select),
+.wf-sheet input,
+.wf-range input[type='number'] {
   width: 100%;
   min-width: 0;
-  border: 1px solid #c7cabf;
+  padding: 8px 10px;
+  background: #fffef9;
+  border: 1.3px solid #817c69;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.wf-field textarea {
+  min-height: 62px;
+  resize: vertical;
+}
+.wf-range {
+  padding: 0;
+  margin: 10px 0;
+  border: 0;
+  min-width: 0;
+}
+.wf-range legend {
+  padding: 0;
+  font-weight: 660;
+  font-size: 13px;
+}
+.wf-range > div {
+  display: grid;
+  grid-template-columns: minmax(36px, 1fr) 77px;
+  align-items: center;
+  gap: 12px;
+}
+.wf-range input[type='range'] {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.wf-range input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  border: 1px solid var(--ink);
   border-radius: 4px;
-  padding: 0.4rem;
-  background: white;
-  color: #20221f;
+  background: #ffde80;
+}
+.wf-range input[type='range']::-moz-range-track {
+  height: 4px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: #ffde80;
+}
+.wf-range input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  margin-top: -6.5px;
+  border: 1.7px solid var(--ink);
+  border-radius: 50%;
+  background: var(--sun);
+}
+.wf-range input[type='range']::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 17px;
+  height: 17px;
+  border: 1.7px solid var(--ink);
+  border-radius: 50%;
+  background: var(--sun);
+}
+@media (forced-colors: active) {
+  .wf-range input[type='range'] {
+    appearance: auto;
+  }
+}
+.wf-range input[type='number'] {
+  padding: 5px 7px;
+  background: #fff4c9;
+}
+.wf-checkbox,
+.wf-group > label:has(> input[type='checkbox']) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.workbench input[type='checkbox'] {
+  width: 17px;
+  height: 17px;
+  accent-color: #247858;
+  flex: 0 0 auto;
+}
+.wf-media {
+  padding: 12px;
+  gap: 8px;
+  border: 1px dashed #a49c83;
+  background: #f9f7e9;
+  border-radius: 13px;
+}
+.wf-media > button {
+  justify-self: start;
+}
+.workbench input[type='file'] {
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.workbench input::file-selector-button {
+  border: 1.3px solid var(--ink);
+  border-radius: 99px;
+  padding: 6px 10px;
+  margin-right: 7px;
+  background: #fff0bd;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.wf-media :is(audio, video) {
+  width: 100%;
+  max-height: 280px;
 }
 .wf-sheet {
+  max-width: 100%;
   overflow-x: auto;
+  margin: 12px 0;
 }
 .wf-sheet table {
   border-collapse: collapse;
   width: 100%;
+  background: var(--paper);
+  font-size: 13px;
 }
-.wf-sheet th,
-.wf-sheet td {
-  padding: 0.2rem;
+.wf-sheet :is(th, td) {
+  padding: 6px;
+  border: 1px solid #cec8b1;
   text-align: left;
 }
+.wf-sheet th {
+  background: #fff0bd;
+}
 .wf-sheet input {
-  min-width: 65px;
+  min-width: 68px;
 }
 .wf-text {
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
-  line-height: 1.5;
-  margin: 0.5rem 0;
-}
-.wf-media audio {
-  width: 100%;
-}
-.workbench button:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
-[hidden] {
-  display: none !important;
+  line-height: 1.65;
+  font-size: 14px;
 }
 .wf-text p {
-  margin: 0.3rem 0;
+  margin: 0.35em 0;
+}
+.wf-text :is(h1, h2, h3) {
+  margin: 0.9em 0 0.4em;
+}
+.wf-text h1 {
+  font-size: 28px;
+}
+.wf-text h2 {
+  font-size: 21px;
+}
+.wf-text h3 {
+  font-size: 17px;
 }
 .wf-text pre {
+  max-width: 100%;
   overflow: auto;
-  background: #f5f6f3;
-  padding: 0.7rem;
+  font-size: 13px;
+  padding: 12px;
+  background: #f2eed7;
+  border-radius: 11px;
 }
-.wf-text {
-  white-space: normal;
+.wf-text img {
+  max-width: 100%;
+}
+.workbench[data-tool='声音克隆'] .tool-body > .wf-tab {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.workbench[data-tool='声音克隆'] .tool-body .wf-media {
+  margin: 0;
+}
+.workbench[data-tool='声音克隆'] .tool-body .wf-range {
+  align-self: center;
+}
+.workbench[data-tool='声音克隆'] .tool-body > .wf-tab > button {
+  justify-self: start;
+  background: var(--sun);
+  padding-inline: 20px;
+}
+@media (max-width: 700px) {
+  .tool-intro {
+    min-height: 92px;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 17px;
+    margin-bottom: 17px;
+  }
+  .tool-intro h1 {
+    font-size: 29px;
+  }
+  .tool-intro p {
+    font-size: 12px;
+  }
+  .tool-mark {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+  }
+  .tool-mark svg {
+    width: 23px;
+  }
+  .wf-column {
+    flex-basis: 100%;
+  }
+  .wf-group {
+    padding: 13px;
+  }
+  .workbench button,
+  .workbench .wf-tabs > nav > button {
+    min-height: 40px;
+  }
+  .workbench[data-tool='声音克隆'] .tool-body > .wf-tab {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

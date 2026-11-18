@@ -1,20 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { ToolIntro } from "./studio-shell";
 import { Microphone } from "./microphone";
 import Markdown from "react-markdown";
 import { SpeakerHub, jsonRequest } from "./studio-hub";
 import "./workbench.css";
 
-export const sections = [
-  "TTS",
-  "SSML",
-  "音色管理",
-  "声音克隆",
-  "训练",
-  "话题转 SSML 播客",
-  "音频工具",
-  "系统",
-  "使用说明",
-];
 type Props = {
   value?: unknown;
   label?: string;
@@ -427,6 +417,39 @@ export function Workbench({
         </div>
       );
     }
+    if (k === "Slider" && p.minimum !== undefined && p.maximum !== undefined) {
+      const numberValue = typeof value === "number" ? value : "";
+      return (
+        <fieldset key={key} className="wf-range" disabled={disabled}>
+          <legend>{title}</legend>
+          <div>
+            <input
+              aria-label={title + " 滑杆"}
+              type="range"
+              min={p.minimum}
+              max={p.maximum}
+              step={p.step || "any"}
+              value={numberValue || 0}
+              onChange={(e) => change(key, Number(e.target.value))}
+            />
+            <input
+              aria-label={title}
+              type="number"
+              min={p.minimum}
+              max={p.maximum}
+              step={p.step || "any"}
+              value={numberValue}
+              onChange={(e) =>
+                change(
+                  key,
+                  e.target.value === "" ? null : Number(e.target.value),
+                )
+              }
+            />
+          </div>
+        </fieldset>
+      );
+    }
     if (k === "Dropdown" || k === "Radio") {
       control = (
         <select
@@ -512,10 +535,8 @@ export function Workbench({
   }
   const [notice, setNotice] = useState("");
   return (
-    <main className="workbench">
-      <div className="intro">
-        <h1>{section}</h1>
-      </div>
+    <main className="workbench" data-tool={section}>
+      <ToolIntro section={section} />
       {error && (
         <div role="alert" className="notice error">
           {error}{" "}
@@ -525,7 +546,7 @@ export function Workbench({
       {!schema && !error && <p role="status">正在启动本机语音工作台…</p>}
       {busy && <p role="status">正在处理…</p>}
       {notice && <p role="status">{notice}</p>}
-      {active && tree(active)}
+      {active && <div className="tool-body">{tree(active)}</div>}
     </main>
   );
 }

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Meter } from './graphics';
+import { PodcastIntro, Sidebar, WorkspaceBar } from './studio-shell';
 import { ScriptEditor, EXAMPLE } from './script-editor';
 import { Mixer, Result } from './audio';
 import { isRecord, isSegment, isVoice } from './studio-types';
 import type { Busy, DraftSegment, Output, Segment, Voice, VoiceSelection } from './studio-types';
 import './studio.css';
-import { Workbench, sections } from './workbench';
+import { Workbench } from './workbench';
 
 let nextId = 1;
 const createSegment = ({ role, text }: Segment): DraftSegment => ({ id: nextId++, role, text });
@@ -28,15 +28,20 @@ async function request(url: string, options: RequestInit) {
   }
   if (!response.ok) {
     const payload: unknown = await response.json().catch(() => null);
-    throw new Error(isRecord(payload) && typeof payload.error === 'string' ? payload.error : '请求失败，请稍后重试。');
+    throw new Error(
+      isRecord(payload) && typeof payload.error === 'string' ? payload.error : '请求失败，请稍后重试。',
+    );
   }
   return response;
 }
 
 function App() {
-  const [section,setSection] = useState('播客编辑台');
-  const [opened,setOpened] = useState(false);
-  function selectSection(value:string){setSection(value);if(value!=='播客编辑台')setOpened(true);}
+  const [section, setSection] = useState('播客编辑台');
+  const [opened, setOpened] = useState(false);
+  function selectSection(value: string) {
+    setSection(value);
+    if (value !== '播客编辑台') setOpened(true);
+  }
 
   const [segments, setSegments] = useState(() => EXAMPLE.map(createSegment));
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -53,7 +58,12 @@ function App() {
   const active = useRef<AbortController | null>(null);
   useEffect(() => {
     const controller = new AbortController();
-    request('/api/capabilities',{signal:controller.signal}).then(r=>r.json()).then(data=>{if(!controller.signal.aborted)setCanScript(data.scriptAvailable===true);}).catch(()=>{});
+    request('/api/capabilities', { signal: controller.signal })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!controller.signal.aborted) setCanScript(data.scriptAvailable === true);
+      })
+      .catch(() => {});
     setLoading(true);
     setVoiceError('');
     (async () => {
@@ -168,29 +178,28 @@ function App() {
     }
   }
   return (
-    <>
-      <header className="mast">
-        <div className="mast-inner">
-          <div className="brand">
-            <Meter />
-            <b>D.Va</b>
-            <span>播客工作室</span>
-          </div>
-          <div className="engine">
-            <Meter small />
-            {loading ? '正在载入语音引擎' : voiceError ? '语音引擎不可用' :
-              voices.some((voice) => voice.engine === 'api') ? '外部语音服务' : '本地语音引擎'}
-          </div>
-        </div>
-      </header>
-      <nav className="studio-navigation" aria-label="工作台">{['播客编辑台',...sections].map(name=><button key={name} aria-pressed={section===name} onClick={()=>selectSection(name)}>{name}</button>)}</nav>
-      <main hidden={section!=='播客编辑台'}>
-        <div className="intro">
-          <h1>播客编辑台</h1>
-          <p>编辑对话、分配音色，生成可播放的 MP3。</p>
-        </div>
-        <div className="studio">
-          <div className="left">
+    <div className="app-frame">
+      <Sidebar section={section} select={selectSection} />
+      <div className="workspace">
+        <WorkspaceBar
+          section={section}
+          available={!loading && !voiceError}
+          engine={
+            loading
+              ? '正在载入语音引擎'
+              : voiceError
+                ? '语音引擎不可用'
+                : voices.some((v) => v.engine === 'api')
+                  ? '外部语音服务'
+                  : '本地语音引擎'
+          }
+        />
+        <main className="podcast-page" hidden={section !== '播客编辑台'}>
+          <PodcastIntro
+            speakers={new Set(segments.map((s) => s.role)).size}
+            characters={script.reduce((n, s) => n + Array.from(s.text).length, 0)}
+          />
+          <div className="studio">
             <ScriptEditor
               segments={segments}
               setSegments={(change) => updateDraft(setSegments, change)}
@@ -200,29 +209,35 @@ function App() {
               generate={generate}
               scriptError={scriptError}
             />
-            <Result
-              output={output}
-              changed={Boolean(output && (output.signature !== signature || output.music !== music))}
-              busy={busy}
-            />
+            <div className="sound-column">
+              <Mixer
+                voices={voices}
+                selected={selected}
+                setSelected={(change) => updateDraft(setSelected, change)}
+                file={music}
+                setFile={(file) => updateDraft(setMusic, file)}
+                busy={busy}
+                loading={loading}
+                voiceError={voiceError}
+                retry={() => setAttempt((n) => n + 1)}
+                render={render}
+                error={renderError}
+              />
+              <Result
+                output={output}
+                changed={Boolean(output && (output.signature !== signature || output.music !== music))}
+                busy={busy}
+              />
+            </div>
           </div>
-          <Mixer
-            voices={voices}
-            selected={selected}
-            setSelected={(change) => updateDraft(setSelected, change)}
-            file={music}
-            setFile={(file) => updateDraft(setMusic, file)}
-            busy={busy}
-            loading={loading}
-            voiceError={voiceError}
-            retry={() => setAttempt((n) => n + 1)}
-            render={render}
-            error={renderError}
-          />
-        </div>
-      </main>
-      {opened&&<div hidden={section==='播客编辑台'}><Workbench section={section} onSection={selectSection}/></div>}
-    </>
+        </main>
+        {opened && (
+          <div hidden={section === '播客编辑台'}>
+            <Workbench section={section} onSection={selectSection} />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 const root = document.getElementById('root');

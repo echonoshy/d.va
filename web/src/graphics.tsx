@@ -1,6 +1,71 @@
-import type { CSSProperties } from 'react';
-
 const paths = {
+  podcast: (
+    <>
+      <rect x="8" y="2.5" width="8" height="13" rx="4" />
+      <path d="M5 10a7 7 0 0 0 14 0M12 17v4.5M8.5 21.5h7" />
+    </>
+  ),
+  text: (
+    <>
+      <path d="M3 5h12M3 9h8M3 13h5M13 12v6m3-9v12m3-8v4m3-6v8" />
+    </>
+  ),
+  code: (
+    <>
+      <path d="m7.5 7-5 5 5 5m9-10 5 5-5 5M14 4l-4 16" />
+    </>
+  ),
+  voices: (
+    <>
+      <path d="M2.5 19v-2a5 5 0 0 1 10 0v2M15 12a5 5 0 0 1 6 5v2" />
+      <circle cx="7.5" cy="7" r="3" />
+      <path d="M15 4a3 3 0 0 1 0 6" />
+    </>
+  ),
+  clone: (
+    <>
+      <rect x="3" y="7" width="12" height="14" rx="3" />
+      <path d="M9 7V5a2 2 0 0 1 2-2h7a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3M6 14h1.5l1-2 1.5 4 1-2h1" />
+    </>
+  ),
+  train: (
+    <>
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+      <path d="M9 3v3m6-3v3M9 18v3m6-3v3M3 9h3m-3 6h3m12-6h3m-3 6h3" />
+      <path d="M10 10h4v4h-4z" />
+    </>
+  ),
+  chat: (
+    <>
+      <path d="M20.5 11A8.5 7.5 0 0 1 12 18.5a10 10 0 0 1-3-.5L4 20l.7-4A7 7 0 0 1 3.5 11a8.5 7.5 0 0 1 17 0Z" />
+      <path d="M8 11h.01m4 0h.01m4 0h.01" strokeWidth="3" />
+    </>
+  ),
+  system: (
+    <>
+      <rect x="2.5" y="4" width="19" height="13" rx="2" />
+      <path d="M8 21h8m-4-4v4m-6-9 2.5 0 1.5-2 2.5 4 1.5-2H18" />
+    </>
+  ),
+  help: (
+    <>
+      <path d="M12 5v15M3 4.5c4-1 7 0 9 1.5 2-1.5 5-2.5 9-1.5v14c-4-1-7-.5-9 1.5-2-2-5-2.5-9-1.5Z" />
+    </>
+  ),
+  script: (
+    <>
+      <path d="M15 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 3v6h6M8 13h8m-8 4h5" />
+    </>
+  ),
+  arrow: <path d="M4 12h15m-6-6 6 6-6 6" />,
+  menu: <path d="M3.5 6h17m-17 6h17m-17 6h17" />,
+  play: <path d="m7 4.5 12 7.5-12 7.5z" fill="currentColor" strokeLinejoin="round" />,
+  layers: (
+    <>
+      <path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5" />
+    </>
+  ),
   headphones: (
     <>
       <path d="M3 14v-2a9 9 0 0 1 18 0v2" />
@@ -38,7 +103,8 @@ const paths = {
   ),
   close: <path d="m6 6 12 12M18 6 6 18" />,
 };
-export function Icon({ name, size = 18 }: { name: keyof typeof paths; size?: number }) {
+export type IconName = keyof typeof paths;
+export function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   return (
     <svg
       aria-hidden="true"
@@ -47,23 +113,12 @@ export function Icon({ name, size = 18 }: { name: keyof typeof paths; size?: num
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.65"
+      strokeWidth="1.85"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       {paths[name]}
     </svg>
-  );
-}
-
-export function Meter({ small = false }) {
-  return (
-    <span aria-hidden="true" className={'meter' + (small ? ' meter-small' : '')}>
-      {[9, 18, 26, 20, 13].map((h) => {
-        const style: CSSProperties & { '--h': number } = { '--h': h };
-        return <i key={h} style={style} />;
-      })}
-    </span>
   );
 }
 

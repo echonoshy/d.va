@@ -41,7 +41,7 @@ type SegmentProps = {
 function Segment({ segment, index, locked, update, remove, setNode }: SegmentProps) {
   const number = String(index + 1).padStart(2, '0');
   return (
-    <li className="segment">
+    <li className={'segment segment-' + segment.role}>
       <div className="segment-toolbar">
         <span className="sequence" aria-hidden="true">
           {number}
@@ -127,9 +127,13 @@ export function ScriptEditor({
   return (
     <section className="paper script" aria-labelledby="script-title">
       <div className="section-head editor-head">
-        <h2 id="script-title">对话脚本</h2>
+        <h2 id="script-title">
+          <span className="heading-icon script-icon">
+            <Icon name="script" size={22} />
+          </span>
+          对话脚本<span className="count">{segments.length} 段</span>
+        </h2>
         <div className="editor-actions">
-          <span className="count">{segments.length} 段</span>
           <button
             type="button"
             className="outline topic-toggle"
