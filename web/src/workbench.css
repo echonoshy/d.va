@@ -1,51 +1,22 @@
-.tool-intro {
-  display: flex;
+.workbench {
+  font-variant-emoji: text;
+}
+.tool-heading {
   align-items: center;
-  gap: 16px;
-  padding: 24px clamp(18px, 2.4vw, 36px);
-  min-height: 111px;
-  border: var(--line);
-  border-radius: 22px;
-  box-shadow: 0 3px 0 var(--ink);
-  margin-bottom: 23px;
+  margin-bottom: 20px;
+  border-bottom: var(--line);
 }
-.tool-intro::before {
-  inset: 15% 2% 15% 64%;
-  mask-image: linear-gradient(to right, transparent, black 40%);
-}
-.tool-intro h1 {
-  font-size: clamp(30px, 3vw, 44px);
-}
-.tool-intro p {
-  margin-top: 6px;
-  font-size: 14px;
-  line-height: 1.6;
-}
-.tool-mark {
-  display: inline-grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 54px;
-  height: 54px;
-  border: var(--line);
-  background: var(--sun);
-  color: var(--ink);
-  border-radius: 18px;
-  transform: rotate(-4deg);
-}
-.workbench:is([data-tool='音色管理'], [data-tool='声音克隆'], [data-tool='训练'], [data-tool='音频工具'])
-  .tool-mark {
-  background: var(--ice);
-}
-.workbench:is([data-tool='系统'], [data-tool='使用说明']) .tool-mark {
-  background: #ffad77;
+.tool-heading .cat-study {
+  width: 95px;
+  height: 72px;
+  margin-right: 12px;
 }
 .workbench > :is(.notice, [role='status']) {
   margin: 10px 0;
 }
 .workbench button {
   border: 1.4px solid var(--ink);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 7px 12px;
   min-height: 36px;
   background: var(--paper);
@@ -58,15 +29,20 @@
   margin-left: 5px;
 }
 .workbench button:hover:not(:disabled) {
-  background: #fff0bd;
+  background: var(--pale);
 }
 .workbench .wf-tabs > nav > button[aria-pressed='true'] {
-  background: var(--cobalt);
+  background: var(--ink);
   color: white;
 }
+.workbench .wf-primary:hover:not(:disabled),
+.workbench[data-tool='声音克隆'] .tool-body > .wf-tab > button:hover:not(:disabled) {
+  background: #48443d;
+  color: var(--paper);
+}
 .workbench .wf-primary {
-  background: var(--sun);
-  box-shadow: 0 2px 0 var(--ink);
+  background: var(--ink);
+  color: var(--paper);
   padding-inline: 20px;
   margin-block: 6px;
 }
@@ -107,13 +83,13 @@
   padding: 16px;
   background: var(--paper);
   border: var(--line);
-  border-radius: 17px;
+  border-radius: 4px;
   margin-bottom: 13px;
 }
 .wf-group .wf-group {
   border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: #f9f7e9;
+  border-radius: 4px;
+  background: #eeeadf;
   box-shadow: none;
 }
 .wf-group:empty,
@@ -142,9 +118,9 @@
   width: 100%;
   min-width: 0;
   padding: 8px 10px;
-  background: #fffef9;
-  border: 1.3px solid #817c69;
-  border-radius: 10px;
+  background: var(--paper);
+  border: 1.3px solid #827c71;
+  border-radius: 3px;
   font-size: 14px;
   line-height: 1.45;
   font-weight: 500;
@@ -183,13 +159,13 @@
   height: 6px;
   border: 1px solid var(--ink);
   border-radius: 4px;
-  background: #ffde80;
+  background: var(--pale);
 }
 .wf-range input[type='range']::-moz-range-track {
   height: 4px;
   border: 1px solid var(--ink);
   border-radius: 4px;
-  background: #ffde80;
+  background: var(--pale);
 }
 .wf-range input[type='range']::-webkit-slider-thumb {
   appearance: none;
@@ -198,7 +174,7 @@
   margin-top: -6.5px;
   border: 1.7px solid var(--ink);
   border-radius: 50%;
-  background: var(--sun);
+  background: var(--ink);
 }
 .wf-range input[type='range']::-moz-range-thumb {
   box-sizing: border-box;
@@ -206,7 +182,7 @@
   height: 17px;
   border: 1.7px solid var(--ink);
   border-radius: 50%;
-  background: var(--sun);
+  background: var(--ink);
 }
 @media (forced-colors: active) {
   .wf-range input[type='range'] {
@@ -215,7 +191,7 @@
 }
 .wf-range input[type='number'] {
   padding: 5px 7px;
-  background: #fff4c9;
+  background: var(--paper);
 }
 .wf-checkbox,
 .wf-group > label:has(> input[type='checkbox']) {
@@ -226,15 +202,15 @@
 .workbench input[type='checkbox'] {
   width: 17px;
   height: 17px;
-  accent-color: #247858;
+  accent-color: var(--ink);
   flex: 0 0 auto;
 }
 .wf-media {
   padding: 12px;
   gap: 8px;
   border: 1px dashed #a49c83;
-  background: #f9f7e9;
-  border-radius: 13px;
+  background: #eeeadf;
+  border-radius: 4px;
 }
 .wf-media > button {
   justify-self: start;
@@ -251,7 +227,7 @@
   border-radius: 99px;
   padding: 6px 10px;
   margin-right: 7px;
-  background: #fff0bd;
+  background: var(--pale);
   color: var(--ink);
   font: inherit;
   cursor: pointer;
@@ -273,11 +249,11 @@
 }
 .wf-sheet :is(th, td) {
   padding: 6px;
-  border: 1px solid #cec8b1;
+  border: 1px solid var(--rule);
   text-align: left;
 }
 .wf-sheet th {
-  background: #fff0bd;
+  background: var(--pale);
 }
 .wf-sheet input {
   min-width: 68px;
@@ -307,7 +283,7 @@
   overflow: auto;
   font-size: 13px;
   padding: 12px;
-  background: #f2eed7;
+  background: var(--pale);
   border-radius: 11px;
 }
 .wf-text img {
@@ -326,33 +302,15 @@
 }
 .workbench[data-tool='声音克隆'] .tool-body > .wf-tab > button {
   justify-self: start;
-  background: var(--sun);
+  background: var(--ink);
+  color: var(--paper);
   padding-inline: 20px;
 }
 @media (max-width: 700px) {
-  .tool-intro {
-    min-height: 92px;
-    gap: 12px;
-    padding: 14px;
-    border-radius: 17px;
-    margin-bottom: 17px;
-  }
-  .tool-intro::before {
-    left: 78%;
-  }
-  .tool-intro h1 {
-    font-size: 29px;
-  }
-  .tool-intro p {
-    font-size: 12px;
-  }
-  .tool-mark {
-    width: 43px;
-    height: 43px;
-    border-radius: 14px;
-  }
-  .tool-mark svg {
-    width: 23px;
+  .tool-heading .cat-study {
+    width: 64px;
+    height: 50px;
+    margin-right: 0;
   }
   .wf-column {
     flex-basis: 100%;

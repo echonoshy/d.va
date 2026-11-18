@@ -127,7 +127,7 @@ export function ScriptEditor({
   return (
     <section className="paper script" aria-labelledby="script-title">
       <div className="section-head editor-head">
-        <h2 id="script-title">
+        <h2 id="script-title" tabIndex={-1}>
           <span className="heading-icon script-icon">
             <Icon name="script" size={22} />
           </span>

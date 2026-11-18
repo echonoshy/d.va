@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { createRoot } from 'react-dom/client';
-import { PodcastIntro, Sidebar, WorkspaceBar } from './studio-shell';
+import { PodcastIntro, StudioHeader } from './studio-shell';
 import { ScriptEditor, EXAMPLE } from './script-editor';
 import { Mixer, Result } from './audio';
 import { isRecord, isSegment, isVoice } from './studio-types';
@@ -9,6 +9,7 @@ import type { Busy, DraftSegment, Output, Segment, Voice, VoiceSelection } from 
 import './studio.css';
 import { Workbench } from './workbench';
 
+const scriptCapacity = 8000;
 let nextId = 1;
 const createSegment = ({ role, text }: Segment): DraftSegment => ({ id: nextId++, role, text });
 const cleanSegments = (items: DraftSegment[]): Segment[] =>
@@ -136,6 +137,7 @@ function App() {
     setRenderError('');
   }
   const script = cleanSegments(segments);
+  const characters = script.reduce((sum, line) => sum + Array.from(line.text).length, 0);
   const signature = JSON.stringify([script, selected]);
   async function render() {
     if (active.current) return;
@@ -143,10 +145,7 @@ function App() {
       setRenderError('请填写每一段台词，或移除空白段落。');
       return;
     }
-    if (
-      script.some((s) => Array.from(s.text).length > 1200) ||
-      script.reduce((sum, s) => sum + Array.from(s.text).length, 0) > 8000
-    ) {
+    if (script.some((s) => Array.from(s.text).length > 1200) || characters > scriptCapacity) {
       setRenderError('每段最多 1200 字，全部台词最多 8000 字。');
       return;
     }
@@ -179,25 +178,28 @@ function App() {
   }
   return (
     <div className="app-frame">
-      <Sidebar section={section} select={selectSection} />
+      <StudioHeader
+        select={selectSection}
+        section={section}
+        available={!loading && !voiceError}
+        engine={
+          loading
+            ? '正在载入语音引擎'
+            : voiceError
+              ? '语音引擎不可用'
+              : voices.some((v) => v.engine === 'api')
+                ? '外部语音服务'
+                : '本地语音引擎'
+        }
+      />
       <div className="workspace">
-        <WorkspaceBar
-          section={section}
-          available={!loading && !voiceError}
-          engine={
-            loading
-              ? '正在载入语音引擎'
-              : voiceError
-                ? '语音引擎不可用'
-                : voices.some((v) => v.engine === 'api')
-                  ? '外部语音服务'
-                  : '本地语音引擎'
-          }
-        />
         <main className="podcast-page" hidden={section !== '播客编辑台'}>
           <PodcastIntro
             speakers={new Set(segments.map((s) => s.role)).size}
-            characters={script.reduce((n, s) => n + Array.from(s.text).length, 0)}
+            characters={characters}
+            segments={segments.length}
+            capacity={scriptCapacity}
+            select={selectSection}
           />
           <div className="studio">
             <ScriptEditor

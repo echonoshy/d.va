@@ -110,7 +110,7 @@ export function Mixer({
   return (
     <aside className="paper mixer" aria-labelledby="mix-title">
       <div className="section-head">
-        <h2 id="mix-title">
+        <h2 id="mix-title" tabIndex={-1}>
           <span className="heading-icon mixer-icon">
             <Icon name="tune" size={21} />
           </span>
@@ -184,7 +184,7 @@ export function Result({ output, changed, busy }: { output: Output | null; chang
       aria-live="polite"
     >
       <div className="result-head">
-        <h2 id="result-title">
+        <h2 id="result-title" tabIndex={-1}>
           <span className="heading-icon result-icon">
             <Icon name="headphones" size={21} />
           </span>
